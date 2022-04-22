@@ -1,0 +1,28 @@
+/* css 重置 */
+*{margin:0; padding:0; list-style:none; }
+body{ background:#fff; font:normal 12px/22px 宋体;  }
+img{ border:0;  }
+a{ text-decoration:none; color:#333;  }
+
+/* 本例子css */
+.picScroll-left{ width:90%;  overflow:hidden; position:relative;  border:1px solid #ccc; margin:auto;  }
+.picScroll-left .hd{ overflow:hidden;  height:30px; background:#f4f4f4; padding:0 10px;  }
+.picScroll-left .hd .prev,.picScroll-left .hd .next{  float:right;  overflow:hidden;
+    cursor:pointer;background: none;border:none; }
+.picScroll-left .hd .next{ background-position:0 -50px;  }
+.picScroll-left .hd .prevStop{ background-position:-60px 0; }
+.picScroll-left .hd .nextStop{ background-position:-60px -50px; }
+.picScroll-left .hd ul{ float:right; overflow:hidden; zoom:1; margin-top:10px; zoom:1; }
+.picScroll-left .hd ul li{ float:left;  width:9px; height:9px; overflow:hidden; margin-right:5px; text-indent:-999px; cursor:pointer; background:url("../../js/SuperSlide2.1/demo/images/icoCircle.gif") 0 -9px no-repeat; }
+.picScroll-left .hd ul li.on{ background-position:0 0; }
+.picScroll-left .bd{ padding:10px; min-height:500px;  }
+.picScroll-left .bd ul{ overflow:hidden; zoom:1; }
+.picScroll-left .bd ul li{ margin:0 8px; _display:inline; overflow:hidden; text-align:center;  }
+.picScroll-left .bd ul li.tablelist{ width:240px;height:530px;border:1px solid #ddd;}
+.picScroll-left .bd ul li .pic img{ width:120px; height:90px; display:block;  padding:2px; border:1px solid #ccc; }
+.picScroll-left .bd ul li .pic a:hover img{ border-color:#999;  }
+.picScroll-left .bd ul li .title{ line-height:24px;   }
+.picScroll-left .bd ul.picList2 li,.picScroll-left .bd ul.picList4 li{margin:0 8px; _display:inline; overflow:hidden; text-align:center; }
+#picList li , #picList1 li,#picList3 li{
+    float: left;
+}

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="/admin/css/font.css">
+        <link rel="stylesheet" href="/admin/css/xadmin.css">
+        <script src="/js/jquery.min.js"></script>
+        <script src="/javascripts/ajaxUtil.js"></script>
+        <script src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+        <script type="text/javascript" src="/admin/javascript/common.js"></script>
+        <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <blockquote class="layui-elem-quote">欢迎管理员：
+                                <span class="x-red">admin  </span><span id="mytime"></span>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">数据统计</div>
+                        <div class="layui-card-body ">
+                            <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a onclick="parent.xadmin.add_tab('主题库服务','view/theme-library-list.html',true)"   class="x-admin-backlog-body">
+                                        <h3>主题库数量</h3>
+                                        <p>
+                                            <cite id="topicCount">66</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a onclick="parent.xadmin.add_tab('知识图谱服务','view/knowledge-graph-list.html',true)"  class="x-admin-backlog-body"   >
+                                        <h3>图库数量</h3>
+                                        <p>
+                                            <cite id="mapCount">12</cite></p>
+                                    </a>
+                                </li>
+
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a onclick="parent.xadmin.add_tab('模型管理','view/model-list.html',true)" class="x-admin-backlog-body">
+                                        <h3>模型数量</h3>
+                                        <p>
+                                            <cite id="modelCount">67</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6 ">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>数据接入数量</h3>
+                                        <p>
+                                            <cite id="dataManegeCount">6766</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>主题库接口数量</h3>
+                                        <p>
+                                            <cite id="interfaceCount">99</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>接口调用次数</h3>
+                                        <p>
+                                            <cite id="totalCallCount">67</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="layui-col-sm6 layui-col-md3">-->
+<!--                    <div class="layui-card">-->
+<!--                        <div class="layui-card-header">下载-->
+<!--                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>-->
+<!--                        <div class="layui-card-body  ">-->
+<!--                            <p class="layuiadmin-big-font">33,555</p>-->
+<!--                            <p>新下载-->
+<!--                                <span class="layuiadmin-span-color">10%-->
+<!--                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="layui-col-sm6 layui-col-md3">-->
+<!--                    <div class="layui-card">-->
+<!--                        <div class="layui-card-header">下载-->
+<!--                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>-->
+<!--                        <div class="layui-card-body ">-->
+<!--                            <p class="layuiadmin-big-font">33,555</p>-->
+<!--                            <p>新下载-->
+<!--                                <span class="layuiadmin-span-color">10%-->
+<!--                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="layui-col-sm6 layui-col-md3">-->
+<!--                    <div class="layui-card">-->
+<!--                        <div class="layui-card-header">下载-->
+<!--                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>-->
+<!--                        <div class="layui-card-body ">-->
+<!--                            <p class="layuiadmin-big-font">33,555</p>-->
+<!--                            <p>新下载-->
+<!--                                <span class="layuiadmin-span-color">10%-->
+<!--                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="layui-col-sm6 layui-col-md3">-->
+<!--                    <div class="layui-card">-->
+<!--                        <div class="layui-card-header">下载-->
+<!--                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>-->
+<!--                        <div class="layui-card-body ">-->
+<!--                            <p class="layuiadmin-big-font">33,555</p>-->
+<!--                            <p>新下载-->
+<!--                                <span class="layuiadmin-span-color">10%-->
+<!--                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="layui-col-sm12 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">硬盘使用情况</div>
+                        <div class="layui-card-body" style="min-height: 280px;">
+                            <div id="main3" class="layui-col-sm12" style="height: 300px;"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-sm12 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">内存使用情况</div>
+                        <div class="layui-card-body" style="min-height: 280px;">
+                            <div id="main4" class="layui-col-sm12" style="height: 300px;"></div>
+
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="layui-col-md12">-->
+<!--                    <div class="layui-card">-->
+<!--                        <div class="layui-card-header">系统信息</div>-->
+<!--                        <div class="layui-card-body ">-->
+<!--                            <table class="layui-table">-->
+<!--                                <tbody>-->
+<!--                                    <tr>-->
+<!--                                        <th>xxx版本</th>-->
+<!--                                        <td>1.0.180420</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>服务器地址</th>-->
+<!--                                        <td>x.xuebingsi.com</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>操作系统</th>-->
+<!--                                        <td>WINNT</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>运行环境</th>-->
+<!--                                        <td>Apache/2.4.23 (Win32) OpenSSL/1.0.2j mod_fcgid/2.3.9</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>PHP版本</th>-->
+<!--                                        <td>5.6.27</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>PHP运行方式</th>-->
+<!--                                        <td>cgi-fcgi</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>MYSQL版本</th>-->
+<!--                                        <td>5.5.53</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>ThinkPHP</th>-->
+<!--                                        <td>5.0.18</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>上传附件限制</th>-->
+<!--                                        <td>2M</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>执行时间限制</th>-->
+<!--                                        <td>30s</td></tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>剩余空间</th>-->
+<!--                                        <td>86015.2M</td></tr>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="layui-col-md12">-->
+<!--                    <div class="layui-card">-->
+<!--                        <div class="layui-card-header">开发团队</div>-->
+<!--                        <div class="layui-card-body ">-->
+<!--                            <table class="layui-table">-->
+<!--                                <tbody>-->
+<!--                                    <tr>-->
+<!--                                        <th>版权所有</th>-->
+<!--                                        <td>网络中心-->
+<!--                                            <a href="" target="_blank">访问官网</a></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <th>开发者</th>-->
+<!--                                        <td>DP2开发团队</td></tr>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <style id="welcome_style"></style>-->
+<!--                <div class="layui-col-md12">-->
+<!--                    <blockquote class="layui-elem-quote layui-quote-nm">感谢。</blockquote></div>-->
+            </div>
+        </div>
+        </div>
+    </body>
+    <script src="/js/echarts.min.js"></script>
+    <script type="text/javascript">
+
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/mainpage/systeminfo",
+            data:'',
+            dataType: 'json',
+            timeout:2000,
+            contentType: 'application/json',
+            success: function (data) {
+                // let arr1 = Object.keys(data.disk)
+                // let arr2 = Object.keys(data.mem)
+
+                // debugger
+                if(data.code == 200){
+
+
+                    let userRate = data.disk.DiskAvailable;
+                    let used = data.disk.DiskUsed;
+
+                    let memUsed = data.mem.MemTotal - data.mem.MemAvailable;
+                    let memFree = data.mem.MemAvailable;            // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main3'));
+
+                    // 指定图表的配置项和数据
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left',
+                            data: ['已使用','未使用']
+                        },
+                        series : [
+                            {
+                                name: '使用情况(kb)',
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:[
+                                    {value:used, name:'已使用'},
+                                    {value:userRate, name:'未使用'},
+                                ],
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+
+
+
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                    // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main4'));
+
+                    // 指定图表的配置项和数据
+                    var option = {
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left',
+                            data: ['已使用','未使用']
+                        },
+                        series : [
+                            {
+                                name: '使用情况(kb)',
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:[
+                                    {value:memUsed, name:'已使用'},
+                                    {value:memFree, name:'未使用'},
+                                ],
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+
+
+
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                }else{
+                   // layer.alert(data.errMsg, {icon: 2})
+                    console.log(data.errMsg);
+                }
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert(data.errMsg, {icon: 2})
+            }
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            getTotal();
+        });
+        function getTotal() {
+            var url = "/mainpage/totalCount";
+            requestGetAjax(url, function (resData) {
+                console.info(resData);
+                if (200 == resData.code) {
+                    $("#interfaceCount").html(resData.interfaceCount);
+                    $("#totalCallCount").html(resData.totalCallCount);
+                    $("#topicCount").html(resData.topicCount);
+                    $("#mapCount").html(resData.mapCount);
+                    $("#modelCount").html(resData.modelCount);
+                    $("#dataManegeCount").html(resData.dataManageCount);
+                }
+            });
+        }
+
+
+        function showTime(){
+            nowtime=new Date();
+            year=nowtime.getFullYear();
+            month=nowtime.getMonth()+1;
+            date=nowtime.getDate();
+            document.getElementById("mytime").innerText="北京时间："+year+"年"+month+"月"+date+" "+nowtime.toLocaleTimeString();
+        }
+
+        setInterval("showTime()",1000);
+    </script>
+
+
+</html>

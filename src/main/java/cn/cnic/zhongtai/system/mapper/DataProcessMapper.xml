@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.DataProcessMapper" >
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.DataProcess" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getList" resultMap="BaseResultMap">
+        select * from data_process
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into data_process(name, type, status, create_date)
+            value
+        (#{name}, #{type}, #{status}, #{createDate})
+    </insert>
+
+    <update id="updateStatusById">
+        update data_process set status = #{status} where id = #{id}
+    </update>
+
+</mapper>

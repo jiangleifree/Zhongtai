@@ -1,0 +1,140 @@
+section.quick-link{
+    background: #3374d5;
+    overflow: auto;
+}
+section.quick-link a{
+     width: 25%;
+     display: block;
+     float: left;
+     color: #fff;
+     font-size: 16px;
+     text-align: left;
+     border-left: #4b8deb 1px solid;
+     padding: 25px 60px;
+     text-decoration: none;
+ }
+section.quick-link a>p{
+    width: 170px;
+    padding-top: 12px;
+    margin-top: 0px;
+}
+section.quick-link a>p>span{
+    font-size: 24px;
+    line-height: 34px;
+ }
+section.quick-link a:last-child{
+    border-right:#2b52b1 1px solid;
+}
+section.quick-link a img{
+    margin-bottom: 10px;
+    float: left;
+    width: 75px;
+    margin-right: 10px
+}
+section.quick-link a:hover{
+    color:#fff;
+    background:#2b52b1;
+}
+section.statistics{
+    padding: 45px 0;
+}
+section.statistics .container, section.experts .container{
+    width: 1230px;
+    overflow: auto;
+}
+section.statistics .container>div{
+    width: 25%;
+    float: left;
+    padding: 0 15px;
+}
+section.statistics .container>div div{
+    background: #3374d5;;
+    color: #fff;
+    text-align: center;
+    padding: 40px;
+}
+section.statistics .container>div div:hover{
+    background: #024fb7;
+}
+section.statistics .container h5{
+    font-size: 24px;
+    font-weight: normal;
+}
+section.experts{
+    /*background: #d0e8fe;*/
+    /*padding: 45px 0;*/
+    padding: 45px 0 20px 0;
+
+}
+section.experts h3 {
+    color: #000;
+    text-align: center;
+    font-size: 24px;
+    font-weight: normal;
+    /*margin-top: -10px;*/
+    margin-bottom: 15px;
+}
+section.experts h5 {
+     text-align: center;
+     font-size: 16px;
+     font-weight: normal;
+     margin-bottom: 15px;
+     margin-top: -5px;
+ }
+section.experts h5 a:hover {
+    color: #3374d5;
+    text-decoration: none;
+}
+section.experts .expert{
+    padding: 15px;
+    width: 25%;
+    float: left;
+}
+section.experts .expert>div{
+    padding: 20px;
+    border-radius: 6px;
+    color: #cfedff;
+    background: #52b4f3;
+    height: 272px;
+    /*
+    border: #73b6f4 1px solid;
+    padding: 15px;
+    color:#bcdfff;
+    background: rgba(81, 169, 232, .2)
+    */
+}
+section.experts .expert>div a{
+    color:#fff;
+}
+section.experts .expert>div a:hover{
+    color:#fff;
+    font-weight: bold;
+}
+section.experts .expert>div div{
+    overflow: auto;
+    border-bottom: #a8d6f2 1px solid;
+    padding-bottom: 5px;
+    margin-bottom: 16px;
+}
+section.experts .expert img{
+    float: left;
+    margin-right: 10px;
+}
+section.experts .expert h4{
+    font-size: 20px;
+    padding-top: 20px;
+}
+section.experts .expert p{
+    line-height: 28px;
+}
+#paperTopDiv a:hover{
+    color: #0c57c7;
+    font-weight:bold;
+}
+#paperTopDiv p{
+    line-height: 22px;
+}
+#orgTopDiv a:hover{
+    color: #0c57c7;
+    font-weight:bold;
+}

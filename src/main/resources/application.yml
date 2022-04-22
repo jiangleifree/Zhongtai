@@ -1,0 +1,9 @@
+spring:  
+  profiles:  
+    active: dev
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1024MB
+server:
+  context-path: /

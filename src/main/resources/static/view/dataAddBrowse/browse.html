@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>虚拟目录</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/css/jquery.json-viewer.css">
+    <script src="/js/jquery.json-viewer.js"></script>
+
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/dtree.css">
+    <!--    <script type="text/javascript" src="/admin/layui_ext/dtree/dtree.js"></script>-->
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/font/dtreefont.css">
+    <style>
+
+        .scrollStyle::-webkit-scrollbar{
+            width:10px;
+            height:2px;
+            /**/
+        }
+        .scrollStyle::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb{
+            background: #fff;
+            /*background: #cfd9e3;*/
+            border-radius:10px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb:hover{
+            background: #cfd9e3;
+        }
+        .scrollStyle::-webkit-scrollbar-corner{
+            background: #fff;
+        }.scrollStyle::-webkit-scrollbar-track{
+             background: #fff;
+         }
+    </style>
+    <style>
+        #demoTree{
+            width: 650px!important;
+        }
+    </style>
+</head>
+<body style="background: #f0f0f0;">
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12" style="background: #f0f0f0;display: flex;flex-direction: column;align-items: center">
+            <div style="height: 40px;width: 670px;display: flex;align-items: center">
+                <input id="searchInput" style="width: 70%;height: 26px" type="text" placeholder="请输入关键字">
+                <button id="searchButton" style="margin-left: 4px" class="layui-btn"  delete_all="">搜索</button>
+            </div>
+            <div style="height: 395px;width: 670px;border: 1px solid #000000;background: #fff;overflow-y: scroll">
+<!--                <div style="height: "></div>-->
+                <ul  id="demoTree" class="dtree" data-id="0"></ul>
+            </div>
+            <div style="display: flex;justify-content: flex-end;margin-top: 10px;width: 650px">
+                <button style="width: 120px;margin-right: 10px" id="buttonAdd" type="button" class="layui-btn layui-btn-primary">确定</button>
+                <button style="width: 120px;" id="buttonCancal" type="button" class="layui-btn layui-btn-primary">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<script>layui.use(['form', 'layer', 'element'],
+    function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+
+    });</script>
+
+<script>
+
+</script>
+<script>
+    let MappingList;
+    let browseId = ''
+    let browseName = ''
+    let tableName = ''
+    //注意：parent 是 JS 自带的全局对象，可用于操作父页面
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+
+    //给父页面传值
+    $('#buttonAdd').on('click', function(){
+        console.log(MappingList);
+        for(var i=0;i<MappingList.length;i++){
+            if(browseId == MappingList[i].id){
+                tableName =  MappingList[i].tableName;
+                break;
+            }
+        }
+        parent.$('#browseInput').val(browseName);
+        parent.$('#parentName').val(browseName);
+        parent.$('#parentId').val(browseId);
+        parent.$('#tableName').val(tableName);
+
+        // parent.layer.tips(browseId, '#jdbcBrowseInput', {time: 5000});
+        parent.layer.close(index);
+    });
+    //关闭iframe
+    $('#buttonCancal').click(function(){
+        parent.layer.close(index);
+    });
+    $(document).ready(function (){
+
+
+        function treeDataConversion(data){
+            let cloneData = JSON.parse(JSON.stringify(data))    // 对源数据深度克隆
+            let tree = cloneData.filter((father)=>{              //循环所有项
+                let branchArr = cloneData.filter((child)=>{
+                    return father.id == child.parentId      //返回每一项的子级数组
+                });
+                if(branchArr.length>0){
+                    father.children = branchArr;    //如果存在子级，则给父级添加一个children属性，并赋值
+                }
+                return father.parentId==0;      //返回第一层
+            });
+            return tree     //返回树形数据
+        }
+
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "/dataMapping/getDataMappingList",
+            data: '',
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            success: function (resData) {
+                MappingList = resData.data
+                leftArr = resData.data
+                leftArr.forEach((item,index)=>{
+                    item.title = item.name
+                })
+              //  leftArr = leftArr.filter((item)=> item.type ==0)
+
+                // console.log(JSON.stringify(leftArr))
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+            }
+        });
+
+
+        let newData = treeDataConversion(leftArr)
+        let demoTree = newData
+        // let demoTree =
+        //     [
+        //     {"id":"001","title": "湖南省","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-weibiaoti5","parentId": "0",children:[
+        //             {"id":"001001","title": "长沙市","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-weibiaoti5","parentId": "001"},
+        //             {"id":"001002","title": "株洲市","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-weibiaoti5","parentId": "001"},
+        //             {"id":"001003","title": "湘潭市","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-weibiaoti5","parentId": "001"},
+        //             {"id":"001004","title": "衡阳市","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-normal-file", "parentId": "001"},
+        //             {"id":"001005","title": "郴州市","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-normal-file","parentId": "001"}
+        //         ]},
+        //     {"id":"001002","title": "湖北省","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-weibiaoti5","parentId": "001"},
+        //     {"id":"001003","title": "广东省","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-weibiaoti5","parentId": "001"},
+        //     {"id":"001004","title": "浙江省","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-normal-file", "parentId": "001"},
+        //     {"id":"001005","title": "福建省","ficonClass": "dtree-icon-jia","iconClass": "dtree-icon-normal-file","parentId": "001"}
+        //
+        // ]
+        layui.extend({
+            dtree: '{/}../virtivalList/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['dtree','layer','jquery'], function(){
+            var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery;
+
+            // 初始化树
+            var DTree = dtree.render({
+                elem: "#demoTree",
+                toolbar:true,
+                data: demoTree, // 使用data加载
+                icon: ["0","7"],
+                ficon: ['1','-1'] , // 隐藏一级图标
+                // skin: "layui"
+                // url: "http://localhost:666/dataMapping/getDataMappingList" // 使用url加载（可与data加载同时存在）
+                // type: "all",
+                // url:"/testdata",//url
+                // method:"POST",
+                // request: {"type":"0"},//传递参数
+                // initLevel: "1",
+                // icon:'2',
+                // firstIconArraylayui:"0",
+                // checkbar: true,
+                // checkbarType: "no-all",//显示半选中状态
+                // success:function (data) {
+                // },
+                toolbarFun: {
+                    addTreeNode: function(treeNode, $div){
+                        $.ajax({
+                            type: "post",
+                            data: treeNode,
+                            url: "/dataMapping/insert",
+                            dataType:"json",
+                            success: function(result){
+                                if(result.code == 200){
+                                    console.info(result);
+                                    console.log('新建成功：')
+                                    console.log(JSON.stringify(result))
+                                    layer.msg(result.msg);
+                                    let newname = result.data.name
+                                    $.ajax({
+                                        type: "post",
+                                        async: false,
+                                        url: "/dataMapping/getDataMappingList",
+                                        data: '',
+                                        dataType: 'json',
+                                        contentType: 'text/plain;charset=UTF-8',
+                                        success: function (resData) {
+                                            if(resData.code == 200){
+                                                let data  = resData.data
+                                                data = data.filter((item)=> item.name == newname)
+                                                let refreshData = data[0]
+                                                refreshData.title = refreshData.name
+                                                DTree.changeTreeNodeAdd(refreshData); // 添加成功，返回一个JSON对象
+                                                DTree.changeTreeNodeAdd("refresh"); // 添加成功，局部刷新树
+                                            }else{
+                                                layer.alert(resData.msg?resData.msg:'返回错误！', {icon: 2});
+                                            }
+
+                                        },
+                                        error: function (request) {//请求失败之后的操作
+                                            layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                                        }
+                                    });
+
+
+                                    // DTree.changeTreeNodeAdd(treeNode.nodeId); // 添加成功，返回ID
+                                    // DTree.changeTreeNodeAdd(true); // 添加成功
+                                    // DTree.changeTreeNodeAdd(result.data); // 添加成功，返回一个JSON对象
+                                    // DTree.changeTreeNodeAdd("refresh"); // 添加成功，局部刷新树
+                                }else{
+                                    layer.msg(result.msg);
+                                }
+
+                            },
+                            error: function(){
+                                //DTree1.changeTreeNodeAdd(false); // 添加失败
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+                    },
+                    editTreeNode: function(treeNode, $div){
+                        $.ajax({
+                            type: "post",
+                            data: treeNode,
+                            url: "/dataMapping/update",
+                            dataType:"json",
+                            success: function(result){
+                                if(result.code===200){
+                                    layer.alert(result.data,{icon: 6});
+                                    DTree.changeTreeNodeEdit(true);// 修改成功
+                                    DTree.changeTreeNodeEdit(treeNode.context); // 修改成功，返回一个JSON对象
+                                }else{
+                                    layer.alert(result.errMsg, {icon: 2});
+                                }
+                            },
+                            error: function(){
+                                DTree.changeTreeNodeEdit(false);//修改失败
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+                    },
+                    delTreeNode: function(treeNode, $div){
+                        $.ajax({
+                            type: "post",
+                            data:{"id":treeNode.nodeId},
+                            url: "/dataMapping/deleteById",
+                            dataType:"json",
+                            success: function(result){
+                                if(result.code===200){
+                                    layer.alert(result.data,{icon: 6});
+                                    DTree.changeTreeNodeDel(true); // 删除成功
+                                }else{
+                                    layer.alert(result.errMsg, {icon: 2});
+                                }
+                            },
+                            error: function(){
+                                DTree.changeTreeNodeDel(false);// 删除失败
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+                    }
+
+                },
+                toolbarBtn:[
+                    [
+                    /*    {"label":"下拉框","name":"type","type":"select","optionsData":function(){
+                                return {"0":"文件夹","1":"文件"};
+                            }},*/
+                        {"value":"重置","name":"name6","type":"reset"},
+                        {"value":"提交","name":"name7","type":"submit","defElem":"btn"},
+                    ] // 这就是自定义新增中的内容
+                ]
+            });
+
+            // 绑定节点点击
+            dtree.on("node('demoTree')" ,function(obj){
+                 console.log(JSON.stringify(obj))
+
+                // layer.msg(JSON.stringify(obj));
+                // layer.msg(JSON.stringify(obj.param));
+                browseId = obj.param.nodeId
+                console.log(JSON.stringify(obj.param))
+                browseName = obj.param.context
+                // getMenuList(id)
+
+            });
+
+            $('#searchButton').on('click',function () {
+                let params = $('#searchInput').val()
+                console.log(params)
+                let data = {
+                    'name':params
+                }
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: `/dataMapping/getDataMappingList?name=${params}`,
+                    // data: data,
+                    dataType: 'json',
+                    contentType: 'text/plain;charset=UTF-8',
+                    success: function (resData) {
+                        // MappingList = resData.data
+                        leftArr = resData.data
+                        leftArr.forEach((item,index)=>{
+                            item.title = item.name
+                            if(params != ''){
+                                item.parentId = 1
+                            }
+                        })
+                        // leftArr = leftArr.filter((item)=> item.type ==0)
+
+                        // console.log(JSON.stringify(leftArr))
+                    },
+                    error: function (request) {//请求失败之后的操作
+                        layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    }
+                });
+                let name =  {"id":1,"name":"主节点","tableName":"","parentId":0,"orderNum":1,"createTime":"2020-02-13 00:24:17","status":"0","updateTime":"2020-02-26 17:03:32","remarks":"备注","type":0,"modelId":null,"iconClass":"dtree-icon-weibiaoti5","ficonClass":"dtree-icon-jia","title":"主节点",}
+                if(params != ''){
+                    leftArr.push(name)
+                }
+                let newData = treeDataConversion(leftArr)
+                let demoTree = newData
+                // 初始化树
+                let DTree = dtree.render({
+                    elem: "#demoTree",
+                    toolbar:true,
+                    data: demoTree, // 使用data加载
+                    icon: ["0","0"],
+                    ficon: ['1','-1'] , // 隐藏一级图标
+                    // skin: "layui"
+                    // url: "http://localhost:666/dataMapping/getDataMappingList" // 使用url加载（可与data加载同时存在）
+                    // type: "all",
+                    // url:"/testdata",//url
+                    // method:"POST",
+                    // request: {"type":"0"},//传递参数
+                    // initLevel: "1",
+                    // icon:'2',
+                    // firstIconArraylayui:"0",
+                    // checkbar: true,
+                    // checkbarType: "no-all",//显示半选中状态
+                    // success:function (data) {
+                    // },
+                    toolbarFun: {
+                        addTreeNode: function(treeNode, $div){
+                            $.ajax({
+                                type: "post",
+                                data: treeNode,
+                                url: "/dataMapping/insert",
+                                dataType:"json",
+                                success: function(result){
+                                    if(result.code===200){
+                                        layer.alert(result.msg,{icon: 6});
+                                        let newname = result.data.name
+                                        $.ajax({
+                                            type: "post",
+                                            async: false,
+                                            url: "/dataMapping/getDataMappingList",
+                                            data: '',
+                                            dataType: 'json',
+                                            contentType: 'text/plain;charset=UTF-8',
+                                            success: function (resData) {
+                                                let data = resData.data
+                                                data = data.filter((item) => item.name == newname)
+                                                let refreshData = data[0]
+                                                refreshData.title = refreshData.name
+                                                DTree.changeTreeNodeAdd(refreshData); // 添加成功，返回一个JSON对象
+                                                DTree.changeTreeNodeAdd("refresh"); // 添加成功，局部刷新树
+                                            },
+                                        })
+
+                                        // DTree.changeTreeNodeAdd(treeNode.nodeId); // 添加成功，返回ID
+                                        // DTree.changeTreeNodeAdd(true); // 添加成功
+                                        // DTree.changeTreeNodeAdd(result.data); // 添加成功，返回一个JSON对象
+                                        // DTree.changeTreeNodeAdd("refresh"); // 添加成功，局部刷新树
+                                    }else{
+                                        layer.alert(result.msg, {icon: 2});
+                                    }
+                                },
+                                error: function(){
+                                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                                    //DTree1.changeTreeNodeAdd(false); // 添加失败
+                                }
+                            });
+                        },
+                        editTreeNode: function(treeNode, $div){
+                            $.ajax({
+                                type: "post",
+                                data: treeNode,
+                                url: "/dataMapping/update",
+                                dataType:"json",
+                                success: function(result){
+                                    if(result.code===200){
+                                        layer.alert(result.data,{icon: 6});
+                                        DTree.changeTreeNodeEdit(true);// 修改成功
+                                        DTree.changeTreeNodeEdit(treeNode.context); // 修改成功，返回一个JSON对象
+                                    }else{
+                                        layer.alert(result.errMsg, {icon: 2});
+                                    }
+                                },
+                                error: function(){
+                                    DTree.changeTreeNodeEdit(false);//修改失败
+                                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                                }
+                            });
+                        },
+                        delTreeNode: function(treeNode, $div){
+                            $.ajax({
+                                type: "post",
+                                data:{"id":treeNode.nodeId},
+                                url: "/dataMapping/deleteById",
+                                dataType:"json",
+                                success: function(result){
+                                    if(result.code===200){
+                                        layer.alert(result.data,{icon: 6});
+                                        DTree.changeTreeNodeDel(true); // 删除成功
+                                    }else{
+                                        layer.alert(result.errMsg, {icon: 2});
+                                    }
+                                },
+                                error: function(){
+                                    DTree.changeTreeNodeDel(false);// 删除失败
+                                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                                }
+                            });
+                        }
+                    },
+                    toolbarBtn:[
+                        [
+                           /* {"label":"下拉框","name":"type","type":"select","optionsData":function(){
+                                    return {"0":"文件夹","1":"文件"};
+                                }},*/
+                            {"value":"重置","name":"name6","type":"reset"},
+                            {"value":"提交","name":"name7","type":"submit","defElem":"btn"},
+                        ] // 这就是自定义新增中的内容
+                    ]
+                });
+
+                // 绑定节点点击
+                dtree.on("node('demoTree')" ,function(obj){
+                    console.log(JSON.stringify(obj))
+
+                    // layer.msg(JSON.stringify(obj));
+                    // layer.msg(JSON.stringify(obj.param));
+                    browseId = obj.param.nodeId
+                    console.log(JSON.stringify(obj.param))
+                    browseName = obj.param.context
+                });
+
+
+                // });
+            })
+
+
+        });
+    })
+
+</script>
+</body>
+
+
+</html>

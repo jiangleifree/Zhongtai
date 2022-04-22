@@ -1,0 +1,338 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.container_box{
+    padding: 20px;
+}
+.flow1,.flow2,.flow3,.flow4,.flow5{
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+.flow2,.flow3,.flow5,.flow4{
+    display: none;
+}
+.flow1{
+    display: block;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header_left{
+    width: 400px;
+    line-height: 40px;
+    padding-left: 10px;
+    font-size: 20px;
+}
+.header_right{
+    width: 200px;
+    display: flex;
+}
+.header_right span{
+    display: inline-block;
+    margin-right: 30px;
+    color: #fff;
+    cursor: pointer;
+}
+.main{
+    border: 1px solid #ddd;
+    display: flex;
+}
+.main_left{
+    width: 30%;
+    border: 1px solid #ddd;
+    margin: 15px;
+}
+.main_right{
+    width: 68%;
+    margin: 15px;
+    margin-left: 2%;
+    border: 1px solid #ddd;
+
+}
+.tablelist h2{
+      text-align: center;
+     line-height: 30px;
+    margin: 10px 0;
+}
+.tablelist ul li{
+    line-height: 30px;
+    margin: 5px 0;
+    margin-left: 10px;
+}
+.prev,.next,.submit{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:3px 10px;
+    background: #20bcad;
+    cursor: pointer;
+}
+.nature{
+    border: 1px solid #ddd;
+   display: flex;
+    padding: 20px;
+}
+.nature_left{
+    width: 68%;
+    margin-right: 2%;
+    border: 1px solid #ddd;
+    height:600px;
+
+}
+.nature_right{
+    width: 30%;
+    border: 1px solid #ddd;
+}
+.nature_right .top{
+    height: 40px;
+    margin:10px;
+    margin-left: 20px;
+}
+.nature_right .top .add{
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.nature_right .module{
+    margin: 20px;
+}
+.nature_right .module p{
+    height: 40px;
+    line-height: 40px;
+    margin: 5px 0;
+}
+.nature_result{
+    display: flex;
+}
+.results{
+    width: 177px;
+    border: 1px solid #ddd;
+    height: 160px;
+    margin-left: 26px;
+}
+.user-oper{
+    display: none;
+
+}
+#dtree_toolbar_demoTree{
+    /*left: 164px !important;*/
+    /*top: 359.6px!important;*/
+}
+.create{
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.create span{
+    display: block;
+    padding: 5px 8px;
+    color: #fff;
+    background: #00B83F;
+    border-radius: 5px;
+}
+.module .results{
+    overflow-y:auto ;
+}
+.module .results p{
+    line-height: 30px;
+    height: auto;
+    font-size: 12px;
+    margin: 3px 5px;
+}
+.restrain{
+    border: 1px solid #ddd;
+    display: flex;
+    padding: 10px;
+}
+.restrain_left{
+    width: 30%;
+    border: 1px solid #ddd;
+}
+.restrain_left>p{
+    line-height: 40px;
+    text-align: center;
+    margin-top: 10px;
+}
+.restrain_left p span{
+    margin: auto;
+    padding: 8px 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.restrain_right{
+    width: 68%;
+    margin-left: 2%;
+    border: 1px solid #ddd;
+}
+.restrain_left .lunbo{
+    margin: 20px;
+    border: 1px solid #ddd;
+    /*height: 400px;*/
+    padding-bottom: 30px;
+}
+.restrain_right p span{
+    margin: auto;
+    padding: 8px 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.restrain_right .top span{
+    margin: auto;
+    padding: 8px 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.restrain_right p,.restrain_right .top{
+    line-height: 40px;
+    text-align: center;
+    margin-top: 10px;
+}
+.restrain_right p{
+    margin-top: 20px;
+}
+.menu{
+    margin: 20px;
+    display: flex;
+}
+.operator{
+    width: 30%;
+    border: 1px solid #ddd;
+}
+.operator span{
+    display: block;
+    width: 80%;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    padding: 0 !important;
+}
+.operator ul{
+    width: 80%;
+    /*margin:auto;*/
+    border: 1px solid #ddd;
+    margin: 40px auto;
+;
+}
+.operator ul li{
+    width: 80%;
+
+    border: 1px solid #ddd;
+    margin: 10px auto;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    /*margin: auto;*/
+}
+.choose{
+    width: 68%;
+    margin-left: 2%;
+    border: 1px solid #ddd;
+}
+.layui-carousel p{
+    line-height: 30px;
+    margin-left: 20px;
+}
+.foot-confim{
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.foot-confim span{
+    padding: 8px 30px;
+    color: #fff;
+    background:#20bcad;
+    border-radius: 8px;
+}
+.everyitem{
+    width: 268px;
+}
+.everyitem p{
+
+    line-height: 22px;
+}
+.table-list{
+    border: 1px solid #ddd;
+
+    width: 100%;
+}
+.table-list ul li{
+    /*float: left;*/
+    height: 30px;
+    line-height:30px ;
+    width: 15%;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.table-list ul{
+    border-bottom: 1px solid #ddd;
+    /*height: 30px;*/
+    display: flex;
+}
+
+.table-list ul li:last-child,.table-list ul li:nth-child(5){
+    width:20%;
+
+}
+.table-list ul li:last-child{
+    border-right: none;
+}
+
+.table-list li{
+    border-right: 1px solid #ddd;
+}
+.table-list li input[type="text"]{
+    width:100%;
+    height: 30px;
+    border: none;
+}
+.preview{
+    display: flex;
+    border: 1px solid #ddd;
+}
+.preview_left,.preview_center,.preview_right{
+    width: 30%;
+    margin: 10px;
+    margin-right: 3%;
+    border: 1px solid #ddd;
+
+}
+.table_info{
+    margin: 20px;
+    border: 1px solid #ddd;
+}
+.table_info>p{
+    height: 40px;
+    line-height: 40px;
+    padding-left: 15px;
+    border-bottom: 1px solid #ddd;
+}
+.table_info ul{
+    display: flex;
+    border-bottom: 1px solid #ddd;
+}
+.table_info ul li{
+    width: 15%;
+    border-right: 1px solid #ddd;
+    text-align: center;
+    /*overflow: hidden;*/
+}
+.table_info ul li:last-child{
+    width: 40%;
+    border-right: none;
+}
+#addtabellist, #addchooses,#addconsults{
+    padding: 8px;
+    display: block;
+    color: blue;
+    cursor: pointer;
+}

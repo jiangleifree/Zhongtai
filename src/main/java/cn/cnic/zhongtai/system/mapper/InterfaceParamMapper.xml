@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.InterfaceParamMapper" >
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.InterfaceParam" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="BIGINT" />
+        <result column="consumes" property="consumes" jdbcType="VARCHAR" />
+        <result column="produces" property="produces" jdbcType="VARCHAR" />
+        <result column="topic_name" property="topicName" jdbcType="VARCHAR" />
+        <result column="parametersJsonStr" property="parametersJsonStr" jdbcType="VARCHAR" />
+        <result column="responsesJsonStr" property="responsesJsonStr" jdbcType="VARCHAR" />
+        <result column="belong" property="belong" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="summary" property="summary" jdbcType="VARCHAR" />
+        <result column="sql_str" property="sql" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="mapStorage_url" property="mapStorageUrl" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getList" resultMap="BaseResultMap">
+        select * from interface
+    </select>
+
+    <select id="getListByTopicName" resultMap="BaseResultMap">
+        select * from interface where topic_name = #{topicName}
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select * from interface where id = #{id}
+    </select>
+
+    <select id="getByUrl" resultMap="BaseResultMap">
+        select * from interface where url = #{url}
+    </select>
+
+    <select id="getByDate" resultMap="BaseResultMap">
+        select * from interface where create_date = #{createDate} and url = #{url}
+    </select>
+
+    <insert id="insert" keyProperty="id" keyColumn="id" useGeneratedKeys="true" >
+        insert into interface(url, type, consumes,produces, topic_name, parametersJsonStr, responsesJsonStr,
+        belong, title, summary, sql_str, create_date,mapStorage_url)
+        values
+        (#{url},#{type},#{consumes},#{produces},#{topicName},#{parametersJsonStr},#{responsesJsonStr},
+        #{belong},#{title},#{summary},#{sql},#{createDate},#{mapStorageUrl})
+    </insert>
+
+</mapper>

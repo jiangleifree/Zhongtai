@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link type="text/css" href="/css/select2.css" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <script type="text/javascript" src="/js/select2.js"></script>
+    <script type="text/javascript" src="/js/select2_locale_zh-CN.js"></script>
+    <script>
+        let xmSelected = []
+    </script>
+    <script type="text/javascript" src="/javascripts/data-import.js"></script>
+    <script type="text/javascript" src="../js/xm-select.js"></script>
+    <style>
+        .layui-form-label{
+            width: 120px !important;
+        }.layui-input-inline-new{
+            /*width: 900px ;*/
+            width: 900px !important;
+        }
+    </style>
+</head>
+
+<body>
+ <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <div style="width: 100%;display: flex;justify-content: left">
+                        <div style="width:1200px">
+                            <div class="layui-btn-container" style="">
+                                <button class="layui-btn layui-btn-sm" onclick="window.history.go(-1)">返回上一级</button>
+                            </div>
+                            <form class="layui-form layui-col-space5" id="dataFtpFrom">
+                                <div class="layui-col-md12" >
+                                    <div class="layui-card"  style="">
+                                        <div class="layui-card-body ">
+
+                                            <div class="layui-form-item">
+                                                <label for="dataType" class="layui-form-label">
+                                                    <span class="x-red">*</span>收割方式</label>
+                                                <div class="layui-input-inline layui-input-inline-new" style="width: 300px">
+                                                    <select id="dataImportType" lay-filter="dataImportType" class="valid">
+                                                        <option value="FTP">FTP</option>
+                                                        <option value="HTTP">HTTP</option>
+                                                        <option value="JDBC">JDBC</option>
+                                                        <option value="NEO4J">NEO4J</option><!--                                                <option value="mySQL">SQL</option>-->
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-form-item">
+                                                <label for="ip" class="layui-form-label">
+                                                    <span class="x-red">*</span>收割名称</label>
+                                                <div class="layui-input-inline layui-input-inline-new">
+                                                    <input data-id="" type="text"   name="modelTypeName" required="" lay-verify="required" id="modelTypeName"
+                                                           autocomplete="off"
+                                                           class="layui-input"></div>
+                                                <!--                                        <div class="layui-form-mid layui-word-aux">-->
+                                                <!--                                            <span class="x-red">*</span>收割介绍-->
+                                                <!--                                        </div>-->
+                                            </div>
+
+
+
+
+                                            <div class="layui-form-item"   >
+                                                <label for="password" class="layui-form-label">
+                                                    <span class="x-red">*</span>虚拟目录</label>
+                                                <div class="layui-input-inline layui-input-inline-new">
+                                                    <input type="text" id="browseInput"   required="" autocomplete="off" placeholder="--请选择目录--"
+                                                           class="layui-input" value=""    >
+                                                    <input type="hidden" id="parentId" name="dataMappingId"   >
+                                                    <input type="hidden" id="parentName" name="dataMappingName"   >
+                                                </div>
+                                                <button id="browse" data-method="offset2" data-type="auto" class="layui-btn">浏览</button>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <hr>-->
+
+
+
+
+                                <div id="ftpType"  ><!--ftp开始-->
+                                    <div class="layui-form-item">
+                                        <label for="ip" class="layui-form-label">
+                                            <span class="x-red">*</span>IP地址</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <input type="text" id="ip" name="ip" required="" lay-verify="required"
+                                                   autocomplete="off"
+                                                   class="layui-input"></div>
+                                        <div class="layui-form-mid layui-word-aux">
+                                            <span class="x-red">*</span>服务器地址
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label for="port" class="layui-form-label">
+                                            <span class="x-red">*</span>端口</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <input type="text" id="port" name="port" required="" value="22"
+                                                   lay-verify="required"
+                                                   autocomplete="off" class="layui-input"></div>
+                                        <div class="layui-form-mid layui-word-aux">
+                                            <span class="x-red">*</span>端口号默认为22
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label for="username" class="layui-form-label">
+                                            <span class="x-red">*</span>用户名</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <input type="text" id="username" name="username" required="" lay-verify="required"
+                                                   autocomplete="off" class="layui-input"></div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label for="password" class="layui-form-label">
+                                            <span class="x-red">*</span>密码</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <input type="password" id="password" name="password" required="" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label for="path" class="layui-form-label">
+                                            <span class="x-red">*</span>路径</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <input type="text" id="path" name="path" required="" lay-verify="required"
+                                                   autocomplete="off"
+                                                   class="layui-input"></div>
+                                        <div class="layui-form-mid layui-word-aux">
+                                            <span class="x-red">*</span>填写目录地址或者目录下的某个文件
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label for="dataType" class="layui-form-label">
+                                            <span class="x-red">*</span>数据类型</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <select id="dataType" name="dataType" class="valid">
+                                                <option value="json">JSON</option>
+                                                <option value="csv">CSV</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label for="dataType" class="layui-form-label">
+                                            <span class="x-red">*</span>数据处理方式</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <select  name="processingMode" class="valid">
+                                                <option value="append" >增量</option>
+                                                <option value="cover">覆盖</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="layui-form-item">
+                                        <label for="username" class="layui-form-label">
+                                            <span class="x-red">*</span>目标数据表</label>
+                                        <div class="layui-input-inline layui-input-inline-new">
+                                            <input id="modelTypeId" name="tableId" style="width: 100%;" required="true">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item" style="text-align: right">
+                                        <button  class="layui-btn"  onclick="dataAddToFtp()" type='button'>开始收割</button>
+                                    </div>
+                                </div> <!--ftp结束-->
+                            </form>
+                            <!--                        jdbc-->
+                            <div id="jdbcType" style="display: none" >
+                                <!--                            <div class="layui-form-item">-->
+                                <!--                                <label for="password" class="layui-form-label"><span class="x-red">*</span>导入类型</label>-->
+                                <!--                                <div class="layui-input-inline" id="IsPurchased">-->
+                                <!--                                    <input type="radio" name="sex" value="coverage" title="全量覆盖" checked="">-->
+                                <!--                                    <input type="radio" name="sex" value="append" title="追加">-->
+                                <!--                                </div>-->
+
+                                <!--                            </div>-->
+                                <div class="layui-form-item" style="display: flex;align-items: center">
+                                    <label for="ip" class="layui-form-label">
+                                        <span class="x-red">*</span>jdbcUrl</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <input type="text" id="jdbcText" name="ip" required="" lay-verify="required"
+                                               autocomplete="off" value=""
+                                               class="layui-input">
+                                    </div>
+                                    <i class="layui-icon layui-icon-about" onmouseenter="show_shopm(this,'支持的类型：MySQL,Oracle,SQLServer,PostgreSQL')" onmouseleave="hide_shopm()"
+                                       style="font-size: 20px;cursor:pointer;"></i>
+                                </div>
+
+
+                                <div class="layui-form-item">
+                                    <label for="password" class="layui-form-label">
+                                        <span class="x-red">*</span>用户名</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <input type="text" id="jdbcuserName" name="password" required="" autocomplete="off"
+                                               class="layui-input" value="">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label for="password" class="layui-form-label">
+                                        <span class="x-red">*</span>密码</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <input type="password" id="jdbcpassword" name="password" required="" autocomplete="off"
+                                               class="layui-input" value="">
+                                    </div>
+                                    <button id="getJDBCButton" class="layui-btn" onclick="getTableList()" type='button'>获取表列表</button>
+                                </div>
+
+
+                                <div class="layui-form-item"  id="xmSelect" style="display: none">
+                                    <label for="password" class="layui-form-label">
+                                        <span class="x-red">*</span>要导入的表</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <div  data-name="" id="demo1" class="xm-select-demo"></div>
+                                    </div>
+                                </div>
+<!--                                <div class="layui-form-item" id="jdbcTagDiv" style="display: none">-->
+<!--                                    <label for="password" class="layui-form-label">-->
+<!--                                        <span class="x-red">*</span>tag</label>-->
+<!--                                    <div class="layui-input-inline">-->
+<!--                                        <input type="text" id="jdbcTagInput" name="password" required="" autocomplete="off"-->
+<!--                                               class="layui-input" value="">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="layui-form-item" style="text-align: right">
+                                    <button id="jdbcButton" class="layui-btn layui-btn-disabled" disabled onclick="dataAddToJDBC()" type='button' lay-event="forbidden">开始收割</button>
+                                </div>
+
+                            </div>
+
+                            <div id="neo4jType" style="display: none" >
+
+                                <div class="layui-form-item" style="display: flex;align-items: center">
+                                    <label for="ip" class="layui-form-label">
+                                        <span class="x-red">*</span>neo4jUrl</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <input type="text" id="neo4jText" name="ip" required="" lay-verify="required"
+                                               autocomplete="off" value=""
+                                               class="layui-input">
+                                    </div>
+
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <label for="password" class="layui-form-label">
+                                        <span class="x-red">*</span>用户名</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <input type="text" id="neo4juserName" name="password" required="" autocomplete="off"
+                                               class="layui-input" value="">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label for="password" class="layui-form-label">
+                                        <span class="x-red">*</span>密码</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <input type="password" id="neo4jpassword" name="password" required="" autocomplete="off"
+                                               class="layui-input" value="">
+                                    </div>
+                                    <button id="getneo4jButton" class="layui-btn" onclick="getneo4jTableList()" type='button'>连接</button>
+
+                                </div>
+
+<!--                                <div class="layui-form-item" id="neo4jTagDiv" style="display: none">-->
+<!--                                    <label for="password" class="layui-form-label">-->
+<!--                                        <span class="x-red">*</span>tag</label>-->
+<!--                                    <div class="layui-input-inline">-->
+<!--                                        <input type="text" id="neo4jTagInput" name="password" required="" autocomplete="off"-->
+<!--                                               class="layui-input" value="">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+                                <div class="layui-form-item"  id="xmSelectneo4j1" style="display: none">
+                                    <label for="password" class="layui-form-label">
+                                        <span class="x-red"></span>要导入的label表</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <div id="demo1neo4j" class="xm-select-demo"></div>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item"  id="xmSelectneo4j2" style="display: none">
+                                    <label for="password" class="layui-form-label">
+                                        <span class="x-red"></span>要导入的relation表</label>
+                                    <div class="layui-input-inline layui-input-inline-new">
+                                        <div id="demo2neo4j" class="xm-select-demo"></div>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item" style="text-align: right">
+                                    <button id="neo4jButton" class="layui-btn layui-btn-disabled" disabled onclick="dataAddToNEO4J()" type='button' lay-event="forbidden">开始收割</button>
+                                </div>
+
+                            </div>
+                            <div id="HttpType" style="display: none" >
+                                <div class="layui-row pt10 layui-form">
+                                    <div class="layui-form-item" style="padding-left: 160px;margin-top: 20px">
+                                        <div class="layui-form-select" first_box="">
+                                            <div class="layui-input-inline htp" style="width: 95px;margin-right:-10px;">
+                                                <select name="hts" id="hts" lay-verify="" style="width: 80px">
+                                                    <option value="http://">HTTP://</option>
+                                                    <option value="https://">HTTPS://</option>
+                                                </select>
+                                                <div class="layui-unselect layui-form-select">
+                                                    <div class="layui-select-title">
+                                                        <input type="text" placeholder="请选择" value="HTTP://" readonly="" class="layui-input layui-unselect">
+                                                        <i class="layui-edge"></i>
+                                                    </div>
+                                                    <dl class="layui-anim layui-anim-upbit">
+                                                        <dd lay-value="http://" class="layui-this">HTTP://</dd>
+                                                        <dd lay-value="https://" class="">HTTPS://</dd>
+                                                    </dl>
+                                                </div>
+                                            </div>
+                                            <div class="layui-input-inline w300 " style="width: 600px">
+                                                <input type="hidden" id="dataTitleParam">
+                                                <input type="text" id="url" required="" lay-verify="required" lay-vertype="tips" placeholder="请输入可以访问的地址 如：www.baidu.com"
+                                                       value="" autocomplete="off" class="layui-input url-input" style="border-left: none;"> </div>
+                                            <script id="show_box_template" type="text/html"> <dd class="layui-select-tips" id="all">本地请求历史记录<a href="javascript:void(0)" class="fr layui-btn layui-btn-sm layui-btn-danger">删除全部</a></dd> {{#layui.each(d,function(i,n){ }} <dd class="layui-select-tips layui-elip" id="{{n}}"><a href="javascript:void(0)" class="fr layui-btn layui-btn-sm layui-btn-danger">删除</a><b >{{n}}</b></dd> {{#})}} </script>
+<!--                                            <dl style="top: 37px; display: none;" show_box="">-->
+<!--                                                <dd class="layui-select-tips" id="all">本地请求历史记录-->
+<!--                                                    <a href="javascript:void(0)" class="fr layui-btn layui-btn-sm layui-btn-danger">删除全部</a>-->
+<!--                                                </dd>-->
+<!--                                            </dl>-->
+                                        </div>
+                                        <button class="layui-btn " httptest="" onclick="httpSubmit('test')">send</button>
+                                        <button class="layui-btn " httptest="" onclick=" getParamToDb()">调用入库</button>
+<!--                                        <div class="apend-txt layui-word-aux">请输入可以访问的网址</div>-->
+                                    </div>
+                                    <div class="layui-form-item" style="padding-left: 160px;display:flex;align-items: center">
+                                        <div class="layui-input-inline " style="width: 95px;">
+                                            <select id="type" name="type" lay-verify="">
+                                                <option value="Post">Post</option>
+                                                <option value="Get">Get</option>
+                                                <option value="Delete">Delete</option>
+                                                <option value="Put">Put</option>
+                                                <option value="Trace">Trace</option>
+                                                <option value="Head">Head</option>
+                                                <option value="Options">Options</option>
+                                            </select>
+                                            <div class="layui-unselect layui-form-select">
+                                                <div class="layui-select-title">
+                                                    <input type="text" placeholder="请选择" value="Post" readonly="" class="layui-input layui-unselect">
+                                                    <i class="layui-edge"></i>
+                                                </div>
+                                                <dl class="layui-anim layui-anim-upbit">
+                                                    <dd lay-value="Post" class="layui-this">Post</dd>
+                                                    <dd lay-value="Get" class="">Get</dd>
+                                                    <dd lay-value="Delete" class="">Delete</dd>
+                                                    <dd lay-value="Put" class="">Put</dd>
+                                                    <dd lay-value="Trace" class="">Trace</dd>
+                                                    <dd lay-value="Head" class="">Head</dd>
+                                                    <dd lay-value="Options" class="">Options</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                        <div class="layui-input-inline lot" style="width: 95px;">
+                                            <select name="charset" id="charset" lay-filter="charset">
+                                                <option value="UTF-8">UTF-8</option>
+                                                <option value="GBK">GBK</option>
+                                                <option value="GB2312">GB2312</option>
+                                                <option value="GB18030">GB18030</option>
+                                            </select>
+                                            <div class="layui-unselect layui-form-select">
+                                                <div class="layui-select-title">
+                                                    <input type="text" placeholder="请选择" value="UTF-8" readonly="" class="layui-input layui-unselect">
+                                                    <i class="layui-edge"></i>
+                                                </div>
+                                                <dl class="layui-anim layui-anim-upbit">
+                                                    <dd lay-value="UTF-8" class="layui-this">UTF-8</dd>
+                                                    <dd lay-value="GBK" class="">GBK</dd>
+                                                    <dd lay-value="GB2312" class="">GB2312</dd>
+                                                    <dd lay-value="GB18030" class="">GB18030</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline pl10" id="paramsBox"  style="width: 105px;display: inline-block;">
+                                            <input type="checkbox" lay-filter="checkBtn" id="params_box" checked="" title="参数设置">
+                                            <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="">
+                                                <span>参数设置</span>
+                                                <i class="layui-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline " id="headerBox" style="width: 95px;display: inline-block;">
+                                            <input type="checkbox" lay-filter="checkBtn" id="header_box"   title="Header">
+                                            <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="">
+                                                <span>Header</span>
+                                                <i class="layui-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline " id="cokkieBox" style="width: 95px;display: inline-block;">
+                                            <input type="checkbox" lay-filter="checkBtn" id="cookie_box" title="Cookie">
+                                            <div class="layui-unselect layui-form-checkbox" lay-skin="">
+                                                <span>Cookie</span>
+                                                <i class="layui-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline " id="proxyBox" style="width: 95px;display: inline-block;">
+                                            <input type="checkbox" lay-filter="checkBtn" id="proxy_box" title="代理设置">
+                                            <div class="layui-unselect layui-form-checkbox" lay-skin="">
+                                                <span>代理设置</span>
+                                                <i class="layui-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--//参数-->
+                                    <div class="layui-form-item " id="paramsFormItem" params_box="" style="display: block;padding-left: 160px;display:flex;align-items: center">
+                                        <div class="layui-tab" lay-filter="parms-tab" style="width: 100%">
+                                            <ul class="layui-tab-title">
+                                                <li class="layui-this" lay-id="tab_kv">
+                                                    <h4>参数设置</h4>
+                                                </li>
+                                                <li lay-id="tab_batch" class="">批量参数设置</li>
+                                                <li lay-id="tab_json" class="">JSON参数设置</li>
+                                            </ul>
+                                            <script type="text/html" id="parms_kv_template">
+                                                <div class="layui-row">
+                                                    <div class="layui-inline"><input type="text" parms_k=""
+                                                                                     placeholder="输入参数 key" value=''
+                                                                                     autocomplete="off"
+                                                                                     class="layui-input"></div>
+                                                    <div class="layui-inline onm-max300"><input type="text" parms_v=""
+                                                                                                placeholder="输入参数value，可为空"
+                                                                                                value=''
+                                                                                                autocomplete="off"
+                                                                                                class="layui-input">
+                                                    </div>
+                                                    <div class="layui-inline">
+                                                        <button class="layui-btn layui-btn-danger parameterDelete"
+                                                                del-k-v>删除
+                                                        </button>
+                                                    </div>
+                                                </div> </script>
+                                            <div class="layui-tab-content" style="border: 1px solid #e6e6e6;border-top-width: 0px;">
+                                                <div class="layui-tab-item layui-show">
+                                                    <div id="httpParameter">
+                                                        <div class="layui-row" style="" >
+                                                            <div class="layui-inline">
+                                                                <input type="text" parms_k="" placeholder="输入参数 key" value="" autocomplete="off"
+                                                                       class="layui-input"> </div>
+                                                            <div class="layui-inline onm-max300">
+                                                                <input type="text" parms_v="" placeholder="输入参数value，可为空" value="" autocomplete="off"
+                                                                       class="layui-input"> </div>
+                                                            <div class="layui-inline">
+                                                                <button  class="layui-btn layui-btn-danger parameterDelete" del-k-v="">删除</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="layui-row" parms_kv_template="" style="display: flex;align-items: center">
+                                                        <div class="layui-inline">
+                                                            <button class="layui-btn" id="add_parms_k_v">添加一行</button>
+                                                        </div>
+                                                        <div class="layui-inline" id="parameterDeleteAll" style="display: none">
+                                                            <button class="layui-btn layui-btn-danger" delete_all="">全部删除</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-tab-item">
+                                    <textarea id="batchParms" placeholder="批量参数添加，如：
+
+name=sojson&amp;domain=www.sojson.com
+
+或纯文本参数提交，如：QQ8446666" class="layui-textarea"></textarea></div>
+                                                <div class="layui-tab-item">
+                                    <textarea id="batchJson" placeholder="JSON 参数添加，如：
+
+{&quot;name&quot;:&quot;sojson&quot;,&quot;domain&quot;:&quot;www.sojson.com&quot;}" class="layui-textarea"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--header-->
+                                    <div class="layui-form-item" id="headerFormItem" header_box="" style="display: none;padding-left: 160px;/*display:flex;*/align-items: center">
+                                        <div class="layui-tab" style="width: 100%">
+                                            <ul class="layui-tab-title">
+                                                <li class="layui-this">
+                                                    <h4>Header 设置&nbsp;
+                                                        <small>/ 请求头设置</small>
+                                                    </h4>
+                                                </li>
+                                            </ul>
+                                            <div class="layui-tab-content" style="border: 1px solid #e6e6e6;border-top-width: 0px;">
+                                                <script type="text/html" id="header_kv_template"> <div class="layui-row" style="display: block"> <div class="layui-inline"> <input type="text" head_k="" placeholder="输入Header key" value="" autocomplete="off" class="layui-input"> </div> <div class="layui-inline onm-max400"> <input type="text" head_v="" placeholder="输入参数Header，可为空" value="" autocomplete="off" class="layui-input"> </div> <div class="layui-inline"> <button class="layui-btn layui-btn-danger headerDelete" del-k-v>删除</button> </div> </div> </script>
+                                                <div class="layui-tab-item layui-show">
+                                                    <div class="layui-row" nodelete="">
+                                                        <div class="layui-inline">
+                                                            <input type="text" head_k="" value="Content-Type" id="headerFirst" disabled="" class="layui-input"> </div>
+                                                        <div class="layui-inline layui-form w300">
+                                                            <select head_v="" id="contentType" lay-filter="contentType">
+                                                                <option value="application/json" v="application/json;charset=">application/json;charset=UTF-8</option>
+                                                                <option value="application/x-www-form-urlencoded"
+                                                                        v="application/x-www-form-urlencoded;charset=" selected="">application/x-www-form-urlencoded;charset=UTF-8</option>
+                                                            </select>
+                                                            <div class="layui-unselect layui-form-select">
+                                                                <div class="layui-select-title">
+                                                                    <input type="text" placeholder="请选择" value="application/x-www-form-urlencoded;charset=UTF-8"
+                                                                           readonly="" class="layui-input layui-unselect">
+                                                                    <i class="layui-edge"></i>
+                                                                </div>
+                                                                <dl class="layui-anim layui-anim-upbit">
+                                                                    <dd lay-value="application/json" class="">application/json;charset=UTF-8</dd>
+                                                                    <dd lay-value="application/x-www-form-urlencoded"
+                                                                        class="layui-this">application/x-www-form-urlencoded;charset=UTF-8</dd>
+                                                                </dl>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="httpHeader">
+                                                        <div class="layui-row" style="">
+                                                            <div class="layui-inline">
+                                                                <input type="text" head_k="" placeholder="输入Header key" value="" autocomplete="off"
+                                                                       class="layui-input"> </div>
+                                                            <div class="layui-inline onm-max400">
+                                                                <input type="text" head_v="" placeholder="输入参数Header，可为空" value="" autocomplete="off"
+                                                                       class="layui-input"> </div>
+                                                            <div class="layui-inline">
+                                                                <button class="layui-btn layui-btn-danger headerDelete" del-k-v="">删除</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="layui-row" header_kv_template="" style="display: flex;align-items: center">
+                                                        <div class="layui-inline">
+                                                            <button class="layui-btn" id="add_header_k_v">添加一行</button>
+                                                        </div>
+                                                        <div class="layui-inline" id="headerDeleteAll" style="display: none">
+                                                            <button class="layui-btn layui-btn-danger"  delete_all="">全部删除</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--// ip代理  设置cokkie-->
+                                    <div class="layui-form-item " id="proxyFormItem" style="display: none;padding-left: 160px;" proxy_box="">
+                                        <div class="layui-tab" style="width: 100%">
+                                            <ul class="layui-tab-title">
+                                                <li class="layui-this">
+                                                    <h4>IP代理设置</h4>
+                                                </li>
+                                            </ul>
+                                            <div class="layui-tab-content" style="border: 1px solid #e6e6e6;border-top-width: 0px;">
+                                                <div class="layui-tab-item layui-show">
+                                                    <div class="layui-inline">
+                                                        <input type="text" placeholder="输入代理IP" value="" id="proxy_ip" autocomplete="off" class="layui-input"> </div>
+                                                    <div class="layui-inline ">
+                                                        <input type="text" placeholder="输入代理端口" value="" id="proxy_port" autocomplete="off" class="layui-input"> </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item " id="cokkieFormItem" style="display: none;padding-left: 160px;" cookie_box="">
+                                        <div class="layui-tab" style="width: 100%">
+                                            <ul class="layui-tab-title">
+                                                <li class="layui-this">
+                                                    <h4>Cookie 设置</h4>
+                                                </li>
+                                            </ul>
+                                            <div class="layui-tab-content" style="border: 1px solid #e6e6e6;border-top-width: 0px;">
+                                                <div class="layui-tab-item layui-show">
+                                                    <textarea id="cookies" placeholder="添加Cookie，非必要" class="layui-textarea"></textarea> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item" style=";padding-left: 160px;display:flex;height: 500px">
+                                        <div class="layui-tab" lay-filter="result-tab" style="width: 100%">
+                                            <ul class="layui-tab-title">
+                                                <li class="layui-this" lay-id="headText">
+                                                    <h4>Header&nbsp;
+                                                        <small>请求头 / 返回头</small>
+                                                    </h4>
+                                                </li>
+                                                <li lay-id="responseText" class="">
+                                                    <h4>Response Text&nbsp;
+                                                        <small>返回值</small>
+                                                    </h4>
+                                                </li>
+                                                <li lay-id="responseTextOld" class="">
+                                                    <h4>Response Text&nbsp;
+                                                        <small>原始返回值</small>
+                                                        <small style="position: absolute;right: -95px;top: 15px;" id="timer"
+                                                               class="blue" disabled=""></small>
+                                                    </h4>
+                                                </li>
+                                            </ul>
+                                            <div class="layui-tab-content" style="border: 1px solid #e6e6e6;border-top-width: 0px;">
+                                                <div class="layui-tab-item layui-show">
+                                                    <div class="layui-row">
+                                                        <div class="layui-col-md6" style="padding: 0 5px">
+                                                            <div class="layui-inline w99 copyTips" style="width: 100%">
+                                                                <textarea style="height: 440px" id="requestHeader" placeholder="Request Header（请求头）" data-clipboard-target="#requestHeader"
+                                                                          click-type="copycode" class=" layui-textarea h300"></textarea> </div>
+                                                        </div>
+                                                        <div class="layui-col-md6" style="padding: 0 5px">
+                                                            <div class="layui-inline w99 copyTips" style="width: 100%">
+                                                                <textarea style="height: 440px" id="responseHeader" placeholder="Response Header（返回头）" data-clipboard-target="#responseHeader"
+                                                                          click-type="copycode" class=" layui-textarea h300"></textarea> </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-tab-item copyTips">
+                                                    <textarea style="height: 440px" id="result" placeholder="Response Text（返回值）" data-clipboard-target="#result" click-type="copycode"
+                                                              class=" layui-textarea h300"></textarea> </div>
+                                                <div class="layui-tab-item copyTips">
+                                                    <textarea style="height: 440px" id="result_old" placeholder="Response Text（原始返回值）" data-clipboard-target="#result_old"
+                                                              click-type="copycode" class=" layui-textarea h300"></textarea> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+
+<script>
+    layui.use(['laydate', 'form'],
+    function() {
+
+
+        var url = location.search; //获取url中"?"符后的字串
+        var parentId = '';
+        if (url.indexOf("?") != -1) {
+            parentId = url.substr(1);
+        }
+
+        var myDate = new Date(); //Thu Dec 28 2017 10:</span>07:39 GMT+0800 (中国标准时间)
+        var str = myDate.getFullYear()+""+(myDate.getMonth()+1)+""+myDate.getDate()+""+myDate.getHours()+""+myDate.getMinutes()+""+myDate.getSeconds()+"-";   //2017-12-28
+        $("#modelTypeName").val(str);
+
+
+        var layer = layui.layer
+            ,form = layui.form;
+        form.on('select(dataImportType)', function (data) {
+            if("FTP" == data.value){
+                closeType()
+                $("#ftpType").css('display', 'block');
+            }else   if("mySQL" == data.value){
+                // layer.msg("暂未开放");
+                closeType()
+                $("#mySQLType").css('display', 'block');
+            }else   if("HTTP" == data.value){
+                // layer.msg("暂未开放");
+                closeType()
+                $('#HttpType').css('display','block')
+            }else   if("JDBC" == data.value){
+                closeType()
+                $("#jdbcType").css('display', 'block');
+            }else   if("NEO4J" == data.value){
+                closeType()
+                $("#neo4jType").css('display', 'block');
+            }
+        });
+
+
+
+
+        $('#browseInput,#browse').on('click', function(){
+            layer.open({
+                type: 2,
+                // area: ['550px', '300px'],
+                area: ['750px', '550px'],
+                title:'选择目录',
+                fixed: false, //不固定
+                maxmin: true,
+                // content: 'dataAddBrowse/replaceOrSkip.html'
+                content: 'dataAddBrowse/browse.html'
+            });
+        });
+    });
+
+    function closeType() {
+        $("#ftpType").css('display', 'none');
+        $("#mySQLType").css('display', 'none');
+        $("#jdbcType").css('display', 'none');
+        $("#neo4jType").css('display', 'none');
+        $("#HttpType").css('display', 'none');
+
+    }
+
+
+
+
+
+
+ </script>
+<script>
+    window.msg = '12313'
+    let demo1
+    let demo2
+    let demo3
+    window.jdbctableArr = []
+    window.neo4jtableArr1 = []
+    window.neo4jtableArr2 = []
+    //点击生成主题库
+    function showLoad() {
+        return layer.msg('正在加载表列表...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:100000});
+    }
+
+    function closeLoad(index) {
+        layer.close(index);
+    }
+    function showSuccess() {
+        layer.msg('加载成功！',{time: 1000,offset: 'auto'});
+    }
+    function getneo4jTableList() {
+        let jdbcUrl = $('#neo4jText').val()
+        let jdbcuserName = $('#neo4juserName').val()
+        let jdbcpassword = $('#neo4jpassword').val()
+        let modelTypeName = $('#modelTypeName').val()
+        if(jdbcUrl == ''){
+            layer.alert('neo4jUrl不能为空!', {icon: 2})
+        }else if(jdbcuserName == ''){
+            layer.alert('用户名不能为空!', {icon: 2})
+        }else if(modelTypeName == ''){
+            layer.alert('收割名称不能为空!', {icon: 2})
+        }else{
+            let quert = {
+                'boltUrl':jdbcUrl,
+                'userName':jdbcuserName,
+                'password':jdbcpassword,
+                // 'modelTypeName':modelTypeName,
+
+            }
+            $.ajax({
+                type: "post",
+                async: true,
+                url: "/dataImport/getLabelsAndRelations",
+                data: (quert),
+                dataType: 'json',
+                // contentType: 'application/json',
+                beforeSend: function () {
+                    i=showLoad();
+                },
+                success: function (data) {
+                    // debugger
+                    if(data.code == 200){
+                        $('#neo4jRoadDiameter').css('display','block')
+                        $('#neo4jText').attr('disabled','disabled')
+                        $('#xmSelectneo4j1').css('display','block')
+                        $('#xmSelectneo4j2').css('display','block')
+                        $('#neo4juserName').attr('disabled','disabled')
+                        $('#neo4jpassword').attr('disabled','disabled')
+                        $('#neo4jButton').attr("disabled",false)
+                        $('#neo4jButton').attr("class",'layui-btn')
+                        $('#getneo4jButton').attr("disabled",'disabled')
+                        $('#getneo4jButton').attr("class",'layui-btn layui-btn-disabled')
+
+                        let labelsData = []
+                        let relationsData = []
+                        data.data.labels.forEach((item,idnex)=>{
+                            let selectItem = {
+                                'name':item,
+                                'value':item
+                            }
+                            labelsData.push(selectItem)
+                        })
+                        data.data.relations.forEach((item,idnex)=>{
+                            let selectItem = {
+                                'name':item,
+                                'value':item
+                            }
+                            relationsData.push(selectItem)
+                        })
+
+
+                        demo2 = xmSelect.render({
+                            el: '#demo1neo4j',
+                            // repeat: true,
+                            empty: '暂时没有数据！',
+                            toolbar: {
+                                show: true,
+                            },
+                            direction: 'auto',
+                            autoRow: true,
+                            data: labelsData,
+                            show(){
+                                let parentId = $('#parentId').val()
+                                if(parentId == ''){
+                                    layer.alert('请先选择目录!', {icon: 2})
+                                }
+                            },
+                            hide(){
+                                let parentId = $('#parentId').val()
+                                if(parentId!=''){
+                                    $.ajax({
+                                        type: "get",
+                                        async: false,
+                                        url: `/dataMapping/getDataMappingTableNamesByPid?parent_id=${parentId}`,
+                                        data: null,
+                                        dataType: 'json',
+                                        // contentType: 'application/json',
+                                        success: function (data) {
+                                            window.neo4jtableArr1 = []
+                                            // debugger
+                                            if(data.code == 200){
+                                                let parentArr = data.data
+                                                let selectArr = demo2.getValue();
+                                                let selectArrtable = []
+                                                selectArr.forEach((item,index)=>{
+                                                    let tableItem = ''
+                                                    tableItem = item.name
+                                                    selectArrtable.push(tableItem)
+                                                })
+                                                let a = ['2020wdd','paper1582298372582']
+                                                selectArrtable.forEach((item,index)=>{
+                                                    let itemArr = {
+                                                        "tableName": item,
+                                                        "importType":2
+                                                    }
+                                                    window.neo4jtableArr1.push(itemArr)
+                                                })
+                                                let isShowFrame = false
+                                                selectArrtable.forEach((item,index)=>{
+                                                    parentArr.forEach((subItem,subIndex)=>{
+                                                        if(item == subItem){
+                                                            isShowFrame = true
+                                                        }
+                                                    })
+                                                })
+                                                console.log(`isShowFrame${isShowFrame}`)
+                                                if(isShowFrame){
+                                                    window.replaceOrSkipNum = 2
+                                                    window.selectArrtable = selectArrtable
+                                                    window.parentArr = parentArr
+                                                    layer.open({
+                                                        type: 2,
+                                                        area: ['550px', '300px'],
+                                                        // area: ['750px', '550px'],
+                                                        title:'追加或覆盖文件',
+                                                        fixed: false, //不固定
+                                                        maxmin: true,
+                                                        shade: 0,
+                                                        content: 'dataAddBrowse/replaceOrSkip.html',
+                                                        // content: 'dataAddBrowse/neo4jBrowse.html'
+                                                        success:function(layero, index){
+                                                            // var body = layer.getChildFrame('body', index);
+                                                            // body.contents().find("#h2").html(`目标中已包含一个名为‘${item}’的文件`);  // #detailId  子页面元素id
+                                                        },
+                                                        end: function(){
+                                                            // window.jdbctableArr.forEach((item3,index3)=>{
+                                                            //     if(item3.tableName == item){
+                                                            //         window.jdbctableArr[index3].importType = $('#modelTypeName').attr('data-id')
+                                                            //     }
+                                                            // })
+                                                            console.log(`我是选择完后的window.neo4jtableArr1${JSON.stringify(window.neo4jtableArr1)}`)
+
+                                                        },
+                                                    });
+                                                }
+                                            }else{
+                                                layer.alert('返回错误！', {icon: 2})
+                                            }
+                                        },
+                                        error: function (request) {//请求失败之后的操作
+                                            layer.alert('返回错误！', {icon: 2})
+                                        }
+                                    });
+
+                                }
+                            }
+                        })
+                        demo3 = xmSelect.render({
+                            el: '#demo2neo4j',
+                            // repeat: true,
+                            empty: '暂时没有数据！',
+                            toolbar: {
+                                show: true,
+                            },
+                            direction: 'auto',
+                            autoRow: true,
+                            data: relationsData,
+                            show(){
+                                let parentId = $('#parentId').val()
+                                if(parentId == ''){
+                                    layer.alert('请先选择目录!', {icon: 2})
+                                }
+                            },
+                            hide(){
+                                let parentId = $('#parentId').val()
+                                if(parentId!=''){
+                                    $.ajax({
+                                        type: "get",
+                                        async: false,
+                                        url: `/dataMapping/getDataMappingTableNamesByPid?parent_id=${parentId}`,
+                                        data: null,
+                                        dataType: 'json',
+                                        // contentType: 'application/json',
+                                        success: function (data) {
+                                            window.neo4jtableArr2 = []
+                                            // debugger
+                                            if(data.code == 200){
+                                                let parentArr = data.data
+                                                let selectArr = demo3.getValue();
+                                                let selectArrtable = []
+                                                selectArr.forEach((item,index)=>{
+                                                    let tableItem = ''
+                                                    tableItem = item.name
+                                                    selectArrtable.push(tableItem)
+                                                })
+                                                let a = ['2020wdd','paper1582298372582']
+                                                selectArrtable.forEach((item,index)=>{
+                                                    let itemArr = {
+                                                        "tableName": item,
+                                                        "importType":2
+                                                    }
+                                                    window.neo4jtableArr2.push(itemArr)
+                                                })
+                                                let isShowFrame = false
+                                                selectArrtable.forEach((item,index)=>{
+                                                    parentArr.forEach((subItem,subIndex)=>{
+                                                        if(item == subItem){
+                                                            isShowFrame = true
+                                                        }
+                                                    })
+                                                })
+                                                console.log(`isShowFrame${isShowFrame}`)
+                                                if(isShowFrame){
+                                                    window.replaceOrSkipNum = 3
+                                                    window.selectArrtable = selectArrtable
+                                                    window.parentArr = parentArr
+                                                    layer.open({
+                                                        type: 2,
+                                                        area: ['550px', '300px'],
+                                                        // area: ['750px', '550px'],
+                                                        title:'追加或覆盖文件',
+                                                        fixed: false, //不固定
+                                                        maxmin: true,
+                                                        shade: 0,
+                                                        content: 'dataAddBrowse/replaceOrSkip.html',
+                                                        // content: 'dataAddBrowse/neo4jBrowse.html'
+                                                        success:function(layero, index){
+                                                            // var body = layer.getChildFrame('body', index);
+                                                            // body.contents().find("#h2").html(`目标中已包含一个名为‘${item}’的文件`);  // #detailId  子页面元素id
+                                                        },
+                                                        end: function(){
+                                                            // window.jdbctableArr.forEach((item3,index3)=>{
+                                                            //     if(item3.tableName == item){
+                                                            //         window.jdbctableArr[index3].importType = $('#modelTypeName').attr('data-id')
+                                                            //     }
+                                                            // })
+
+                                                        },
+                                                    });
+                                                }
+                                            }else{
+                                                layer.alert('返回错误！', {icon: 2})
+                                            }
+                                        },
+                                        error: function (request) {//请求失败之后的操作
+                                            layer.alert('返回错误！', {icon: 2})
+                                        }
+                                    });
+
+                                }
+                            }
+                        })
+
+
+                        closeLoad(i);
+                        showSuccess();
+                    }else{
+                        layer.alert(data.errMsg, {icon: 2})
+                        closeLoad(i);
+                    }
+
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    layer.close(index);
+                    closeLoad(i);
+                }
+            });
+        }
+    }
+
+    function getTableList(){
+        let jdbcUrl = $('#jdbcText').val()
+        // let jdbcPid = $('#jdbcBrowseInput').attr('name')
+        let jdbcuserName = $('#jdbcuserName').val()
+        let jdbcpassword = $('#jdbcpassword').val()
+        let modelTypeName = $('#modelTypeName').val()
+        if(jdbcUrl == ''){
+            layer.alert('jdbcUrl不能为空!', {icon: 2})
+        }else if(jdbcuserName == ''){
+            layer.alert('用户名不能为空!', {icon: 2})
+        }else if(modelTypeName == ''){
+            layer.alert('收割名称不能为空!', {icon: 2})
+        }else{
+            let quert = {
+                'jdbcUrl':jdbcUrl,
+                'userName':jdbcuserName,
+                'password':jdbcpassword,
+                // 'pid':jdbcPid,
+                // 'modelTypeName':modelTypeName,
+
+            }
+            $.ajax({
+                type: "post",
+                async: true,
+                url: "/dataImport/getAllTables",
+                data: (quert),
+                dataType: 'json',
+                // contentType: 'application/json',
+                beforeSend: function () {
+                    i=showLoad();
+                },
+                success: function (data) {
+                    // debugger
+                    if(data.code == 200){
+
+                        closeLoad(i);
+                        showSuccess();
+                        // $('#jdbcTagDiv').css('display','block')
+                        $("#xmSelect").css('display', 'block');
+                        $("#jdbcRoadDiameter").css('display', 'block');
+                        $('#jdbcText').attr('disabled','disabled')
+                        $('#jdbcuserName').attr('disabled','disabled')
+                        $('#jdbcpassword').attr('disabled','disabled')
+                        $('#jdbcButton').attr("disabled",false)
+                        $('#jdbcButton').attr("class",'layui-btn')
+                        $('#getJDBCButton').attr("disabled",'disabled')
+                        $('#getJDBCButton').attr("class",'layui-btn layui-btn-disabled')
+
+
+                        let selectData = []
+                        data.data.forEach((item,idnex)=>{
+                            let selectItem = {
+                                'name':item,
+                                'value':item
+                            }
+                            selectData.push(selectItem)
+                        })
+
+
+                        demo1 = xmSelect.render({
+                            el: '#demo1',
+                            // repeat: true,
+                            empty: '暂时没有数据！',
+                            toolbar: {
+                                show: true,
+                            },
+                            direction: 'auto',
+                            autoRow: true,
+                            data: selectData,
+                            show(){
+                                let parentId = $('#parentId').val()
+                                if(parentId == ''){
+                                    layer.alert('请先选择目录!', {icon: 2})
+                                }
+                            },
+                            hide(){
+                                let parentId = $('#parentId').val()
+                                if(parentId!=''){
+                                    $.ajax({
+                                        type: "get",
+                                        async: false,
+                                        url: `/dataMapping/getDataMappingTableNamesByPid?parent_id=${parentId}`,
+                                        data: null,
+                                        dataType: 'json',
+                                        // contentType: 'application/json',
+                                        success: function (data) {
+                                            window.jdbctableArr = []
+                                            // debugger
+                                            if(data.code == 200){
+                                                let parentArr = data.data
+                                                let selectArr = demo1.getValue();
+                                                let selectArrtable = []
+                                                selectArr.forEach((item,index)=>{
+                                                    let tableItem = ''
+                                                    tableItem = item.name
+                                                    selectArrtable.push(tableItem)
+                                                })
+                                                let a = ['2020wdd','paper1582298372582']
+                                                selectArrtable.forEach((item,index)=>{
+                                                    let itemArr = {
+                                                        "tableName": item,
+                                                        "importType":2
+                                                    }
+                                                    window.jdbctableArr.push(itemArr)
+                                                })
+                                                let isShowFrame = false
+                                                selectArrtable.forEach((item,index)=>{
+                                                    parentArr.forEach((subItem,subIndex)=>{
+                                                        if(item == subItem){
+                                                            isShowFrame = true
+                                                        }
+                                                    })
+                                                })
+                                                 console.log(isShowFrame)
+                                                if(isShowFrame){
+                                                    window.replaceOrSkipNum = 1
+                                                    window.selectArrtable = selectArrtable
+                                                    window.parentArr = parentArr
+                                                    layer.open({
+                                                        type: 2,
+                                                        area: ['550px', '300px'],
+                                                        // area: ['750px', '550px'],
+                                                        title:'追加或覆盖文件',
+                                                        fixed: false, //不固定
+                                                        maxmin: true,
+                                                        shade: 0,
+                                                        content: 'dataAddBrowse/replaceOrSkip.html',
+                                                        // content: 'dataAddBrowse/neo4jBrowse.html'
+                                                        success:function(layero, index){
+                                                            // var body = layer.getChildFrame('body', index);
+                                                            // body.contents().find("#h2").html(`目标中已包含一个名为‘${item}’的文件`);  // #detailId  子页面元素id
+                                                        },
+                                                        end: function(){
+                                                            // window.jdbctableArr.forEach((item3,index3)=>{
+                                                            //     if(item3.tableName == item){
+                                                            //         window.jdbctableArr[index3].importType = $('#modelTypeName').attr('data-id')
+                                                            //     }
+                                                            // })
+
+                                                        },
+                                                    });
+                                                }
+                                            }else{
+                                                layer.alert('返回错误！', {icon: 2})
+                                            }
+                                        },
+                                        error: function (request) {//请求失败之后的操作
+                                            layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                                        }
+                                    });
+
+                                }
+                            }
+                        })
+
+                    }else{
+                        layer.alert(data.errMsg, {icon: 2})
+                        closeLoad(i);
+                    }
+
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    layer.close(index);
+                    closeLoad(i);
+                }
+            });
+        }
+
+    }
+    function dataAddToNEO4J() {
+        var index = layer.load(1, {shade: [0.5,'#000']}); //0代表加载的风格，支持0-2,shade透明度的背景
+        let data = {
+            'boltUrl':$('#neo4jText').val(),
+            'userName':$('#neo4juserName').val(),
+            'password':$('#neo4jpassword').val(),
+            'modelTypeName':$('#modelTypeName').val(),
+            // 'tag':$('#neo4jTagInput').val(),
+            'labels': window.neo4jtableArr1,
+            'relations': window.neo4jtableArr2,
+            'pid':$('#parentId').val(),
+        }
+        console.log(JSON.stringify(data))
+        var url = "/dataImport/neo4jToHive";
+        //requestPostAjax(url, true, data, function (resData) {
+        requestPostAjaxByJson(url, true, JSON.stringify(data), 'application/json', function (resData) {
+            if (resData.code === 200) {
+                layer.close(index);
+                layer.alert(resData.data, {
+                        icon: 6
+                    },
+                    function() {
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                        // 可以对父窗口进行刷新
+                        xadmin.father_reload();
+                    });
+
+            } else {
+                layer.close(index);
+                layer.alert(resData.data, {icon: 2});
+            }
+        });
+    }
+    function dataAddToJDBC() {
+        var index = layer.load(1, {shade: [0.5,'#000']}); //0代表加载的风格，支持0-2,shade透明度的背景
+        let data = {
+            'jdbcUrl':$('#jdbcText').val(),
+            'userName':$('#jdbcuserName').val(),
+            'password':$('#jdbcpassword').val(),
+            'pid':$('#parentId').val(),
+            'modelTypeName':$('#modelTypeName').val(),
+            // 'tag':$('#jdbcTagInput').val(),
+            'tables':window.jdbctableArr,
+            // 'importType':importType,
+        }
+        console.log(JSON.stringify(data))
+        var url = "/dataImport/data_import_jdbc";
+        //requestPostAjax(url, true, data, function (resData) {
+        requestPostAjaxByJson(url, true, JSON.stringify(data), 'application/json', function (resData) {
+            if (resData.code === 200) {
+                layer.close(index);
+                layer.alert(resData.data, {
+                        icon: 6
+                    },
+                    function() {
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                        // 可以对父窗口进行刷新
+                        xadmin.father_reload();
+                    });
+
+            } else {
+                layer.close(index);
+                layer.alert(resData.data, {icon: 2});
+            }
+        });
+    }
+
+
+
+    /*
+    * http的js部分
+    * */
+    //参数添加
+    $('#add_parms_k_v').on('click',function () {
+        let data = $('#parms_kv_template').html()
+        let newData = `${data}`
+        $('#httpParameter').append(newData)
+        let itemNum = $('#httpParameter').find('.layui-row').length
+        if(itemNum >=2){
+            $('#parameterDeleteAll').css('display','block')
+        }
+    })
+    //参数全部删除
+    $('#parameterDeleteAll').on('click',function () {
+        $('#httpParameter').empty()
+        $('#parameterDeleteAll').css('display','none')
+    })
+
+    //参数删除一个
+    $('#httpParameter').on('click','.parameterDelete',function () {
+        let index = $(this).parent().parent().index()
+        console.log(index)
+        $('#httpParameter').find('.layui-row').eq(index).remove()
+        let itemNum = $('#httpParameter').find('.layui-row').length
+        if(itemNum < 2){
+            $('#parameterDeleteAll').css('display','none')
+        }
+    })
+
+    //header添加
+    $('#add_header_k_v').on('click',function () {
+        let data = $('#header_kv_template').html()
+        // console.log(data)
+        let newData = `${data}`
+        $('#httpHeader').append(newData)
+        let itemNum = $('#httpHeader').find('.layui-row').length
+        console.log(itemNum)
+        if(itemNum >=2){
+            $('#headerDeleteAll').css('display','block')
+        }
+    })
+    //header全部删除
+    $('#headerDeleteAll').on('click',function () {
+        $('#httpHeader').empty()
+        $('#headerDeleteAll').css('display','none')
+    })
+
+    //header删除一个
+    $('#httpHeader').on('click','.headerDelete',function () {
+        let index = $(this).parent().parent().index()
+        console.log(index)
+        $('#httpHeader').find('.layui-row').eq(index).remove()
+        let itemNum = $('#httpHeader').find('.layui-row').length
+        if(itemNum < 2){
+            $('#headerDeleteAll').css('display','none')
+        }
+    })
+
+    $('#paramsBox').on('click',function () {
+        let type = $('#params_box').is(':checked')
+        if(type){
+            $('#paramsFormItem').css('display','block')
+        }else{
+            $('#paramsFormItem').css('display','none')
+        }
+    })
+    $('#headerBox').on('click',function () {
+        let type = $('#header_box').is(':checked')
+        if(type){
+            $('#headerFormItem').css('display','block')
+        }else{
+            $('#headerFormItem').css('display','none')
+        }
+    })
+    $('#cokkieBox').on('click',function () {
+        let type = $('#cookie_box').is(':checked')
+        if(type){
+            $('#cokkieFormItem').css('display','block')
+        }else{
+            $('#cokkieFormItem').css('display','none')
+        }
+    })
+    $('#proxyBox').on('click',function () {
+        let type = $('#proxy_box').is(':checked')
+        if(type){
+            $('#proxyFormItem').css('display','block')
+        }else{
+            $('#proxyFormItem').css('display','none')
+        }
+    })
+
+
+     //hhtp方式接入
+    function httpSubmit(mode) {
+
+        var index = layer.load(1, {shade: [0.5,'#000']}); //0代表加载的风格，支持0-2,shade透明度的背景
+
+        //拿k-v参数
+        let length = $('#httpParameter').find('.layui-row').length
+        let arr = []
+        for(let i = 0;i<length;i++){
+            let item = {
+                key:'',
+                value:'',
+            }
+            item.key = $('#httpParameter').find('.layui-row').eq(i).find('.layui-inline').eq(0).find('input:text').val()
+            item.value = $('#httpParameter').find('.layui-row').eq(i).find('.layui-inline').eq(1).find('input:text').val()
+            arr.push(item)
+        }
+        // httpHeader参数获取
+        let HeaderArr = []
+
+
+        let type = $('#header_box').is(':checked');
+        if(type){
+            let item = {
+                key:'',
+                value:'',
+            }
+            item.key =$('#headerFirst').val();
+            item.value =$('#contentType').val();
+            HeaderArr.push(item);
+        }
+        let Headerlength = $('#httpHeader').find('.layui-row').length
+        for(let i = 0;i<Headerlength;i++){
+            let item = {
+                key:'',
+                value:'',
+            }
+            item.key = $('#httpHeader').find('.layui-row').eq(i).find('.layui-inline').eq(0).find('input:text').val()
+            item.value = $('#httpHeader').find('.layui-row').eq(i).find('.layui-inline').eq(1).find('input:text').val()
+            HeaderArr.push(item)
+        }
+        //代理
+        let proxy = {
+            ip: $('#proxy_ip').val(),
+            port: $('#proxy_port').val()
+        }
+        let data = {
+            'operationMode': mode,//执行方式:测试od执行入库
+            'parms_tab': $('#paramsFormItem').find('.layui-this').attr("lay-id"),
+            'hts': $('#hts').val(),
+            'url': $('#url').val(),
+            'type': $('#type').val(),
+            'charset': $('#charset').val(),
+            'importName': $('#modelTypeName').val(),
+            'pid': $('#parentId').val(),
+            'dataMappingName': $('#parentName').val(),
+            'params_box': $("#params_box").is(":checked") ? true : false,
+            'header_box': $("#header_box").is(":checked") ? true : false,
+            'cookie_box': $("#cookie_box").is(":checked") ? true : false,
+            'proxy_box': $("#proxy_box").is(":checked") ? true : false,
+            'kvParms': arr,
+            'batchParms': $('#batchParms').val(),
+            'batchJson': $('#batchJson').val(),
+            'kvHeads': HeaderArr,
+            'proxy': proxy,
+            'cookies':$('#cookies').val(),
+            'dataTitleParam':$('#dataTitleParam').val()//返回结果的解析头
+        }
+
+        console.log(JSON.stringify(data));
+        var url = "/dataImport/httpToData";
+        requestPostAjaxByJson(url, true, JSON.stringify(data), 'application/json', function (resData) {
+            if (resData.code === 200) {
+                layer.close(index);
+                //var jsonPretty = JSON.stringify(JSON.parse(resData.data),null,2);
+                $("#result").html(resData.data);
+                layer.alert(resData.msg, {icon: 6});
+            } else {
+                layer.close(index);
+                layer.alert(resData.msg, {icon: 2});
+            }
+        });
+    }
+
+
+    function getParamToDb() {
+        layer.prompt({title: '请输入数据解析结构，并确认', formType: 3}, function(pass, index){
+            layer.close(index);
+            $("#dataTitleParam").val(pass);
+            httpSubmit('getToDb');
+        });
+    }
+
+
+
+    function show_shopm(that,val){
+        tip_index = layer.tips(val, that, {tips: [1,], time: 0,maxWidth:500});
+    }
+    function hide_shopm(){
+        layer.close(tip_index);
+    }
+
+
+
+</script>
+
+</html>

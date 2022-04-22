@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>虚拟目录</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/css/jquery.json-viewer.css">
+    <script src="/js/jquery.json-viewer.js"></script>
+
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/dtree.css">
+    <!--    <script type="text/javascript" src="/admin/layui_ext/dtree/dtree.js"></script>-->
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/font/dtreefont.css">
+
+    <style>
+
+        .scrollStyle::-webkit-scrollbar{
+            width:10px;
+            height:2px;
+            /**/
+        }
+        .scrollStyle::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb{
+            background: #fff;
+            /*background: #cfd9e3;*/
+            border-radius:10px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb:hover{
+            background: #cfd9e3;
+        }
+        .scrollStyle::-webkit-scrollbar-corner{
+            background: #fff;
+        }.scrollStyle::-webkit-scrollbar-track{
+             background: #fff;
+         }
+    </style>
+    <style>
+        .rightLi{
+            height: 35px;
+            width: 100%;
+            background:#fff;
+            line-height: 35px;
+            font-size: 12px;
+
+        }
+        .rightLi .topLi:hover{
+            background: #d9ebf9;
+
+        }
+        .rightLi .titleLi {
+            /*border-right: 1px solid #e5e5e5;*/
+            /*border-top: 1px solid #bfbfbf;*/
+            text-indent: 5px;
+        }
+        .itemLi:hover{
+            background: #eaeceb;
+        }
+
+        .menus ul li{
+            list-style-type: none;
+            /*margin: 10px 0;*/
+            text-align: left;
+            text-indent: 10px;
+            line-height: 36px;
+            color: #333;
+        }
+        .menus ul li:hover{
+            background-color: #eaeceb
+        }
+        .menus{
+            /*border:1px solid #ccc;*/
+            /*background: #eee;*/
+            position: absolute;
+            width: 120px;
+            /*height: 120px;*/
+            display: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+            border: 1px solid #d2d2d2;
+            background-color: #fff;
+            z-index: 100;
+            border-radius: 2px;
+            white-space: nowrap;
+            padding: 7.5px 0;
+        }
+
+    </style>
+</head>
+<body style="position: relative">
+
+<div class="layui-fluid" style="position: absolute;left:0;top: 0;bottom: 0;height: 100%;width: 100%;box-sizing: border-box;padding-right: 0">
+    <div class="layui-row layui-col-space15" style="width: 100%;height: 100%;box-sizing: border-box;padding-right: 0">
+        <div class="layui-col-md12" style="width: 100%;height: 100%;box-sizing: border-box;padding-right: 0">
+            <div class="layui-card" style="position: relative;width: 100%;height: 100%;box-sizing: border-box;padding-right: 0">
+                <div class="" style="width:100%;height: 100%;box-sizing: border-box;padding-right: 0">
+                    <div style="display: flex;width:100%;height: 100%;">
+                        <div style="height: 100%">
+                            <div style="height: 5%;width: 100%;display: flex;align-items: center">
+                                <input id="searchInput" style="width: 70%;height: 26px" type="text" placeholder="请输入关键字">
+                                <button id="searchButton" style="margin-left: 4px" class="layui-btn"  delete_all="">搜索</button>
+                            </div>
+                            <ul style="height:95%;width: 100%;margin-top: 10px"  id="demoTree" class="dtree" data-id="0"></ul>
+                        </div>
+                        <div style="position:relative;height:100%;flex: 1;border-left: 1px solid #f7f7f7;overflow: hidden">
+                            <ul style="position: absolute;top: 0px;left: 0px;width: 100%;z-index:10">
+                                <li class="rightLi" style="height: 35px;width: 100%;font-size:14px;">
+                                    <div class="layui-row">
+                                        <div class="layui-col-md2 topLi titleLi">名称</div>
+                                        <div class="layui-col-md4 topLi titleLi">映射</div>
+                                        <!-- <div class="layui-col-md2 topLi titleLi">类型</div>-->
+                                        <div class="layui-col-md2 topLi titleLi">创建时间</div>
+                                        <div class="layui-col-md2 topLi titleLi">更新时间</div>
+                                        <div class="layui-col-md2 topLi titleLi">备注</div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="dataListDiv" style="padding: 10px;position: absolute;top: 0;left: 0;width: 100%;height: 100%;overflow-y: scroll">
+
+                                <div style="height: 35px;width: 100%"></div>
+                                <ul style="margin-top: 5px" id="rightUl"></ul>
+                            </div>
+                            <div class="listDetailsDiv" style="display: none;position: absolute;left: 0;bottom: 0;width: 100%;height: 50%;background: #fff;box-shadow: 0 -2px 5px  rgba(0,0,0,.1);">
+                                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="height: 100%">
+                                    <ul class="layui-tab-title">
+
+                                        <li class="layui-this" >数据结构</li>
+                                        <li layui-name="0" id="dataContentId">数据内容</li>
+                                        <li layui-name="0">血缘关系</li>
+                                        <li layui-name="0">变更记录</li>
+                                    </ul>
+                                    <div class="layui-tab-content" style="overflow-y: scroll;height: 80%">
+                                        <div class="layui-tab-item layui-show">
+                                            <table class="layui-table" id="genTableColumnData" lay-filter="genTableColumnTable"></table>
+                                        </div>
+                                        <div class="layui-tab-item">
+                                            <table class="layui-table">
+                                                <colgroup>
+                                                    <col>
+                                                    <col>
+                                                    <col>
+                                                </colgroup>
+                                                <thead>
+                                                <tr id="tabthead1">
+<!--                                                    <th>昵称</th>-->
+<!--                                                    <th>加入时间</th>-->
+<!--                                                    <th>签名</th>-->
+                                                </tr>
+                                                </thead>
+                                                <tbody id="tabBody1">
+<!--                                                    <tr>-->
+<!--                                                        <td>贤心</td>-->
+<!--                                                        <td>2016-11-29</td>-->
+<!--                                                        <td>人生就像是一场修行</td>-->
+<!--                                                    </tr>-->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="layui-tab-item">
+                                            <div id="myChart"  style="min-height: 400px;height:100%;width: 600px"></div>
+                                        </div>
+                                        <div class="layui-tab-item">
+                                            <table class="layui-table" id="genTableColumnData2" lay-filter="genTableColumnTable2"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="closeDetailsDiv" style="position: absolute;right:0;top:0;width: 30px;height: 30px;display: flex;justify-content: center;align-items: center"
+                                    ><i class="layui-icon layui-icon-close" style="font-size: 16px;"></i>  </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <div id="menu" class="menus">
+            <ul>
+                <li class="menuItem"><a href="#">进入数据收割</a></li>
+                <li class="menuItem"><a href="#">进入手动导入</a></li>
+                <li  class="menuItem"><a href="#">测试是否可用</a></li>
+                <li  class="menuItem"><a href="#">移动位置</a></li>
+                <li  class="menuItem"><a href="#">重命名</a></li>
+                <li  class="menuItem"><a href="#">删除</a></li>
+            </ul>
+        </div>
+        <div id="menu2" class="menus">
+            <ul>
+                <li class="menuItem2"><a href="#">进入数据收割</a></li>
+                <li class="menuItem2"><a href="#">进入手动导入</a></li>
+                <li  class="menuItem2"><a href="#">移动位置</a></li>
+                <li  class="menuItem2"><a href="#">重命名</a></li>
+                <li  class="menuItem2"><a href="#">删除</a></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<script src="/js/echarts.min.js"></script>
+<script>
+
+    $(document).ready(function (){
+
+
+
+        function showLoad() {
+            return layer.msg('正在测试接口...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:20000});
+        }
+        function showLoad2() {
+            return layer.msg('正在加载数据！', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:20000});
+        }
+        function closeLoad(index) {
+            layer.close(index);
+        }
+        function showSuccess() {
+            // layer.msg('执行成功！',{time: 1000,offset: 'auto'});
+        }
+
+        function getMenuList(id) {
+            rightArr = []
+            MappingList.forEach((item,index)=>{
+                if(item.parentId == id ){
+                    rightArr.push(item)
+                }
+            })
+            let divCon = ''
+            rightArr.forEach((item,index)=>{
+                if(item.type == 0){
+                    divCon += `
+                        <li name1="${item.type}" name2="${item.id}" tableName="${item.tableName}" name3="${item.name}"  class="itemLi rightLi" style="height: 35px;width: 100%">
+                                    <div class="layui-row">
+                                        <div class="layui-col-md2 titleLi" style="display: flex;align-items: center"><img style="margin-right:3px;height: 50%;width: auto " src="../../img/folder.png" alt="">${item.name}</div>
+                                        <div class="layui-col-md4 titleLi">${item.tableName ? item.tableName :  '&nbsp;' }</div>
+                                        <!--<div class="layui-col-md2 titleLi">文件夹</div>-->
+                                        <div class="layui-col-md2 titleLi">${item.createTime}</div>
+                                        <div class="layui-col-md2 titleLi">${item.updateTime== null ? "" :  item.updateTime }</div>
+                                        <div class="layui-col-md2 titleLi"> ${item.remarks == null ? "" :  item.remarks } </div>
+                                    </div>
+                                </li>
+                                `
+                }else{
+                    divCon += `
+                        <li name1="${item.type}" name2="${item.id}" tableName="${item.tableName}" name3="${item.name}" class="itemLi rightLi" style="height: 35px;width: 100%">
+                                    <div class="layui-row">
+                                        <div class="layui-col-md2 titleLi" style="display: flex;align-items: center"><img style="margin-right:3px;height: 50%;width: auto " src="../../img/file.png" alt="">${item.name}</div>
+                                         <div class="layui-col-md4 titleLi">${item.tableName ? item.tableName :  '&nbsp;' }</div>
+                                        <!--<div class="layui-col-md2 titleLi">文件</div>-->
+                                        <div class="layui-col-md2 titleLi">${item.createTime}</div>
+                                        <div class="layui-col-md2 titleLi">${item.updateTime== null ? "" :  item.updateTime }</div>
+                                          <div class="layui-col-md2 titleLi"> ${item.remarks == null ? "" :  item.remarks } </div>
+                                    </div>
+                                </li>
+                                `
+                }
+
+            })
+            $('#rightUl').empty()
+            $('#rightUl').append(divCon)
+        }
+
+        let MappingList = []
+        let rightArr = []
+        let leftArr = []
+        let rightClickNum = 0
+        let SelectedType = ''
+        let SelectedId = ''
+        let SelectedTableName = ''
+        let SelectedName = ''
+
+        //右边右键显示菜单
+        // let  itemLi =
+
+        $('#rightUl').on('contextmenu','.itemLi',function () {
+            let menu = document.getElementById('menu');
+            let menu2 = document.getElementById('menu2');
+            rightClickNum = ($(this).index())
+            $('#rightUl').find('.itemLi').css('background','#fff')
+            $('#rightUl').find('.itemLi').eq(rightClickNum).css('background','#d2d2d2')
+
+            SelectedType = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name1');          //该条数据的类型
+            SelectedId = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name2');            //该条数据的id
+            SelectedTableName = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('tableName'); //该条数据的tableName
+            SelectedName = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name3');          //该条数据的name
+
+            if(SelectedType == 1){
+                var e = e || window.event;
+                e.preventDefault();            //阻止系统右键菜单 IE8-不支持
+                // 显示自定义的菜单 调整位置
+                menu.style.display = 'block';
+                // menu.style.left = e.clientX + 'px';
+                // menu.style.top = e.clientY + 'px';
+
+                let divHeight = $('#menu').height();
+                if(e.clientY > divHeight){
+                    menu.style.left =e.clientX + $(window).scrollLeft()  + 'px';
+                    menu.style.top = e.clientY + $(window).scrollTop() - divHeight+ 'px';
+                }else{
+                    menu.style.left =e.clientX + $(window).scrollLeft()+2  + 'px';
+                    menu.style.top = e.clientY + $(window).scrollTop()+ 'px';
+                }
+            }else{
+                var e = e || window.event;
+                e.preventDefault();            //阻止系统右键菜单 IE8-不支持
+                // 显示自定义的菜单 调整位置
+                menu2.style.display = 'block';
+                let divHeight = $('#menu2').height();
+                if(e.clientY > divHeight){
+                    menu2.style.left =e.clientX + $(window).scrollLeft()  + 'px';
+                    menu2.style.top = e.clientY + $(window).scrollTop() - divHeight+ 'px';
+                }else{
+                    menu2.style.left =e.clientX + $(window).scrollLeft()+2  + 'px';
+                    menu2.style.top = e.clientY + $(window).scrollTop()+ 'px';
+                }
+            }
+        });
+        // itemLi.oncontextmenu = function(e){
+        //
+        // }
+        // 鼠标点击其他位置时隐藏菜单
+        document.onclick = function(){
+            menu.style.display = 'none';     //隐藏菜单
+            menu2.style.display = 'none';     //隐藏菜单
+        }
+
+
+        //左侧单击击列表的item
+        $('#rightUl').on('click','.itemLi',function () {
+
+            let index = $(this).index()
+            $('#rightUl').find('.itemLi').css('background','#fff')
+            $('#rightUl').find('.itemLi').eq(index).css('background','#d2d2d2')
+            rightClickNum = ($(this).index())
+            SelectedType = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name1');          //该条数据的类型
+            SelectedId = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name2');            //该条数据的id
+            SelectedTableName = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('tableName'); //该条数据的tableName
+            SelectedName = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name3');          //该条数据的name
+            if(SelectedType == 1){  //文件
+                $('.layui-tab-title').find('li').attr('layui-name',0)
+                $('.layui-tab-title').find('li').attr('class','')
+                $('.layui-tab-title').find('li').eq(0).attr('class','layui-this')
+                $('.layui-tab-content').find('.layui-tab-item').removeClass("layui-show");
+                $('.layui-tab-content').find('.layui-tab-item').eq(0).attr('class','layui-tab-item layui-show')
+
+                $('.dataListDiv').css('height','50%')
+                $('.listDetailsDiv').css('display','block')
+                $('#myChart').css('height','350px')
+                //获取表结构数据
+                layui.use('table',
+                    function() {
+                        var table = layui.table;
+
+                        table.render({
+                            id:"genTableColumnTable",//
+                            elem: '#genTableColumnData',//指定表格元素
+                            url: '/dataMapping/getTableSchemaById?id='+SelectedId,  //请求路径
+                            cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                            ,skin: 'line ' //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
+                            // ,even: true    //隔行换色
+                            ,page: false  //开启分页
+                            ,limits: [10,20,50,100]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+                            ,limit: 10 //每页默认显示的数量
+                            ,method:'get'  //提交方式
+                            ,cols: [[
+                                {
+                                    field: 'id', //json对应的key
+                                    title: 'id',   //列名
+                                    sort: true,   // 默认为 false,true为开启排序
+                                    // width: '3%',
+                                    hide:true
+                                },
+                                {
+                                    field: 'columnName', //json对应的key
+                                    title: 'columnName',   //列名
+                                    // width: '15%',
+                                    // style: 'color:red;'
+                                },
+                                {
+                                    field: 'columnType', //json对应的key
+                                    title: 'columnType',   //列名
+                                    // width: '20%',
+                                },
+                                {
+                                    field: 'columnLength', //json对应的key
+                                    title: 'columnLength',   //列名
+                                    // width: '20%',
+                                },
+                                // {
+                                //     field: 'param', //json对应的key
+                                //     title: '参数记录',   //列名
+                                //     width: '15%',
+                                //     style: 'color:red;'
+                                // },
+                                // {
+                                //     field: 'operationUser',
+                                //     title: '变更人',
+                                //     align: 'center',
+                                //     width: '10%',
+                                // },
+                                // {
+                                //     field: 'operationTime', //json对应的key
+                                //     title: '变更时间',   //列名
+                                // },{
+                                //     field: 'version', //json对应的key
+                                //     title: '变更版本',   //列名
+                                // }
+                            ]]
+                        });
+
+                    })
+            }else{
+                $('.dataListDiv').css('height','100%')
+                $('.listDetailsDiv').css('display','none')
+            }
+
+        })
+
+        //点击tab的切换按钮
+        $('.layui-tab-title').on('click','li',function () {
+            let index = $(this).index()
+            let isClick = $(this).attr('layui-name')
+            console.log(index)
+            console.log(isClick)
+            if(index == 1 && isClick == 0){
+                let i;
+                i=showLoad2();
+                $(this).attr('layui-name','1')
+                //获取数据内容
+                setTimeout(function () {
+                    $.ajax({
+                        type: "get",
+                        async: false,
+                        url: `/hive/getHiveContentV2?tableName=${SelectedTableName}`,
+                        // url: `/neo4j/get/relation?tableName=2`,
+                        // data: ,
+                        dataType: 'json',
+                        contentType: 'text/plain;charset=UTF-8',
+                        success: function (resData) {
+                            $('#tabthead1').empty()
+                            $('#tabBody1').empty()
+                            if(resData.code == 200){
+                                // $("#dataContentId").html("数据内容(共有："+resData.count+"条,默认显示100条;)");
+                                $("#dataContentId").html("(默认显示100条;)");
+                                let head = ``
+                                let columnList = []
+                                resData.columnList.forEach((item,index)=>{
+                                    //head += `<th>${item.columnName}</th>`
+                                    //columnList.push(item.columnName)
+                                    head += `<th>${item}</th>`
+                                    columnList.push(item)
+                                })
+                                $('#tabthead1').append(head)
+                                let body = ``
+                                resData.data.forEach((item,index)=>{
+                                    let trs = ``
+                                    columnList.forEach((subItem,subIndex)=>{
+                                        let tabName = SelectedTableName.toLocaleLowerCase()
+                                        trs+= `<td style="width: 200px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;-webkit-line-clamp: 1;">${item[`${tabName}.${columnList[subIndex]}`]}</td>`
+                                    })
+                                    body += `<tr>
+                                        ${trs}
+                                    </tr>`
+                                })
+
+                                $('#tabBody1').append(body)
+                                closeLoad(i);
+                            }else{
+                                $('#tabBody1').append(resData.msg);
+                                //   layer.alert(resData.msg, {icon: 2});
+                                closeLoad(i);
+                            }
+                        },
+                        error: function (request) {//请求失败之后的操作
+                            closeLoad(i);
+                            layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+
+                        }
+                    });
+
+                },500)
+            }else if(index == 2 && isClick == 0){
+
+                $(this).attr('layui-name','1')
+                //获取血缘关系的数据
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: `/neo4j/get/relation?tableName=${SelectedTableName}`,
+                    // url: `/neo4j/get/relation?tableName=2`,
+                    // data: ,
+                    dataType: 'json',
+                    contentType: 'text/plain;charset=UTF-8',
+                    success: function (resData) {
+                        let echartsData = resData
+                        // $('#myChart').empty()
+                        let myChart = echarts.init(document.getElementById('myChart'));
+                        let categories = echartsData["categories"];
+                        let links = echartsData["links"];
+                        let data = echartsData["data"];
+
+                        option = {
+                            title: {
+                                text: "血缘关系图"
+                            },
+                            animationDurationUpdate: 1500,
+                            animationEasingUpdate: "quinticInOut",
+                            toolbox: {
+                                feature: {
+                                    restore: {}
+                                }
+                            },
+                            legend: {
+                                show: true,
+                                data: categories
+                            },
+                            series: [{
+                                type: "graph",
+                                layout: "force",
+                                roam: true,
+                                hoverAnimation: true,
+                                focusNodeAdjacency: true,
+                                draggable: true,
+                                symbolSize: 33,
+                                force: {
+                                    repulsion: 200,
+                                    edgeLength: 100
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        borderColor: "#fff",
+                                        borderWidth: 1,
+                                        shadowBlur: 10,
+                                        shadowColor: "rgba(0, 0, 0, 0.3)"
+                                    }
+                                },
+                                lineStyle: {
+                                    width: 0.5,
+                                    curveness: 0.3,
+                                    opacity: 0.8
+                                },
+                                label: {
+                                    emphasis: {
+                                        position: 'right',
+                                        show: true
+                                    }
+                                },
+                                emphasis: {
+                                    itemStyle: {
+                                        borderWidth: 3
+                                    },
+                                    lineStyle: {
+                                        color: 'gray',
+                                        width: 3,
+                                    }
+                                },
+                                data:data,
+                                links:links,
+                                categories: categories
+                            }]
+                        }
+                        myChart.setOption(option);
+                    },
+                    error: function (request) {//请求失败之后的操作
+                        layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    }
+                });
+            } else if(index == 3 && isClick == 0){
+                $(this).attr('layui-name','1')
+                //获取变更记录数据
+                layui.use('table',
+                    function() {
+                        var table = layui.table;
+
+                        table.render({
+                            id:"genTableColumnTable2",//
+                            elem: '#genTableColumnData2',//指定表格元素
+                            url: '/dataChangeLog/getDataChangeLogByTableName?tableName='+SelectedTableName,  //请求路径
+                            cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                            ,skin: 'line ' //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
+                            //,even: true    //隔行换色
+                            ,page: true  //开启分页
+                            ,limits: [10,20,50,100]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+                            ,limit: 10 //每页默认显示的数量
+                            ,method:'post'  //提交方式
+                            ,cols: [[
+                                {
+                                    field: 'id', //json对应的key
+                                    title: 'id',   //列名
+                                    sort: true,   // 默认为 false,true为开启排序
+                                    width: '3%',
+                                    hide:true
+                                },
+                                {
+                                    field: 'tableName', //json对应的key
+                                    title: '表名',   //列名
+                                    width: '15%',
+                                    style: 'color:red;'
+                                },
+                                {
+                                    field: 'mode', //json对应的key
+                                    title: '操作类型',   //列名
+                                    width: '20%',
+                                },
+                                {
+                                    field: 'param', //json对应的key
+                                    title: '参数记录',   //列名
+                                    width: '15%',
+                                    style: 'color:red;'
+                                },
+                                {
+                                    field: 'operationUser',
+                                    title: '变更人',
+                                    align: 'center',
+                                    width: '10%',
+                                },
+                                {
+                                    field: 'operationTime', //json对应的key
+                                    title: '变更时间',   //列名
+                                },{
+                                    field: 'version', //json对应的key
+                                    title: '变更版本',   //列名
+                                }
+                            ]]
+                        });
+
+                    })
+            }
+
+        })
+
+        $('.closeDetailsDiv').on('click',function () {
+            $("#dataContentId").html("数据内容");
+            $('.layui-tab-title').find('li').attr('layui-name',0)
+            $('.dataListDiv').css('height','100%')
+            $('.listDetailsDiv').css('display','none')
+        })
+
+        //点击菜单item
+        $('.menuItem').on('click',function () {
+            let index = $(this).index()
+            let type = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name1');
+            let id = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name2');
+            let tableName = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('tableName');
+            let name = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name3');
+
+            if(index == 0){
+                $('#menu').css('display','none')
+                xadmin.open('添加在线收割','../dataMapping-add-import.html?'+id+'&'+name,650,550,true)
+            }if(index == 1){
+                $('#menu').css('display','none')
+                xadmin.open('手动离线导入','../dataMapping-Import.html?'+id+'&'+name,650,550)
+            }
+            // else if(index == 2){
+            //     $('#menu').css('display','none')
+            //     xadmin.open('查看血缘关系图','../dataList/relation-chart.html?'+tableName,650,550,)
+            // }else if(index == 3){
+            //     $('#menu').css('display','none')
+            //     xadmin.open('查看数据变更记录','../data-change-log.html?'+tableName,850,580)
+            // }else if(index == 4){
+            //     $('#menu').css('display','none')
+            //     xadmin.open('查看表机构','../dataList/table-structure.html?'+id,850,580)
+            // }
+            else if(index == 2){
+                $('#menu').css('display','none')
+                //点击生成主题库
+
+                $.ajax({
+                    type: "get",
+                    async: true,
+                    url: "/dataMapping/testAvailability?id="+id,
+                    data: '',
+                    dataType: 'json',
+                    contentType: 'text/plain;charset=UTF-8',
+                    beforeSend: function () {
+                        i=showLoad();
+                    },
+                    success: function (resData) {
+                        if(resData.code == 200){
+                            if(resData.data.exist == true){
+                                layer.alert(`可用，共有${resData.data.count}条数据.`, {icon: 1})
+                            }else{
+                                layer.alert(`不可用！`, {icon: 2})
+                            }
+
+                            closeLoad(i);
+                            showSuccess();
+                        }else{
+                            layer.alert(resData.errMsg, {icon: 2})
+                            closeLoad(i);
+                        }
+                    },
+                    error: function (request) {//请求失败之后的操作
+                        layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                        closeLoad(i);
+                    }
+                });
+            }else if(index == 5){
+                $('#menu').css('display','none')
+                deleteRow(id);
+            }else if(index == 4){
+                $('#menu').css('display','none')
+                updateName(id,name);
+            }
+
+
+        })
+        $('.menuItem2').on('click',function () {
+            let index = $(this).index()
+            let type = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name1');
+            let id = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name2');
+            let tableName = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('tableName');
+            let name = $('#rightUl').find('.itemLi').eq(rightClickNum).attr('name3');
+
+            if(index == 0){
+                $('#menu2').css('display','none')
+                xadmin.open('添加在线收割','../dataMapping-add-import.html?'+id+'&'+name,650,550,true)
+            }if(index == 1){
+                $('#menu2').css('display','none')
+                xadmin.open('手动离线导入','../dataMapping-Import.html?'+id+'&'+name,650,550)
+            }else if(index == 4){
+                $('#menu2').css('display','none')
+                deleteRow(id);
+            }else if(index == 3){
+                $('#menu2').css('display','none')
+                updateName(id,name);
+            }
+
+        })
+
+        //双击菜单item
+        $('#rightUl').on('dblclick','.itemLi',function () {
+            let index = $(this).index()
+            let type = $(this).attr('name1')
+            let id = $(this).attr('name2')
+            if(type == 0){
+                getMenuList(id)
+            }
+        })
+
+        $('#addFile').on('click',function () {
+            layer.open({
+                content: `
+                    <from class="ayui-form layui-form-pane">
+                        <div class="layui-from-item">
+                            <lable class="layui-form-label" title="当前选中">当前选中：</lable>
+                            <div class="layui-input-block f-input-par">
+                                <input type="text" class="layui-input f-input">
+                            </div>
+                        </div>
+                        <div class="layui-from-item">
+                            <lable class="layui-form-label" title="新增节点">新增节点：</lable>
+                            <div class="layui-input-block f-input-par">
+                                <input type="text" class="layui-input f-input">
+                            </div>
+                        </div>
+                        <div class="layui-from-item">
+                            <lable class="layui-form-label" title="下拉框">下拉框：</lable>
+                            <div class="layui-input-block f-input-par">
+                                <input type="text" class="layui-input f-input">
+                            </div>
+                        </div>
+                    </from>
+                `,
+                scrollbar: false
+            });
+            
+        })
+
+
+
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "/dataMapping/getDataMappingList",
+            data: '',
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            success: function (resData) {
+                MappingList = resData.data
+                leftArr = resData.data
+                leftArr.forEach((item,index)=>{
+                    item.title = item.name
+                })
+                leftArr = leftArr.filter((item)=> item.type ==0)
+
+                // console.log(JSON.stringify(leftArr))
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+            }
+        });
+
+
+        let newData = treeDataConversion(leftArr)
+        let demoTree = newData
+        layui.extend({
+            dtree: '{/}dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['dtree','layer','jquery'], function(){
+            var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery;
+
+            // 初始化树
+            var DTree = dtree.render({
+                elem: "#demoTree",
+                toolbar:true,
+                data: demoTree, // 使用data加载
+                icon: ["0","0"],
+                ficon: ['1','-1'] , // 隐藏一级图标
+                // skin: "layui"
+                // url: "http://localhost:666/dataMapping/getDataMappingList" // 使用url加载（可与data加载同时存在）
+                // type: "all",
+                // url:"/testdata",//url
+                // method:"POST",
+                // request: {"type":"0"},//传递参数
+                // initLevel: "1",
+                // icon:'2',
+                // firstIconArraylayui:"0",
+                // checkbar: true,
+                // checkbarType: "no-all",//显示半选中状态
+                // success:function (data) {
+                // },
+                toolbarFun: {
+                    addTreeNode: function(treeNode, $div){
+                        $.ajax({
+                            type: "post",
+                            data: treeNode,
+                            url: "/dataMapping/insert",
+                            dataType:"json",
+                            success: function(result){
+                                if(result.code===200){
+                                    layer.alert(result.msg,{icon: 6});
+                                    let newname = result.data.name
+                                    $.ajax({
+                                        type: "post",
+                                        async: false,
+                                        url: "/dataMapping/getDataMappingList",
+                                        data: '',
+                                        dataType: 'json',
+                                        contentType: 'text/plain;charset=UTF-8',
+                                        success: function (resData) {
+                                            let data = resData.data
+                                            data = data.filter((item) => item.name == newname)
+                                            let refreshData = data[0]
+                                            refreshData.title = refreshData.name
+                                            DTree.changeTreeNodeAdd(refreshData); // 添加成功，返回一个JSON对象
+                                            DTree.changeTreeNodeAdd("refresh"); // 添加成功，局部刷新树
+                                        },
+                                    })
+
+                                    // DTree.changeTreeNodeAdd(treeNode.nodeId); // 添加成功，返回ID
+                                    // DTree.changeTreeNodeAdd(true); // 添加成功
+                                    // DTree.changeTreeNodeAdd(result.data); // 添加成功，返回一个JSON对象
+                                    // DTree.changeTreeNodeAdd("refresh"); // 添加成功，局部刷新树
+                                }else{
+                                    layer.alert(result.msg, {icon: 2});
+                                }
+                            },
+                            error: function(){
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                                //DTree1.changeTreeNodeAdd(false); // 添加失败
+                            }
+                        });
+                    },
+                    editTreeNode: function(treeNode, $div){
+                        $.ajax({
+                            type: "post",
+                            data: treeNode,
+                            url: "/dataMapping/update",
+                            dataType:"json",
+                            success: function(result){
+                                if(result.code===200){
+                                    layer.alert(result.data,{icon: 6});
+                                    DTree.changeTreeNodeEdit(true);// 修改成功
+                                    DTree.changeTreeNodeEdit(treeNode.context); // 修改成功，返回一个JSON对象
+                                }else{
+                                    layer.alert(result.errMsg, {icon: 2});
+                                }
+                            },
+                            error: function(){
+                                DTree.changeTreeNodeEdit(false);//修改失败
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+                    },
+                    delTreeNode: function(treeNode, $div){
+                        $.ajax({
+                            type: "post",
+                            data:{"id":treeNode.nodeId},
+                            url: "/dataMapping/deleteById",
+                            dataType:"json",
+                            success: function(result){
+                                if(result.code===200){
+                                    layer.alert(result.data,{icon: 6});
+                                    DTree.changeTreeNodeDel(true); // 删除成功
+                                }else{
+                                    layer.alert(result.errMsg, {icon: 2});
+                                }
+                            },
+                            error: function(){
+                                DTree.changeTreeNodeDel(false);// 删除失败
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+                    }
+                },
+                toolbarBtn:[
+                    [
+                 /*       {"label":"下拉框","name":"type","type":"select","optionsData":function(){
+                                return {"0":"文件夹","1":"文件"};
+                            }},*/
+                        {"value":"重置","name":"name6","type":"reset"},
+                        {"value":"提交","name":"name7","type":"submit","defElem":"btn"},
+                    ] // 这就是自定义新增中的内容
+                ]
+            });
+
+            // 绑定节点点击
+            dtree.on("node('demoTree')" ,function(obj){
+                // console.log(JSON.stringify(obj))
+
+                // layer.msg(JSON.stringify(obj));
+                // layer.msg(JSON.stringify(obj.param));
+
+                let id = obj.param.nodeId
+                getMenuList(id)
+
+            });
+
+
+        });
+    });
+
+    //搜索功能
+    $('#searchButton').on('click',function () {
+        let params = $('#searchInput').val()
+        console.log(params)
+        let data = {
+            'name':params
+        }
+        if(params != ''){
+            $.ajax({
+                type: "get",
+                async: false,
+                url: `/dataMapping/getDataMappingList?name=${params}`,
+                // data: data,
+                dataType: 'json',
+                contentType: 'text/plain;charset=UTF-8',
+                success: function (resData) {
+                    // MappingList = resData.data
+                    let leftArrSearch = resData.data
+                    let divCon = ''
+                    leftArrSearch.forEach((item,index)=>{
+                        if(item.type == 0){
+                            divCon += `
+                        <li name1="${item.type}" name2="${item.id}" tableName="${item.tableName}" name3="${item.name}"  class="itemLi rightLi" style="height: 35px;width: 100%">
+                                    <div class="layui-row">
+                                        <div class="layui-col-md2 titleLi" style="display: flex;align-items: center"><img style="margin-right:3px;height: 50%;width: auto " src="../../img/folder.png" alt="">${item.name}</div>
+                                        <div class="layui-col-md4 titleLi">${item.tableName ? item.tableName :  '&nbsp;' }</div>
+                                        <!--<div class="layui-col-md2 titleLi">文件夹</div>-->
+                                        <div class="layui-col-md2 titleLi">${item.createTime}</div>
+                                        <div class="layui-col-md2 titleLi">${item.updateTime== null ? "" :  item.updateTime }</div>
+                                        <div class="layui-col-md2 titleLi"> ${item.remarks == null ? "" :  item.remarks } </div>
+                                    </div>
+                                </li>
+                                `
+                        }else{
+                            divCon += `
+                        <li name1="${item.type}" name2="${item.id}" tableName="${item.tableName}" name3="${item.name}" class="itemLi rightLi" style="height: 35px;width: 100%">
+                                    <div class="layui-row">
+                                        <div class="layui-col-md2 titleLi" style="display: flex;align-items: center"><img style="margin-right:3px;height: 50%;width: auto " src="../../img/file.png" alt="">${item.name}</div>
+                                         <div class="layui-col-md4 titleLi">${item.tableName ? item.tableName :  '&nbsp;' }</div>
+                                        <!--<div class="layui-col-md2 titleLi">文件</div>-->
+                                        <div class="layui-col-md2 titleLi">${item.createTime}</div>
+                                        <div class="layui-col-md2 titleLi">${item.updateTime== null ? "" :  item.updateTime }</div>
+                                          <div class="layui-col-md2 titleLi"> ${item.remarks == null ? "" :  item.remarks } </div>
+                                    </div>
+                                </li>
+                                `
+                        }
+
+                    })
+                    $('#rightUl').empty()
+                    $('#rightUl').append(divCon)
+
+                    // console.log(JSON.stringify(leftArr))
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                }
+            });
+        }
+
+    })
+    function deleteRow(id) {
+        layer.confirm('确定删除所选项吗？',{icon: 3, title:'删除记录'},function (index) {
+            $.ajax({
+                url: "/dataMapping/deleteById",
+                type:'post',
+                dataType:'json',
+                data:{"id":id},
+                url: "/dataMapping/deleteById",
+                success:function (data,statusText) {
+                    if(data.code===200){
+                        layer.alert(data.data,{icon: 6},
+                            function() {
+                                location.reload(true);
+                            });
+                    }else{
+                        layer.alert(data.errMsg, {icon: 2});
+                    }
+                },
+                'error':function () {
+                    layer.msg('系统错误');
+                }
+            });
+        })
+
+    }
+
+    function treeDataConversion(data){
+        let cloneData = JSON.parse(JSON.stringify(data))    // 对源数据深度克隆
+        let tree = cloneData.filter((father)=>{              //循环所有项
+            let branchArr = cloneData.filter((child)=>{
+                return father.id == child.parentId      //返回每一项的子级数组
+            });
+            if(branchArr.length>0){
+                father.children = branchArr;    //如果存在子级，则给父级添加一个children属性，并赋值
+            }
+            return father.parentId==0;      //返回第一层
+        });
+        return tree     //返回树形数据
+    }
+
+    function updateName(id,name) {
+        layer.prompt({
+            formType: 3,
+            value: name,
+            title: '重命名'
+        }, function (value, index, elem) {
+            layer.close(index);
+            $.ajax({
+                type: "post",
+                data: {nodeId:id,context:value},
+                url: "/dataMapping/update",
+                dataType:"json",
+                success: function(result){
+                    if(result.code===200){
+                        layer.alert(result.data,{icon: 6});
+
+                    }else{
+                        layer.alert(result.errMsg, {icon: 2});
+                    }
+                },
+                error: function(){
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                }
+            });
+        });
+
+    }
+</script>
+<script>layui.use(['form', 'layer', 'element'],
+    function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+
+    });</script>
+</body>
+
+
+</html>

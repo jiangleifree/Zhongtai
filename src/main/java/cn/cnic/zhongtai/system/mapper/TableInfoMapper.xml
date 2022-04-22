@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.TableInfoMapper" >
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.TableInfo">
+        <id column="table_info_id" property="tableId" jdbcType="BIGINT" />
+        <result column="table_info_name" property="tableName" jdbcType="VARCHAR" />
+        <result column="topic_name" property="topicName" jdbcType="VARCHAR" />
+        <result column="columns" property="columns" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="findTablesByTopicName" resultMap="BaseResultMap">
+        select * from table_info where topic_name = #{topicName}
+    </select>
+
+    <insert id="createTableInfo" parameterType="cn.cnic.zhongtai.system.model.TableInfo" useGeneratedKeys="true" keyProperty="tableId">
+        insert into table_info(table_info_id, table_info_name, topic_name, columns)
+        values (#{tableId},#{tableName}, #{topicName},#{columns})
+
+    </insert>
+
+</mapper>

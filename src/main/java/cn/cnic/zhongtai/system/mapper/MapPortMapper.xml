@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.MapPortMapper">
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.MapPort">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="bolt_port" property="boltPort" jdbcType="BIGINT"/>
+        <result column="http_port" property="httpPort" jdbcType="BIGINT"/>
+        <result column="https_port" property="httpsPort" jdbcType="BIGINT"/>
+        <result column="mapName" property="map_name" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <select id="getMaxPort" resultType="Integer">
+        select max(https_port) from port
+    </select>
+
+    <insert id="create">
+        insert into port(bolt_port, http_port, https_port, map_name) values
+        (#{boltPort},#{httpPort},#{httpsPort},#{mapName})
+    </insert>
+
+    <delete id="deleteByMapNameEn">
+        delete from port where map_name = #{mapNameEn}
+    </delete>
+
+</mapper>

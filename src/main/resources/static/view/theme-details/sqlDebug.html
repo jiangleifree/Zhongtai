@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>虚拟目录</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/css/jquery.json-viewer.css">
+    <script src="/js/jquery.json-viewer.js"></script>
+
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/dtree.css">
+    <!--    <script type="text/javascript" src="/admin/layui_ext/dtree/dtree.js"></script>-->
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/font/dtreefont.css">
+    <style>
+
+        .scrollStyle::-webkit-scrollbar{
+            width:10px;
+            height:2px;
+            /**/
+        }
+        .scrollStyle::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb{
+            background: #fff;
+            /*background: #cfd9e3;*/
+            border-radius:10px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb:hover{
+            background: #cfd9e3;
+        }
+        .scrollStyle::-webkit-scrollbar-corner{
+            background: #fff;
+        }.scrollStyle::-webkit-scrollbar-track{
+             background: #fff;
+         }
+    </style>
+    <style>
+        #demoTree{
+            width: 650px!important;
+        }
+        .layui-input-inline-new2{
+            /*width: 900px ;*/
+            width: 600px !important;
+        }
+    </style>
+</head>
+<body style="background: #f0f0f0;">
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12" style="background: #f0f0f0;display: flex;flex-direction: column;align-items: center">
+            <div style="height: 435px;width: 850px;background: #fff;">
+                <div class="" style="display: none"><input type="text" class="filename"></div>
+                <form class="layui-form layui-col-space5" id="dataFtpFrom">
+                    <div class="layui-col-md12" >
+                            <div class="layui-card-body ">
+                                <div class="layui-form-item" style="height: 110px;margin-top: 50px">
+                                    <label  class="layui-form-label">
+                                        <span class="x-red">*</span>sql</label>
+                                    <div class="layui-input-inline layui-input-inline-new2">
+                                        <textarea id="sqlData" class="layui-textarea"  value="" name="content" lay-verify="content" ></textarea>
+
+                                    </div>
+                                    <div class="layui-input-inline" style="width: 50px">
+                                        <a style="margin-top: 6px;" id="debugClick" class="layui-btn  layui-btn-xs responseListDelete" lay-event="getLog">调试</a>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item" style="height: 110px" v-if="isDebug">
+                                    <label  class="layui-form-label">
+                                        <span class="x-red">*</span>sql调试结果</label>
+                                    <div class="layui-input-inline layui-input-inline-new2">
+                                        <textarea id="deBugData" class="layui-textarea"  value="" name="content" lay-verify="content" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </form>
+            </div>
+            <div style="display: flex;justify-content: flex-end;margin-top: 10px;width: 650px">
+                <button style="width: 120px;" id="buttonAdd" type="button" class="layui-btn layui-btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<script>layui.use(['form', 'layer', 'element'],
+    function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+
+    });</script>
+
+<script>
+
+</script>
+<script>
+    let MappingList;
+    let browseId = ''
+    let browseName = ''
+    let tableName = ''
+    //注意：parent 是 JS 自带的全局对象，可用于操作父页面
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+
+    //给父页面传值
+    $('#buttonAdd').on('click', function(){
+        parent.layer.close(index);
+    });
+    //接口调试
+    $('#debugClick').click(function(){
+        let sql = $('#sqlData').val()
+        let topicName = parent.topicName2
+        if(sql == ''){
+            layer.alert("请输入sql语句！", {icon: 2});
+        }else{
+            $.ajax({
+                type: "get",
+                async: false,
+                url: `/topic/testSql?topicName=${topicName}&sql=${sql}`,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (resData) {
+                    if(resData.code == 200){
+                        layer.msg('调试成功！')
+                        $('#deBugData').val(JSON.stringify(resData.data))
+                        // that.sqlDebugData = resData.data
+                    }else{
+                        layer.alert(resData.errMsg, {icon: 2})
+                    }
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                }
+            });
+        }
+    });
+
+    //关闭iframe
+    $('#buttonCancal').click(function(){
+        parent.layer.close(index);
+    });
+    $(document).ready(function (){
+
+
+
+
+
+
+
+
+
+    })
+
+</script>
+</body>
+
+
+</html>

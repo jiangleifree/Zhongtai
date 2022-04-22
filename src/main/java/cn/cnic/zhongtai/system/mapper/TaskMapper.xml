@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.TaskMapper">
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.ImportDataTask">
+        <id column="task_id" property="taskId" jdbcType="BIGINT"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="task_type" property="taskType" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="interval_time" property="interval"></result>
+        <result column="errorCause" property="errorCause"></result>
+        <collection property="logInfos" column="{taskId}" ofType="cn.cnic.zhongtai.system.model.LogInfo"
+                    javaType="java.util.List"
+                    select="getLogInfoByTaskId">
+        </collection>
+
+    </resultMap>
+
+    <resultMap id="BaseResultMap2" type="cn.cnic.zhongtai.system.model.ImportDataTask">
+        <id column="task_id" property="taskId" jdbcType="BIGINT"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="task_type" property="taskType" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="interval_time" property="interval"></result>
+        <result column="json_data" property="jsonData"></result>
+    </resultMap>
+
+    <resultMap id="LogInfoMap" type="cn.cnic.zhongtai.system.model.LogInfo">
+        <id column="log_id" property="logId" jdbcType="BIGINT"/>
+        <result column="log_info" property="logInfo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="task_id" property="taskId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getTasksByStatus" resultMap="BaseResultMap2">
+        select * from task where status = #{status}
+    </select>
+
+    <select id="getTasksByTypeAndStatus" resultMap="BaseResultMap2">
+        select * from task where task_type = #{taskType} and status = #{status}
+    </select>
+
+    <select id="getOneDoingTaskByTaskType" resultMap="BaseResultMap2">
+        select * from task where status = 'doing' and task_type = #{taskType} limit 1
+    </select>
+
+    <select id="getOneWaitingTaskByTaskType" resultMap="BaseResultMap2">
+        select * from task where status = 'waiting' and task_type = #{taskType} limit 1
+    </select>
+
+    <select id="getCountByTaskType" resultType="int">
+        select count(*) as count from task where status = "doing" and task_type = #{taskType}
+    </select>
+    <update id="updateNextTime">
+        update task set next_time = #{nextTime} where task_id = #{taskId}
+    </update>
+
+    <update id="updateJsonData">
+        update task set json_data = #{jsonData} where task_id = #{taskId}
+    </update>
+
+    <insert id="createTask" parameterType="cn.cnic.zhongtai.system.model.Task" useGeneratedKeys="true" keyProperty="taskId" >
+        insert into task(task_id, task_name, task_type, create_time, status, json_data)
+        value (#{taskId},#{taskName},#{taskType},#{createTime},#{status},#{jsonData})
+    </insert>
+
+    <select id="getLogInfoByTaskId" resultMap="LogInfoMap">
+        select * from log_info where task_id = #{taskId}
+    </select>
+
+    <select id="getAllTask" resultMap="BaseResultMap">
+        select * from task order by create_time desc
+    </select>
+
+    <select id="getOneTask" resultMap="BaseResultMap2">
+        select task_id, task_name, task_type, create_time, status, interval_time, json_data from task where status = "waiting" and now() >= next_time union
+        select task_id, task_name, task_type, create_time, status, interval_time, json_data  from task where status = "waiting" and next_time is null limit 1
+    </select>
+
+    <update id="changeTaskStatus">
+        update task set status = #{status} where task_id = #{taskId}
+    </update>
+
+    <update id="changeTaskAppId">
+        update task set app_id = #{appId} where task_id = #{taskId}
+    </update>
+
+
+    <update id="changeTaskStatusAndErrCause">
+        update task set status = #{status}, errorCause = #{errorCause} where task_id = #{taskId}
+    </update>
+
+    <select id="getOneMapTask" resultMap="BaseResultMap2">
+        select * from task where task_type = "Neo4jTask" and status = "done";
+    </select>
+
+    <select id="getTaskStatusById" resultMap="BaseResultMap2" parameterType="int">
+        select * from task  where task_id = #{taskId,jdbcType=BIGINT}
+    </select>
+
+    <update id="addLog">
+        update task set log_text = #{log} where task_id = #{taskId}
+    </update>
+
+
+    <select id="getTasksBytaskName" resultMap="BaseResultMap2">
+        select * from task where task_name = #{taskName}
+    </select>
+</mapper>

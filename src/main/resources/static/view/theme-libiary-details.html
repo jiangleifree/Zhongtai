@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/css/jquery.json-viewer.css">
+    <script src="/js/jquery.json-viewer.js"></script>
+    <script src="/js/vue/vue.js"></script>
+
+    <script src="/js/ace/jsoneditor.js"></script>
+    <link rel="stylesheet" href="/js/ace/jsoneditor.css" type="text/css">
+    <style>
+        .jsoneditorDiv {
+            font: 10.5pt arial;
+            color: #4d4d4d;
+            line-height: 150%;
+            width: 500px;
+        }
+
+        code {
+            background-color: #f5f5f5;
+        }
+
+        #jsoneditor {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+        #jsoneditor2 {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+        .jsoneditor {
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            border: none;
+        }
+        .jsoneditor-menu{
+            background: #fff;
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body style="position: relative">
+
+<div class="layui-fluid" style="position: absolute;top: 0;left: 0;bottom: 0;height: 100%;width: 100%">
+    <div class="layui-row layui-col-space15" style="height: 100%;width: 100%">
+        <div class="layui-col-md12" style="height: 100%">
+            <div id="appCon" class="layui-card" style="position: relative;height: 100%">
+                <div class="layui-btn-container" style="position: absolute;top: 0;left: 0;">
+                    <button class="layui-btn layui-btn-sm" onclick="window.location.href='theme-library-list.html';">返回主题库首页</button>
+                </div>
+                <div class="layui-btn-container" >
+                    <button class="layui-btn layui-btn-sm" ></button>
+                </div>
+                <div style="height: 90%">
+                    <div class="layui-row" style="height: 100%;position: relative;display: flex">
+                        <div  style="box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);height: 100%;flex: 1;position: relative">
+                            <div id="jsoneditor">
+                                <div @click="open" id="open" style="width: 40px;height: 35px;line-height: 35px;text-align: left;position: absolute;right: 0;top: 0;z-index: 100">
+                                    <i class="layui-icon layui-icon-triangle-r" style="font-size: 22px; color: #00a69b;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 40px"></div>
+                        <div  style="box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);height: 100%;flex: 2;position: relative">
+                            <div id="jsoneditor2"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    let vm = new Vue({
+        el:'#appCon',
+        data:{
+            leftData:{},
+            a:'11111',
+            jsonLeft:{},
+            editor:null,
+            editor2:null,
+
+        },
+        created(){
+        },
+        mounted(){
+            this.getJSONeditor()
+            this.getJSONeditor2()
+            this.getleftData()
+            this.a = '2222222222222'
+
+        },
+        methods:{
+            open(){
+                let that = this
+                console.log(`a:${this.a}`)
+                console.log(JSON.stringify(this.leftData))
+                let topicName = this.leftData[0].topicName
+                let query = that.editor.get()
+                $.ajax({
+                    type: "post",
+                    async: false,
+                    url: `/api/topicService/${topicName}/getList`,
+                    data: JSON.stringify(query) ,
+                    dataType: 'json',
+                    //contentType: 'text/plain;charset=UTF-8',
+                    contentType: 'application/json',
+                    success: function (res) {
+                        let data = '111'
+                        that.editor2.set(res)
+
+                    },
+                    error: function (request) {//请求失败之后的操作
+                        layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    }
+                });
+                // let data = this.editor.get()
+                // this.editor2.set(data)
+            },
+
+            getJSONeditor(){
+                let container = document.getElementById('jsoneditor')
+                let options = {
+                    mode: 'code',
+                    modes: ['code'], // allowed modes
+                    onError: function (err) {
+                        alert(err.toString())
+                    },
+                    onModeChange: function (newMode, oldMode) {
+                        console.log('Mode switched from', oldMode, 'to', newMode)
+                    }
+                }
+                this.editor = new JSONEditor(container, options, this.jsonLeft)
+                $('.jsoneditor-menu').attr('class','jsoneditor-menu2')
+                $('.jsoneditor-menu2').empty()
+            },
+            getJSONeditor2(){
+                let container = document.getElementById('jsoneditor2')
+                let options = {
+                    mode: 'code',
+                    modes: ['code'], // allowed modes
+                    onError: function (err) {
+                        alert(err.toString())
+                    },
+                    onModeChange: function (newMode, oldMode) {
+                        console.log('Mode switched from', oldMode, 'to', newMode)
+                    }
+                }
+                let data = {}
+                this.editor2 = new JSONEditor(container, options, data)
+                $('#jsoneditor2').find('.jsoneditor-menu').attr('class','jsoneditor-menu3')
+                $('.jsoneditor-menu3').empty()
+                $('.jsoneditor-menu3').css('height','35px')
+            },
+
+            getleftData() {
+                let that = this
+                let url = decodeURI(decodeURI(location.search)); //获取url中"?"符后的字串
+                let topicName = '';
+                if (url.indexOf("?") != -1) {
+                    topicName = url.substr(1);
+                }
+                let query = {
+                    topicName:topicName
+                }
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: "/topic/getTopicInterfaceByTopic",
+                    data: (query),
+                    dataType: 'json',
+                    contentType: 'text/plain;charset=UTF-8',
+                    success: function (res) {
+                        that.leftData = res.data
+                        that.a = '222222222222222222222222'
+                        console.log(`111${JSON.stringify(that.leftData)}`)
+                        let menuDiv = ``
+                        let div1 = `
+        <div style="line-height: 35px;width: 30px;font-size: 12px;text-align: center;color: #dd0a73;margin-right: 10px">${that.leftData[0].type}</div>
+    `
+                        let div2 = `
+        <div style="flex:1;line-height: 35px;font-size: 12px;text-align: center;color: #00a69b;text-align: left">${that.leftData[0].topicName}</div>
+    `
+                        let div3 = ``
+                        menuDiv = `
+        <div style="display: flex">${div1}${div2}${div3}</div>
+    `
+                        $('.jsoneditor-menu2').append(menuDiv)
+                    },
+                    error: function (request) {//请求失败之后的操作
+                        layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    }
+                });
+
+            }
+        }
+    })
+</script>
+</body>
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- HTML for static distribution bundle build -->
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Swagger UI</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >-->
+<!--    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />-->
+<!--    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />-->
+<!--    <style>-->
+<!--        html-->
+<!--        {-->
+<!--            box-sizing: border-box;-->
+<!--            overflow: -moz-scrollbars-vertical;-->
+<!--            overflow-y: scroll;-->
+<!--        }-->
+
+<!--        *,-->
+<!--        *:before,-->
+<!--        *:after-->
+<!--        {-->
+<!--            box-sizing: inherit;-->
+<!--        }-->
+
+<!--        body-->
+<!--        {-->
+<!--            margin:0;-->
+<!--            background: #fafafa;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<div id="swagger-ui"></div>-->
+
+<!--<script src="./swagger-ui-bundle.js"> </script>-->
+<!--<script src="./swagger-ui-standalone-preset.js"> </script>-->
+<!--<script>-->
+<!--    window.onload = function() {-->
+<!--        // Begin Swagger UI call region-->
+<!--        const ui = SwaggerUIBundle({-->
+<!--            url: "localhost:666/v2/api-docs",-->
+<!--            dom_id: '#swagger-ui',-->
+<!--            deepLinking: true,-->
+<!--            presets: [-->
+<!--                SwaggerUIBundle.presets.apis,-->
+<!--                SwaggerUIStandalonePreset-->
+<!--            ],-->
+<!--            plugins: [-->
+<!--                SwaggerUIBundle.plugins.DownloadUrl-->
+<!--            ],-->
+<!--            layout: "StandaloneLayout"-->
+<!--        })-->
+<!--        // End Swagger UI call region-->
+
+<!--        window.ui = ui-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->

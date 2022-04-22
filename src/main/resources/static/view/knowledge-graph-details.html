@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/css/jquery.json-viewer.css">
+    <script src="/js/jquery.json-viewer.js"></script>
+    <style>
+
+        .scrollStyle::-webkit-scrollbar{
+            width:10px;
+            height:2px;
+            /**/
+        }
+        .scrollStyle::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb{
+            background: #fff;
+            /*background: #cfd9e3;*/
+            border-radius:10px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb:hover{
+            background: #cfd9e3;
+        }
+        .scrollStyle::-webkit-scrollbar-corner{
+            background: #fff;
+        }.scrollStyle::-webkit-scrollbar-track{
+             background: #fff;
+         }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card" style="position: relative">
+                <div class="layui-btn-container" style="position: absolute;top: 0;left: 0;">
+                    <button class="layui-btn layui-btn-sm" onclick="window.location.href='knowledge-graph-list.html';">返回知识图谱首页</button>
+                    <button class="layui-btn layui-btn-sm" id="apiQuery">xinyemian</button>
+                    <button class="layui-btn layui-btn-sm" id="mapreate">新建</button>
+                </div>
+                <div class="layui-btn-container" >
+                    <button class="layui-btn layui-btn-sm" ></button>
+                </div>
+                <div>
+                    <div class="layui-row">
+                        <div class="layui-col-md2" style="box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);">
+                            <div class="layui-collapse" id="leftBody">
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md10">
+                            <div style="padding: 0  15px">
+                                <div class="layui-tab layui-tab-card">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">调试</li>
+                                    </ul>
+                                    <div class="layui-tab-content" style="min-height: 600px;">
+                                        <div class="layui-tab-item layui-show">
+                                            <div style="display: flex;">
+                                                <input id="centerUrl"  style="width: 700px;margin-top:15px;margin-bottom: 20px" type="text" name="title" required lay-verify="required" placeholder="请选择您要调试的url" autocomplete="off" class="leftSearch layui-input">
+                                                <button id="selectButton" style="height: 30px;width: 60px;margin-top: 15px">调试</button>
+                                                <button id="copyButton" style="height: 30px;width: 60px;margin-top: 15px;margin-left: 15px">复制</button>
+                                                <button id="toNeo4j" style="height: 30px;width: 60px;margin-top: 15px;margin-left: 15px">neo4j</button>
+                                            </div>
+
+                                            <fieldset  class="showResDiv layui-elem-field" style="display: none; min-height:200px">
+                                                <legend>返回数据</legend>
+                                                <div class="layui-field-box">
+                                                    <div class="resDiv">
+
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+        let leftData = []
+        let leftKey = []
+        let debugUrl = ''
+        let   neo4jUrl ="bolt://"+GetQueryString("url")+":"+GetQueryString("port");
+        let mapName = GetQueryString("name");
+        getleftData()
+        function getleftData() {
+
+            let query = {
+                neo4jUrl:neo4jUrl
+            }
+            $.ajax({
+                type: "get",
+                async: false,
+                url: "/map/getLabelsByNeo4jUrl",
+                data: (query),
+                dataType: 'json',
+                contentType: 'text/plain;charset=UTF-8',
+                success: function (res) {
+                    leftData = res.data;
+                    console.log(leftData);
+                    let jiekou = []
+                    for(let key in leftData){
+                        leftKey.push(key)
+                    }
+                    leftKey.forEach((item,index)=>{
+                        let pBody = ''
+                        leftData[item].forEach((item1,index1)=>{
+                            pBody += `<p class="scrollStyle leftP" style="cursor:pointer;height: 20px;white-space:nowrap;text-indent: 15px;width: 100%;overflow-x: scroll"
+                                    title="${item1}">${item1}</p>`
+                        })
+                        if( index == 0){
+                            let left =
+                                `<div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">${item}</h2>
+                                    <div class="layui-colla-content layui-show">
+                                        ${pBody}
+                                    </div>
+                                </div>`
+                            $('#leftBody').append(left)
+                        }else{
+                            let left =
+                                `<div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">${item}</h2>
+                                    <div class="layui-colla-content">
+                                        ${pBody}
+                                    </div>
+                                </div>`
+                            $('#leftBody').append(left)
+                        }
+
+                    })
+
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                }
+            });
+
+        }
+        $('#copyButton').on('click',function () {
+            var dd = $('#centerUrl');
+            dd.select();
+            document.execCommand("copy");
+            layer.msg('复制成功！');
+        })
+        $('#toNeo4j').on('click',function () {
+            var port = parseInt(GetQueryString("port"))+1;
+            parent.xadmin.add_tab("图库-" ,`http://`+GetQueryString("url")+":"+ port ,true);
+        })
+
+
+        function GetQueryString(key)
+        {
+            var reg = new RegExp("(^|&)"+key+"=([^&]*)(&|$)");
+            var result = window.location.search.substr(1).match(reg);
+            return result?decodeURIComponent(result[2]):null;
+        }
+
+
+        //点击debug
+        function showLoad() {
+            return layer.msg('正在进行调试...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:100000});
+        }
+
+        function closeLoad(index) {
+            layer.close(index);
+        }
+        function showSuccess() {
+            layer.msg('执行成功！',{time: 1000,offset: 'auto'});
+        }
+
+        $('#selectButton').on('click',function () {
+            let cql =  $('#centerUrl').val();
+
+            if("" == cql){
+                layer.alert("参数为空", {icon: 2});
+                return;
+            }
+            let query = {
+                neo4jUrl:neo4jUrl,
+                cql:cql
+            }
+            let i;
+            $.ajax({
+                type: "get",
+                async: true,
+                url: "/map/getDataByCql",
+                data:query,
+                dataType: 'json',
+                contentType: 'text/plain;charset=UTF-8',
+                beforeSend: function () {
+                    i=showLoad();
+                },
+                success: function (res) {
+                    if(res.code == 200){
+                        $('.showResDiv').show()
+                        $('.showResDiv').find('.resDiv').empty();
+                        var jsonPretty = JSON.stringify(JSON.parse(res.data),null,2);
+                        $('.showResDiv').find('.resDiv').html("<pre>"+jsonPretty+"</pre>")
+                        layer.msg('调试成功！');
+                        closeLoad(i);
+                        showSuccess();
+                    }else{
+                        layer.msg(res.errMsg);
+                        closeLoad(i);
+                    }
+
+
+
+                    // $('.showResDiv').find('.resDiv').JSONView(JSON.stringify(res))
+
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    layer.close(index);
+                    closeLoad(i);
+                }
+            });
+        })
+
+        //点击左侧url
+        $('#leftBody').on('click','.leftP',function () {
+            let $this = $(this)
+            debugUrl = $this.attr('title')
+            $('#centerUrl').val(debugUrl)
+        })
+
+
+        $('#mapreate').on('click',function () {
+            window.location.href=encodeURI(encodeURI('map-storage-create.html?mapName='+mapName+'&neo4jUrl='+neo4jUrl))
+        })
+
+        $('#apiQuery').on('click',function () {
+            window.location.href=encodeURI(encodeURI(' theme-details/map-storage-details.html?mapName='+mapName+'&neo4jUrl='+neo4jUrl))
+        })
+
+
+
+
+
+
+
+
+
+    });
+</script>
+<script>layui.use(['form', 'layer', 'element'],
+    function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+
+    });</script>
+</body>
+
+
+</html>

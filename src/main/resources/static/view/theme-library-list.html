@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <style>
+        .itemDiv , .itemDiv1{
+            width: 240px;
+            height: 240px;
+            border-radius:10px;
+            transition: 0.4s;
+            /*background: #f4f8fd  ;*/
+            background-size:100% 100% ;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            position: relative;
+        }
+        .itemDiv1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .itemDiv:hover , .itemDiv1:hover{
+            width: 250px;
+            height: 250px;
+        }
+        .itemDiv:hover .div4{
+            width: 150px;
+            height: 150px;
+        }
+
+        .itemDiv .divPosit{
+            height: 30px;
+            width: 100%;
+            /*background: pink;*/
+            position: relative;
+        }
+        .itemDiv .divPosit .titlePosit{
+            position: absolute;
+            left: -10px;
+            top: 10px;
+            width: 80px;
+            border-radius: 4px ;
+            height: 20px;
+            font-size:14px;
+            font-weight:400;
+            color:rgba(255,255,255,1);
+            background: rgba(251,114,116,1);
+            text-align: center;
+        }
+        .itemDiv .divPosit .open{
+            position: absolute;
+            right: 5px;
+            top: 10px;
+            height: 18px;
+            width: 40px;
+            border-radius: 20px;
+            background:#5fb878;
+            color: #fff;
+            line-height: 18px;
+            font-size: 12px;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            z-index:100;
+            text-align: center;
+        }
+        .itemDiv .div1{
+            height: 130px;
+            font-size: 18px;
+            margin-top: 10px;
+            width: 100%;
+            text-indent: 15px;
+            color: #000;
+            display: flex;
+            align-items: center;
+        }
+        .itemDiv .div1 div{
+            width: 130px;
+            height: 130px;
+            margin-right: 12px;
+            margin-left: 14px;
+        }
+        .itemDiv .div1 div img{
+            width: 100%;
+            height: 100%;
+            float: left;
+        }
+        .itemDiv .divTitle{
+            height: 30px;
+            font-size: 18px;
+            margin-top: 10px;
+            width: 100%;
+            text-indent: 15px;
+            color: #000;
+            display: flex;
+            align-items: center;
+        }
+        .itemDiv .div2{
+            font-size: 13px;
+            width: 140px;
+            margin-top: 10px;
+            text-indent: 15px;
+            color: #000;
+            white-space: nowrap;/*强制在一行显示*/
+            text-overflow:ellipsis;/*设置超出内容显示...*/
+            overflow: hidden;/*一定不能少 超出的内容进行隐藏*/
+        }
+        .itemDiv .div3{
+            font-size: 13px;
+            width: 140px;
+            margin-top: 10px;
+            text-indent: 15px;
+            color: #000;
+            white-space: nowrap;/*强制在一行显示*/
+            text-overflow:ellipsis;/*设置超出内容显示...*/
+            overflow: hidden;/*一定不能少 超出的内容进行隐藏*/
+        }
+        .itemDiv .div4{
+            height: 140px;
+            transition: 0.4s;
+            width: 140px;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            opacity: 0.02;
+        }
+        .itemDiv .div4 img{
+            width: 100%;
+            height: 100%;
+            float: left;
+        }
+        .itemDiv .div5 {
+            width: 100%;
+            height: 28px;
+            position: absolute;
+            bottom: 0px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            left: 0px;
+            background:rgba(0,222,152,1);
+            font-size:14px;
+            font-weight:400;
+            color:rgba(255,255,255,1);
+            line-height:28px;
+            text-indent: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .open{
+            height: 18px;
+            width: 40px;
+            border-radius: 20px;
+            background:#5fb878;
+            /*background:rgba(0,222,152,1);*/
+            color: #fff;
+            line-height: 18px;
+            font-size: 12px;
+            /*text-align: center;*/
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            margin-right: 10px;
+            z-index:100;
+        }
+        .close{
+            height: 18px;
+            width: 40px;
+            border-radius: 20px;
+            background:#d2d2d2;
+            /*background:rgba(251,114,116,1);*/
+            color: #fff;
+            line-height: 18px;
+            font-size: 12px;
+            /*text-align: center;*/
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            margin-right: 10px;
+            z-index:100;
+        }
+    </style>
+</head>
+<body>
+<!--<div class="x-nav">-->
+<!--          <span class="layui-breadcrumb">-->
+<!--            <a href="">首页</a>-->
+<!--            <a href="">演示</a>-->
+<!--            <a>-->
+<!--              <cite>导航元素</cite></a>-->
+<!--          </span>-->
+<!--    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"-->
+<!--       onclick="location.reload()" title="刷新">-->
+<!--        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>-->
+<!--</div>-->
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <h1>主题库首页
+                    </h1>
+                </div>
+
+                <div class="layui-card-body " style="/*height: 650px*/;" style="widows: 50%;">
+                    <div class="layui-btn-container">
+<!--                        <button class="layui-btn layui-btn-sm" onclick="window.location.href='theme-library-add.html';">添加主题库</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="div-container" style="display:flex;flex-wrap:wrap;justify-content:flex-start">
+            <div onclick="window.location.href='theme-library-add.html';" style="width: 260px;height: 260px;display: flex;justify-content: center;align-items: center">
+                <div class="itemDiv1">
+                    <i class="layui-icon layui-icon-add-1" style="font-size: 180px; color: #ebeeee;"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        init();
+    });
+
+    function showTopicDetail(topicName) {
+
+    }
+
+    function init() {
+
+        var container = $("#div-container")
+        $.get('/topic/findAllTopics', function (resp) {
+            res = $.parseJSON(resp)
+            layui.each(res.data, function (index, item) {
+                var topicName= item.topicName;
+                let img = ``
+                if(item.attarchId == ''){
+                    img = `<div><img src="../../img/9656d225451e540.jpg" alt=""></div>`
+                }else{
+                    img =   `<div><img src="/file/get/picture?attarchId=${item.attarchId}" alt=""></div>`
+                }
+                var result = `
+                    <div data-value='${topicName}' class='childd'  style="cursor:pointer; width: 260px;height: 260px;display: flex;justify-content: center;align-items: center">
+                        <div class="itemDiv">
+                            <div class="div1" name="${item.mapName}">
+                               ${img}
+
+                            </div>
+                            <div class="divTitle">${item.topicName}</div>
+                            <div class="div2" title="我是主题库1的简介哦哦哦">${item.createTime}</div>
+                            <div class="div3" title="2018.1.10">${item.comment}</div>
+                        </div>
+                    </div>
+                `;
+                container.prepend(result)
+                // <div class="itemDiv">
+                //     <div>${item.topicName}</div>
+                //     <div title="我是主题库1的简介哦哦哦">${item.createTime}</div>
+                //     <div title="2018.1.10">${item.comment}</div>
+                //     ${img}
+                //     </div>
+            })
+            container.on("click", ".childd", function () {
+                let con = `
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >账号：</label>
+                        <div class="layui-input-block">
+                            <input  type="text" value="" id="username"name="topicName" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-text">
+                        <label class="layui-form-label">密码：</label>
+                        <div class="layui-input-block">
+                            <input  type="text" value="" id="password"name="topicName" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                `
+                var topicName = $(this).attr('data-value')
+                window.location.href=encodeURI(encodeURI('theme-details/theme-details.html?'+topicName))
+                /*layer.open({
+                    title: '请输入权限账号和密码'
+                    ,content: con,
+                    area: ['500px', '250px'],
+                    btn: ['提交',]
+                    ,yes: function(index, layero){
+                        let username = $('#username').val()
+                        let password = $('#password').val()
+                        // alert(`${username}---${password}---${topicName}`)
+                        let query = {
+                            topicName:(topicName),
+                            userName:username,
+                            password:password,
+                        }
+                        $.ajax({
+                            type: "post",
+                            async: false,
+                            url: "/topic/authentication",
+                            data: JSON.stringify(query),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (resData) {
+                                if(resData.code == 200){
+                                    if(resData.data == true){
+                                        layer.msg('权限验证成功！');
+                                        window.location.href=encodeURI(encodeURI('theme-details/theme-details.html?'+topicName))
+                                        // window.location.href=encodeURI(encodeURI('theme-library-table-list.html?'+topicName))
+                                    }else{
+                                        layer.alert('权限验证不通过,请重新验证！', {icon: 2})
+                                    }
+
+                                }else{
+                                    layer.alert(resData.errMsg, {icon: 2})
+                                }
+                            },
+                            error: function (request) {//请求失败之后的操作
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+
+
+                    }
+
+                });*/
+                // var val = $(this).attr('data-value');
+                // window.location.href=encodeURI(encodeURI('theme-library-table-list.html?'+val))
+                // xadmin.open('主题库详细信息','theme-library-table-list.html?'+val)
+            })
+        })
+    }
+</script>
+</body>
+
+
+</html>

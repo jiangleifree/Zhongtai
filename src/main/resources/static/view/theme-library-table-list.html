@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/css/jquery.json-viewer.css">
+    <script src="/js/jquery.json-viewer.js"></script>
+    <style>
+
+        .scrollStyle::-webkit-scrollbar{
+            width:10px;
+            height:2px;
+            /**/
+        }
+        .scrollStyle::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb{
+            background: #fff;
+            /*background: #cfd9e3;*/
+            border-radius:10px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb:hover{
+            background: #cfd9e3;
+        }
+        .scrollStyle::-webkit-scrollbar-corner{
+            background: #fff;
+        }.scrollStyle::-webkit-scrollbar-track{
+             background: #fff;
+         }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card" style="position: relative">
+                <div class="layui-btn-container" style="position: absolute;top: 0;left: 0;">
+                    <button class="layui-btn layui-btn-sm" onclick="window.location.href='theme-library-list.html';">返回主题库首页</button>
+                </div>
+                <div class="layui-btn-container" >
+                    <button class="layui-btn layui-btn-sm" ></button>
+                </div>
+                <div>
+                    <div class="layui-row">
+                        <div class="layui-col-md2" style="box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);">
+                            <div class="layui-collapse" id="leftBody">
+<!--                                <div class="layui-colla-item">-->
+<!--                                    <h2 class="layui-colla-title">杜甫</h2>-->
+<!--                                    <div class="layui-colla-content layui-show">-->
+<!--                                        <p>我是第一个</p>-->
+<!--                                        <p>我是第二个</p>-->
+<!--                                        <p>我是第三个</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md10">
+                            <div style="padding: 0  15px">
+                                <div class="layui-tab layui-tab-card">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">调试</li>
+                                        <li>说明</li>
+                                        <li>访问统计</li>
+                                    </ul>
+                                    <div class="layui-tab-content" style="min-height: 600px;">
+                                        <div class="layui-tab-item layui-show">
+                                            <div style="display: flex;">
+                                                <input id="centerUrl"  style="width: 700px;margin-top:15px;margin-bottom: 20px" type="text" name="title" required lay-verify="required" placeholder="请选择您要调试的url" autocomplete="off" class="leftSearch layui-input">
+                                                <button id="selectButton" style="height: 30px;width: 60px;margin-top: 15px">调试</button>
+                                                <button id="copyButton" style="height: 30px;width: 60px;margin-top: 15px;margin-left: 15px">复制</button>
+                                            </div>
+                                            <fieldset class="layui-elem-field">
+                                                <legend>设置检索条件</legend>
+                                                <div class="layui-field-box">
+                                                    <div class="layui-row">
+                                                        <div class="layui-col-md1"></div>
+                                                        <div class="layui-col-md10" id="parameterConDiv">
+                                                            <div class="" style="margin-top:4px;height: 40px;width: 100%; display: flex;align-items: center;margin-bottom: 30px">
+                                                                <div style="width: 120px;height: 30px"></div>
+                                                                <div>page:</div>
+                                                                <input style="text-indent: 5px; margin-left:30px;height: 30px;width: 120px;" class="inputPage" type="text"placeholder="请输入page" >
+                                                                <div style="margin-left: 50px">limit:</div>
+                                                                <input style=" text-indent: 5px;margin-left:30px;height: 30px;width: 120px;" class="inputlimit" type="text" placeholder="请输入limit" >
+                                                            </div>
+                                                            <div class="preferencesDiv" style="margin-top:4px;height: 40px;width: 100%; display: flex;align-items: center">
+                                                                <div style="width: 60px"></div>
+                                                                <div style="height: 40px;width: 60px">
+
+                                                                </div>
+                                                                <div style="height: 40px;display: flex;align-items: center">
+                                                                    <select class="select1" id="select0" style="height: 30px;width: 120px;">
+<!--                                                                        <option value ="1">并且</option>-->
+<!--                                                                        <option value ="2">并且</option>-->
+<!--                                                                        <option value ="3">并且</option>-->
+<!--                                                                        <option value ="4">并且</option>-->
+<!--                                                                        <option value ="5">并且</option>-->
+                                                                    </select>
+                                                                </div>
+                                                                <div style="height: 40px;margin-left: 5px;display: flex;align-items: center">
+                                                                    <select class="select2" style="height: 30px;width: 120px">
+                                                                        <option value =" like ">包含(like)</option>
+                                                                        <option value =" <= ">小于等于</option>
+                                                                        <option value =" >= ">大于等于</option>
+                                                                        <option value =" = ">等于</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div style="height: 40px;margin-left: 50px;display: flex;align-items: center">
+                                                                    <input class="parameterInput" style="height: 26px" type="text">
+                                                                </div>
+                                                                <div class="parameterIDiv" style="font-size:16px;width:60px;height: 40px;margin-left: 50px;display: flex;justify-content: space-between;align-items: center">
+                                                                    <i tyle="font-size: 16px" class="addClick layui-icon layui-icon-add-1"></i>
+                                                                    <i tyle="font-size: 16px" class="deleteClick layui-icon layui-icon-delete"></i>
+                                                                    <i class="submitClick layui-icon layui-icon-search"></i>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset  class="showResDiv layui-elem-field" style="display: none;min-height:200px">
+                                                <legend>返回数据</legend>
+                                                <div class="layui-field-box">
+                                                    <div class="resDiv">
+
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
+                                        </div>
+                                        <div class="layui-tab-item ">
+                                            <div style="">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label" >表描述：</label>
+                                                    <div id="tableDescription" class="layui-input-block" style="display: flex;align-items: center">
+
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label" >字段描述：</label>
+                                                    <div id="fieldDescription" class="layui-input-block">
+
+<!--                                                        <div class="layui-form-item">-->
+<!--                                                            <label class="layui-form-label" >字段2：</label>-->
+<!--                                                            <div class="layui-input-block" style="display: flex;align-items: center">字段2描述</div>-->
+<!--                                                        </div>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="layui-tab-item ">
+                                            <table id="statistics" lay-filter="test"></table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="layui-fluid">-->
+<!--                    <div class="layui-row layui-col-space15">-->
+
+<!--                        <div class="parent" id="div-container-tables" style="display:flex;flex-wrap:wrap;justify-content:flex-start">-->
+
+<!--                        </div>-->
+
+<!--                    </div>-->
+<!--                </div>-->
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+        // init();
+        // getData();
+        // getleftData()
+        // getleftData()
+    let debugParams = []
+    let addNum = 0    // 参数部分添加按钮在第几行
+    let leftData = []
+    let leftKey = []
+    let parameterArr  = []  //参数选项
+    let debugUrl = ''
+    let url = decodeURI(decodeURI(location.search)); //获取url中"?"符后的字串
+    let topicName = '';
+    if (url.indexOf("?") != -1) {
+        topicName = url.substr(1);
+    }
+    getleftData()
+    function getleftData() {
+            let url = decodeURI(decodeURI(location.search)); //获取url中"?"符后的字串
+            let topicName = '';
+            if (url.indexOf("?") != -1) {
+                topicName = url.substr(1);
+            }
+            let query = {
+                topicName:topicName
+            }
+            $.ajax({
+                type: "get",
+                async: false,
+                url: "/topic/getTopicInterfaceByTopic",
+                data: (query),
+                dataType: 'json',
+                contentType: 'text/plain;charset=UTF-8',
+                success: function (res) {
+                    leftData = res.data
+                    let jiekou = []
+                    for(let key in leftData){
+                        leftKey.push(key)
+                    }
+                    leftKey.forEach((item,index)=>{
+                        let pBody = ''
+                        leftData[item].forEach((item1,index1)=>{
+                            pBody += `<p class="scrollStyle leftP" style="cursor:pointer;height: 20px;white-space:nowrap;text-indent: 15px;width: 100%;overflow-x: scroll"
+                                    title="${item1.url}">${item1.url}</p>`
+                        })
+                        console.log(pBody)
+                        if( index == 0){
+                            let left =
+                                `<div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">${item}</h2>
+                                    <div class="layui-colla-content layui-show">
+                                        ${pBody}
+                                    </div>
+                                </div>`
+                            $('#leftBody').append(left)
+                        }else{
+                            let left =
+                                `<div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">${item}</h2>
+                                    <div class="layui-colla-content">
+                                        ${pBody}
+                                    </div>
+                                </div>`
+                            $('#leftBody').append(left)
+                        }
+
+                    })
+
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                }
+            });
+
+        }
+    $('#copyButton').on('click',function () {
+        var dd = $('#centerUrl');
+        dd.select();
+        document.execCommand("copy");
+        layer.msg('复制成功！');
+    })
+    //点击debug
+        function showLoad() {
+            return layer.msg('正在进行调试...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:100000});
+        }
+
+        function closeLoad(index) {
+            layer.close(index);
+        }
+        function showSuccess() {
+            layer.msg('执行成功！',{time: 1000,offset: 'auto'});
+        }
+
+    $('#selectButton').on('click',function () {
+        let url =  $('#centerUrl').val()
+        let page = $('.inputPage').val()
+        let limit = $('.inputlimit').val()
+        let newUrl = url.split('?wherre=')[0]
+        let query = {
+            where:url.split('?wherre=')[1],
+            page:page,
+            limit:limit
+        }
+        let i;
+        $.ajax({
+            type: "get",
+            async: true,
+            url:newUrl,
+            data:query,
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            beforeSend: function () {
+                i=showLoad();
+            },
+            success: function (res) {
+                if(res.code == 200){
+                    $('.showResDiv').show()
+                    $('.showResDiv').find('.resDiv').empty();
+                    var jsonPretty = JSON.stringify((res),null,2);
+                    let newRes = `<pre>${jsonPretty}</pre>`
+                    $('.showResDiv').find('.resDiv').html(newRes)
+                    layer.msg('调试成功！');
+                    closeLoad(i);
+                    showSuccess();
+                }else{
+                    layer.msg(res.errMsg);
+                    closeLoad(i);
+                }
+
+
+
+                // $('.showResDiv').find('.resDiv').JSONView(JSON.stringify(res))
+
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                layer.close(index);
+                closeLoad(i);
+            }
+        });
+    })
+
+    //点击左侧url
+    $('#leftBody').on('click','.leftP',function () {
+        let $this = $(this)
+        debugUrl = $this.attr('title')
+        $('#centerUrl').val(debugUrl)
+        $('#parameterConDiv').find('.preferencesDiv').eq(0).nextAll().remove();
+        addNum = 0
+        $('#parameterConDiv').find('.parameterIDiv').eq(addNum).show()
+        let tableName = $(this).parents('.layui-colla-item').find('.layui-colla-title').html().split('<')[0]
+        let query = {
+            topicName:topicName,
+            tableName:tableName
+        }
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/topic/getAllFieldsByDBNameAndTableName",
+            data: (query),
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            success: function (res) {
+                parameterArr = res.data
+                parameterArr.forEach((item,index)=>{
+                    let div = `<option value ="${item}">${item}</option>`
+                    $('#select0').append(div)
+                })
+                addNum = 0
+                debugParams = []
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+            }
+        });
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/topic/getTableInfoByTopicAndTableName",
+            data: (query),
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            success: function (res) {
+                $('#tableDescription').empty()
+                $('#fieldDescription').empty()
+                $('#tableDescription').append(res.data.tableComment)
+                res.data.columnSampleInfos.forEach((item,index)=>{
+                    let div = `
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 200px" >${item.columnName}:</label>
+                            <div class="layui-input-block" style="display: flex;align-items: center">${item.columnComment}</div>
+                        </div>
+                    `
+                    $('#fieldDescription').append(div)
+                })
+
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+            }
+        });
+
+        let accessQuery = {
+            url:debugUrl,
+            page:1,
+            limit:10,
+        }
+        // $.ajax({
+        //     type: "get",
+        //     async: false,
+        //     url: "/topic/interface/statistics",
+        //     data: (accessQuery),
+        //     dataType: 'json',
+        //     contentType: 'text/plain;charset=UTF-8',
+        //     success: function (res) {
+        //
+        //     },
+        //     error: function (request) {//请求失败之后的操作
+        //         layer.alert(request, {icon: 2})
+        //     }
+        // });
+
+        layui.use('table', function(){
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#statistics'
+                ,height: 500
+                ,url: '/topic/interface/statistics' //数据接口
+                ,where:{url:debugUrl}
+                ,skin: 'line '
+                ,page: true //开启分页
+                ,limits:[10,20,50,100]
+                ,limit:10
+                ,cols: [[ //表头
+                    {field: 'callTime', title: '访问时间', },
+                    {field: 'param', title: 'param', },
+                    {field: 'userIp', title: '访问者ip', },
+
+                ]]
+            });
+
+        });
+
+
+
+    })
+
+
+
+     //点击添加参数按钮
+    $('#parameterConDiv').on('click','.addClick',function () {
+        if($('#parameterConDiv').find('.parameterInput').eq(addNum).val() == ''){
+            layer.msg('请填写完整再增加检索条件！');
+        }else{
+            let select = ``
+            parameterArr.forEach((item,index)=>{
+                select+= `<option value ="${item}">${item}</option>`
+            })
+
+            let div = `
+            <div class="preferencesDiv" style="margin-top:4px;height: 40px;width: 100%; display: flex;align-items: center">
+                <select class="select0" style="height: 30px;width: 60px">
+                    <option value =" and ">并且</option>
+                    <option value =" or ">或者</option>
+                </select>
+                <div style="height: 40px;width: 60px">
+
+                </div>
+                <div style="height: 40px;display: flex;align-items: center">
+                    <select class="select1" style="height: 30px;width: 120px;">
+                        ${select}
+                    </select>
+                </div>
+                <div class="select2" style="height: 40px;margin-left: 5px;display: flex;align-items: center">
+                    <select style="height: 30px;width: 120px">
+                        <option value =" like ">包含(like)</option>
+                        <option value =" <= ">小于等于</option>
+                        <option value =" >= ">大于等于</option>
+                        <option value =" = ">等于</option>
+                    </select>
+                </div>
+                <div style="height: 40px;margin-left: 50px;display: flex;align-items: center">
+                    <input class="parameterInput" style="height: 26px" type="text">
+                </div>
+                <div class="parameterIDiv" style="font-size:16px;width:60px;height: 40px;margin-left: 50px;display: flex;justify-content: space-between;align-items: center">
+                    <i  style="font-size: 16px" class="addClick layui-icon layui-icon-add-1"></i>
+                    <i  style="font-size: 16px" class="deleteClick layui-icon layui-icon-delete"></i>
+                    <i style="font-size: 16px" class="submitClick layui-icon layui-icon-search"></i>
+                </div>
+            </div>
+        `
+            $('#parameterConDiv').append(div)
+            addNum += 1
+            $('#parameterConDiv').find('.parameterIDiv').hide()
+            $('#parameterConDiv').find('.parameterIDiv').eq(addNum).show()
+        }
+    })
+
+    //点击删除参数按钮
+    $('#parameterConDiv').on('click','.deleteClick',function () {
+        if(addNum == 0){
+            layer.msg('参数条件不可删除！');
+        }else{
+            // debugParams.splice(addNum,1)
+            $('#parameterConDiv').find('.preferencesDiv').eq(addNum).remove()
+            addNum -= 1
+            $('#parameterConDiv').find('.parameterIDiv').eq(addNum).show()
+
+
+
+            console.log(JSON.stringify(debugParams))
+        }
+    })
+        //点击参数添加到input框
+    $('#parameterConDiv').on('click','.submitClick',function () {
+
+        if($('#parameterConDiv').find('.parameterInput').eq(addNum).val() == ''){
+            layer.msg('请填写完整再增加检索条件！');
+        }else{
+            console.log(addNum)
+            debugParams = []
+            for(let i = 0;i <= addNum;i++){
+                let select0 = ''
+                if(i != 0){
+                    select0 = $('#parameterConDiv').find('.preferencesDiv').eq(i).find('.select0').find('option:selected').val()
+                }
+                let select1 = $('#parameterConDiv').find('.preferencesDiv').eq(i).find('.select1').find('option:selected').val()
+                let select2 = $('#parameterConDiv').find('.preferencesDiv').eq(i).find('.select2').find('option:selected').val()
+                let input = $('#parameterConDiv').find('.preferencesDiv').eq(i).find('.parameterInput').val()
+                let itemarr = `${select0}${select1}${select2}${input}`
+                debugParams.push(itemarr)
+            }
+
+            console.log(JSON.stringify(debugParams))
+            let params =`?where=${debugParams.join('')}`
+            let aa =  `${debugUrl}${params}`
+            $('#centerUrl').val(aa)
+        }
+
+    })
+
+
+
+
+
+
+        // layui.use('table', function(){
+        //     var table = layui.table;
+        //
+        //     //第一个实例
+        //     table.render({
+        //         elem: '#statistics'
+        //         ,height: 312
+        //         ,url: '/topic/interface/statistics' //数据接口
+        //         ,where:{url:}
+        //         ,page: true //开启分页
+        //         ,limit:10
+        //         ,cols: [[ //表头
+        //             {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+        //             ,{field: 'username', title: '用户名', width:80}
+        //             ,{field: 'sex', title: '性别', width:80, sort: true}
+        //             ,{field: 'city', title: '城市', width:80}
+        //             ,{field: 'sign', title: '签名', width: 177}
+        //             ,{field: 'experience', title: '积分', width: 80, sort: true}
+        //             ,{field: 'score', title: '评分', width: 80, sort: true}
+        //             ,{field: 'classify', title: '职业', width: 80}
+        //             ,{field: 'wealth', title: '财富', width: 135, sort: true}
+        //         ]]
+        //     });
+        //
+        // });
+
+
+
+
+
+
+    // function init() {
+    //
+    //     var url = location.search; //获取url中"?"符后的字串
+    //     var topicName = '';
+    //     if (url.indexOf("?") != -1) {
+    //         topicName = url.substr(1);
+    //     }
+    //
+    //     var container = $("#div-container-tables")
+    //     $.get('/topic/findTablesInfoByTopicName/' + topicName, function (resp) {
+    //         res = $.parseJSON(resp)
+    //         layui.each(res.data, function (index, item) {
+    //             var result = "";
+    //             var tableName = item.tableName;
+    //             result += "<div class='childd' data-value='"+tableName+"' style='box-sizing:border-box; width:25%;display:flex; justify-content:center; align-item:center;margin:10px 0'>";
+    //             result +=   "<div style='width: 80%; height: 90%'>";
+    //             result +=       "<div class='layui-card'>"
+    //             result +=           "<div class='layui-card-header'>" + item.tableName + "</div>"
+    //             result +=           "<div class='layui-card-body'>";
+    //             for (var i = 0; i < item.columnSampleInfos.length; i++){
+    //                 result +=               item.columnSampleInfos[i].columnName + " " + item.columnSampleInfos[i].columnType +"<br />"
+    //             }
+    //             result +=           "</div>"
+    //             result +=       "<div>"
+    //             result +=     "<div>"
+    //             result += "<div>"
+    //             container.append(result)
+    //         })
+    //         container.on("click", ".childd", function () {
+    //             var val = $(this).attr('data-value');
+    //             xadmin.open('表数据','table-data.html?' + topicName + "," + val)
+    //         })
+    //     })
+    // }
+    });
+</script>
+<script>layui.use(['form', 'layer', 'element'],
+    function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+
+    });</script>
+</body>
+
+
+</html>

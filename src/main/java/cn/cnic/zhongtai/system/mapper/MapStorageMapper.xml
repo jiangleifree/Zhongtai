@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.MapStorageMapper" >
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.MapStorage" >
+        <id column="map_id" property="mapId" jdbcType="BIGINT" />
+        <result column="map_name" property="mapName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="map_comment" property="mapComment" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR"></result>
+        <result column="http_port" property="httpPort" jdbcType="VARCHAR"></result>
+        <result column="bolt_port" property="boltPort" jdbcType="VARCHAR"></result>
+        <result column="attarch_id" property="attarchId" jdbcType="VARCHAR"></result>
+        <result column="map_name_en" property="mapNameEn" jdbcType="VARCHAR"></result>
+    </resultMap>
+
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select m.map_id, m.map_name, m.create_time, m.map_comment, m.status, m.attarch_id, m.map_name_en, p.http_port, p.bolt_port
+         from map_storage m
+         left join port p
+          on m.map_name_en = p.map_name
+    </select>
+
+    <insert id="create">
+        insert into map_storage(map_name, map_name_en, create_time, map_comment, attarch_id) values (#{mapName},#{mapNameEn},#{createTime},#{mapComment}, #{attarchId})
+    </insert>
+
+    <delete id="deleteByMapName">
+        delete from map_storage where map_name = #{mapName}
+    </delete>
+
+    <select id="getStatusByMapName" resultType="String">
+        select status from map_storage where map_name = #{mapName}
+    </select>
+
+    <update id="changeAllMapToClosed">
+        update map_storage set status = 'closed' where status = 'doing'
+    </update>
+
+    <update id="changeMapToDoing">
+        update map_storage set status = 'doing' where map_name = #{mapName}
+    </update>
+
+    <update id="changeStatusByMapNameEn">
+        update map_storage set status = #{status} where map_name_en = #{mapNameEn}
+    </update>
+
+    <select id="getTotalCount" resultType="Integer">
+        select count(*) from map_storage
+    </select>
+
+    <update id="changeMapToClosed">
+        update map_storage set status = 'closed' where map_name = #{mapName}
+    </update>
+
+    <select id="getMapNameEnByMapName" resultType="String">
+        select map_name_en from map_storage where map_name = #{mapName}
+    </select>
+
+    <update id="changeMapToDoingByMapNameEn">
+        update map_storage set status = 'doing' where map_name_en = #{mapNameEn}
+    </update>
+
+    <update id="changeMapToClosedByMapNameEn">
+        update map_storage set status = 'closed' where map_name_en = #{mapNameEn}
+    </update>
+
+    <delete id="deleteByMapNameEn">
+        delete from map_storage where map_name_en = {mapNameEn}
+    </delete>
+
+    <select id="getMapStorageByName" resultMap="BaseResultMap">
+        select * from map_storage where map_name = #{mapName}
+    </select>
+
+
+</mapper>

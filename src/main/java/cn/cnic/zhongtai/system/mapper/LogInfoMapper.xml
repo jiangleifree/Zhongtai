@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.LogInfoMapper" >
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.LogInfo" >
+        <id column="log_id" property="logId" jdbcType="BIGINT" />
+        <result column="log_info" property="logInfo" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="task_id" property="taskId" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="getLogInfoByTaskId" resultMap="BaseResultMap">
+        select * from log_info where task_id = #{taskId}
+    </select>
+
+    <insert id="insertLogInfo">
+        insert into log_info(log_info, create_time, task_id) values (#{logInfo},#{createTime},#{taskId})
+    </insert>
+
+</mapper>

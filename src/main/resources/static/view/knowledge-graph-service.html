@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <script type="text/javascript" src="/javascripts/theme-library.js"></script>
+    <script type="text/javascript" src="/js/jquery.form.js"></script>
+
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/dtree.css">
+    <!--    <script type="text/javascript" src="/admin/layui_ext/dtree/dtree.js"></script>-->
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/font/dtreefont.css">
+    <style>
+
+        .scrollStyle::-webkit-scrollbar{
+            width:10px;
+            height:10px;
+            /**/
+        }
+        .scrollStyle::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb{
+            background: #fff;
+            /*background: #cfd9e3;*/
+            border-radius:10px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb:hover{
+            background: #cfd9e3;
+        }
+        .scrollStyle::-webkit-scrollbar-corner{
+            background: #fff;
+        }.scrollStyle::-webkit-scrollbar-track{
+             background: #fff;
+         }
+
+        .lidiv1{
+            background: #f2f2f2;
+            width: 100%;
+            height: 42px;
+            line-height: 42px;
+            text-indent: 22px;
+            font-size: 15px;
+            border-bottom: 1px solid #e6e6e6;
+            cursor:pointer;
+        }
+        .lidiv2{
+            width: 100%;
+            background: #ffffff;
+            word-wrap: break-word;
+            /*width: 100%;*/
+            /*height: 42px;*/
+            line-height: 42px;
+            text-indent: 36px;
+            color: #666666;
+            font-size: 15px;
+            border-bottom: 1px solid #e6e6e6;
+            cursor:pointer;
+        }
+
+        .stepItem{
+            cursor: pointer;
+            flex: 1;
+            height: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        .stepline{
+            position: absolute;
+            background: #dddddd;
+            height: 6px;
+            width: 100%;
+            top: 7px;
+        }
+        .stepline1{
+            background: #4682b4;
+        }
+        .stepNum{
+            width: 20px;
+            height: 20px;
+            background:#dddddd ;
+            border-radius: 20px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            color: #635454;
+            position: relative;
+            z-index: 10;
+        }
+        .stepNum{
+            background:#4682b4 ;
+            color: #fff;
+        }
+        .stepNum .stepText{
+            position: absolute;
+            top: -25px;
+            left: -40px;
+            height: 20px;
+            width: 100px;
+            font-size: 13px;
+            color: #746868;
+            text-align: center;
+        }
+        .lunbo{
+            background: #fff;
+        }
+        .lunDiv:hover .lunImg{
+            display: block;
+        }
+        .lunImg{
+            width: 45px;
+            height: 46px;
+        }
+        .lunImg img{
+            width: 100%;
+            height: 100%;
+            float: left;
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        #demoTree{
+            width: 80%!important;
+        }
+    </style>
+
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+
+
+                <div class="layui-card-body " style="/*height: 650px*/;" style="widows: 50%;">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" onclick="window.location.href='knowledge-graph-list.html';">返回图库首页</button>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >图库名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" value="" id="topicName"name="topicName" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-text">
+                        <label class="layui-form-label">图库描述</label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" value="" class="layui-textarea" id="topicComment"
+                                      name="topicComment"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-text" style="margin-top: 10px">
+                        <label class="layui-form-label">图库头像</label>
+                        <div class="layui-input-block" style="display: flex;align-items: center">
+                            <form method="post" enctype="multipart/form-data" id="upload-pic" action="" style="display: flex;align-items: center">
+                                <input onchange="submitImg()" name="file" type="file"/>
+
+<!--                                <button type="button" onclick="submitImg()">上传</button>-->
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                        <legend>创建流程</legend>
+                    </fieldset>
+
+                    <div class="stepsDiv" style="width: 100%;display: flex;justify-content: center;margin:10px 0">
+                        <div class="stetConDiv" style="display: flex;width: 40%;height: 40px">
+                            <div class="stepItem" >
+                                <div class="stepline stepline1"></div>
+                                <div class="stepNum stepNum1">1<div class="stepText">选取表格</div></div>
+                            </div>
+                            <div class="stepItem" >
+                                <div class="stepline stepline2"></div>
+                                <div class="stepNum stepNum2">2<div  class="stepText" >选取字段</div></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="lunDiv" style="width: 100%;height: 600px;position: relative">
+                        <div class="layui-carousel"  id="test2"  lay-filter="test4">
+                            <div carousel-item="" style="position: relative">
+                                <div class="lunbo1 lunbo" style="display: flex;justify-content: center;background: #fff">
+                                    <div  class="layui-col-xs2 scrollStyle" style="width:100%;">
+                                        <fieldset class="layui-elem-field">
+                                            <legend>选取表格</legend>
+                                            <div class="layui-field-box">
+                                                <div class="grid-demo grid-demo-bg1" style="display: flex;justify-content: center">
+                                                    <div class="scrollStyle" style="height: 500px;overflow-y: scroll;width: 80%">
+                                                        <div style="height: 100%;margin-top: 10px">
+                                                            <div style="height: 5%;width: 100%;display: flex;align-items: center">
+                                                                <input id="searchInput" style="width: 70%;height: 26px" type="text" placeholder="请输入关键字">
+                                                                <button id="searchButton" style="margin-left: 4px" class="layui-btn"  delete_all="">搜索</button>
+                                                            </div>
+                                                            <ul style="height:95%;width: 80%!important;margin-top: 10px"  id="demoTree" class="dtree" data-id="0"></ul>
+                                                        </div>
+<!--                                                        <div style="display: flex;align-items: center">-->
+<!--                                                            <input  style="width: 400px" type="text" name="title" required lay-verify="required" placeholder="请输入您要搜索的条件" autocomplete="off" class="leftSearch layui-input">-->
+<!--                                                            <button style="height: 30px;width: 60px" onclick="leftButtom()">搜索</button>-->
+<!--                                                        </div>-->
+
+<!--                                                        <table  class="leftTable layui-table" style="margin-top: 5px;">-->
+<!--                                                            <colgroup>-->
+<!--                                                                <col width="80">-->
+<!--                                                                <col width="200">-->
+<!--                                                                <col>-->
+<!--                                                            </colgroup>-->
+<!--                                                            <thead>-->
+<!--                                                            <tr>-->
+<!--                                                                <th>复选框</th>-->
+<!--                                                                <th>表名称</th>-->
+<!--                                                                <th>表描述</th>-->
+<!--                                                            </tr>-->
+<!--                                                            </thead>-->
+<!--                                                            <tbody>-->
+
+<!--                                                            </tbody>-->
+<!--                                                        </table>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <!--                                <blockquote class="layui-elem-quote">选取表格</blockquote>-->
+                                        <!--                                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;"/>-->
+
+                                    </div>
+                                </div>
+                                <div class="lunbo2 lunbo" style="background: #fff">
+                                    <div class="scrollStyle" style="width: 100%;">
+                                        <!--                                        <blockquote class="layui-elem-quote">选取字段</blockquote>-->
+                                        <fieldset class="layui-elem-field">
+                                            <legend>选取字段</legend>
+                                            <div class="layui-field-box">
+                                                <div id="centerConDiv" class="scrollStyle centerTable"
+                                                     style="width: 100%;display: none;flex-direction:column;align-items: center;height: 500px;overflow-y: scroll;">
+                                                    <!--                                                        <div style="width: 90%;text-align: left">双击选取字段</div>-->
+
+                                                    <div  class="layui-tab layui-tab-card scrollStyle" style="min-height: 220px;margin-bottom:20px;width:80%;overflow-x: scroll">
+                                                        <ul class="layui-tab-title" id="centerTopUl">
+<!--                                                                    <li class="layui-this">table1</li>-->
+<!--                                                                    <li>table2</li>-->
+<!--                                                                    <li>table3</li>-->
+                                                        </ul>
+                                                        <div class="layui-tab-content" id="centerTopDiv">
+    <!--                                                    <div class="layui-tab-item layui-show">-->
+    <!--                                                        <table class="layui-table" style="margin-top: 5px;">-->
+    <!--                                                            <colgroup>-->
+    <!--                                                                <col width="150">-->
+    <!--                                                                <col width="200">-->
+    <!--                                                                <col>-->
+    <!--                                                            </colgroup>-->
+    <!--                                                            <thead>-->
+    <!--                                                            <tr>-->
+    <!--                                                                <th>昵称</th>-->
+    <!--                                                                <th>加入时间</th>-->
+    <!--                                                                <th>签名</th>-->
+    <!--                                                            </tr>-->
+    <!--                                                            </thead>-->
+    <!--                                                            <tbody>-->
+    <!--                                                            <tr class="trdiv1">-->
+    <!--                                                                <td>贤心gggggg</td>-->
+    <!--                                                                <td>2016-11-29</td>-->
+    <!--                                                                <td>人生就像是一场修行</td>-->
+    <!--                                                            </tr>-->
+    <!--                                                            <tr>-->
+    <!--                                                                <td>许闲心</td>-->
+    <!--                                                                <td>2016-11-28</td>-->
+    <!--                                                                <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>-->
+    <!--                                                            </tr>-->
+    <!--                                                            </tbody>-->
+    <!--                                                        </table>-->
+    <!--                                                    </div>-->
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div style="width: 80%;display: flex;justify-content: flex-end">
+                                                        <button id="themeSubmit" type="button" class="layui-btn">提交</button>
+                                                    </div>
+                                                </div>
+                                                <div class="empty" style="height: 500px;width: 100%;display: flex;flex-direction: column;justify-content: flex-start;align-items: center">
+                                                    <img style="width: 210px;height: 146px;margin-top: 20px" src="../../img/Empty.png" alt="">
+                                                    <p>暂无被选中的表格</p>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="lunImg lunImgLeft" style="position: absolute;top: 270px;left: 30px;transition: 0.5s"><img src="../../img/toleft.png" alt=""></div>
+                        <div class="lunImg lunImgRight" style="position: absolute;top: 270px;right: 30px;transition: 0.5s"><img src="../../img/toright.png" alt=""></div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    let leftData = []
+    let keyData = []
+    let attarchIdImg = ''
+    let SelectedTableIdArr = [] //左侧被选中的让步了id
+    let selsctedTableNum = 0    //中部被选取的table个数
+    let selectedField = []      //被选中的字段的columnName值
+    let tableNameSelect = []    //被选中的表格的表格名
+    let nodeNum = []
+    let leftCheckedData = []   //第一步被选中的数组
+    let stepIndex = 0
+    let SelectedTableData = {
+        comment:'',
+        createTime:'',
+        dbName:'',
+        topicId:'',
+        topicName:'',
+        tables:[],
+    }
+    let createdData = {}
+    // let createdTable = []
+    let creatingTable = []
+
+    $this = $(this)
+    //获取数据
+    $.ajax({
+        type: "post",
+        async: false,
+        url: "/dataMapping/getDataMappingList",
+        data: '',
+        dataType: 'json',
+        contentType: 'text/plain;charset=UTF-8',
+        success: function (resData) {
+            MappingList = resData.data
+            leftData = resData.data
+            leftArr = resData.data
+            leftArr.forEach((item,index)=>{
+                item.title = item.name
+                if(item.type == 1){
+                    item.checkArr = '0'
+                }
+            })
+            // leftArr = leftArr.filter((item)=> item.type ==0)
+
+            // console.log(JSON.stringify(leftArr))
+        },
+        error: function (request) {//请求失败之后的操作
+            layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+        }
+    });
+
+
+    let newData = treeDataConversion(leftArr)
+    let demoTree = newData
+    layui.extend({
+        dtree: '{/}virtivalList/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    }).use(['dtree','layer','jquery'], function(){
+        var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery;
+
+        // 初始化树
+        let DTree = dtree.render({
+            elem: "#demoTree",
+            toolbar:false,
+            checkbar:true,
+            checkbarData: "choose",
+            checkbarType:'self',
+            data: demoTree, // 使用data加载
+            icon: ["0","0"],
+            ficon: ['1','-1'] , // 隐藏一级图标
+        });
+        // 绑定节点点击事件
+        dtree.on("node(demoTree)", function(obj){
+            var nodeId = obj.param.nodeId;
+            DTree.clickNodeCheckbar(nodeId);// 点击节点选中复选框
+        });
+        dtree.on("chooseDone('demoTree')" ,function(obj){
+            let data = obj.checkbarParams
+            // console.log(JSON.stringify(data))
+            if(data.length > leftCheckedData.length){
+                console.log('增加')
+                let length =  leftCheckedData.length
+                // console.log(`length:${length}`)
+                let lastData
+                if(length == 0){
+                    lastData = data[0]
+                }else{
+                    data.forEach((item,index)=>{
+                        let num = 0
+                        leftCheckedData.forEach((subItem,subIndex)=>{
+                            if(item.nodeId != subItem.nodeId){
+                                num += 1
+                                // console.log(`num:${num}`)
+                                if(num == length){
+                                    lastData =  item
+                                }
+                            }
+                        })
+                    })
+                }
+                let nodeId = Number(lastData.nodeId)
+                console.log(`lastData:${JSON.stringify(lastData)}`)
+                leftCheckedData = data
+                let a = lastData
+                let selectArr = leftData.filter((item)=>item.id == nodeId )
+                let selectParent = leftData.filter((item)=>item.id == selectArr[0].parentId )
+                let arrItem = {
+                    name:selectArr[0].tableName,
+                    index:nodeId
+                }
+                SelectedTableIdArr.push(arrItem)
+                let tableID  = {
+                    id:selectArr[0].id,
+                }
+                tableNameSelect.push({
+                    name:selectArr[0].name,
+                    realName:selectArr[0].tableName,
+                })
+                console.log(`tableNameSelect:${JSON.stringify(tableNameSelect)}`)
+                console.log(`SelectedTableIdArr:${JSON.stringify(SelectedTableIdArr)}`)
+                console.log(`tableID:${JSON.stringify(tableID)}`)
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: "/dataMapping/getTableInfoById",
+                    data: tableID,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        let tableName = data.data.tableName
+                        let leftItem = data.data.columns
+                        leftItem.forEach((item,index)=>{
+                            let val = `${tableName}.${item.columnName}`
+                        })
+                        if(keyData.length == 0){
+                            for(var key in leftItem[0]){
+                                keyData.push(key)
+                            }
+                        }
+                        var num = $('#centerTopUl').children().length
+                        let li = ''
+                        let tablecol = ''
+                        if(num == 0){
+                            li =   `<li class="layui-this" name="${selectParent[0].name}" layui-nodeId="${selectArr[0].id}">${`${selectParent[0].name}:${selectArr[0].name}`}<i style="margin-left: 4px"  class="centerI layui-icon layui-icon-close"></i></li>`
+
+                            let colDiv = ''
+                            let trTitle = ''
+                            let trBody = ''
+
+                            keyData.forEach((item1,index1)=>{
+                                colDiv += '<col >'
+                                trTitle += `<th>${keyData[index1]}</th>`
+                            })
+                            leftItem.forEach((item,index)=>{
+                                let subTrBody = `
+                                    <td >${item['columnName']}</td>
+                                    <td >${item['columnComment']}</td>
+                                    <td >${item['columnType']}</td>
+                                    <td >${item['columnLength']}</td>
+                                `;
+                                // keyData.forEach((item1,index1)=>{
+                                //     subTrBody += `<td >${item[item1]}</td>`
+                                // })
+                                trBody += `<tr class="centerTr"><td ><input class="checkboxTd" type="checkbox" name="item" ><label></td>${subTrBody}<td class="td5"></td>
+                                <td class="td6"></tr>`
+                            })
+
+                            tablecol =
+                                `<div class="layui-tab-item layui-show">
+                                    <select  class="select0" style="height: 30px;width: 200px;margin: 5px 0 10px">
+                                        <option class="tableChectNode" class="" style="height: 30px" value ="node">node</option>
+                                        <option class="tableChectNode" style="height: 30px" value ="relation">relation-ship</option>
+                                    </select>
+                            <table class="layui-table , tab2centerTable" style="margin-top: 5px;">
+                                <colgroup>
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                <th style="display: flex;align-items: center">
+                                <input  class="centerCheckAll" type="checkbox"/>
+                                多选框</th>
+                                <th>columnName</th>
+                                <th>columnComment</th>
+                                <th>columnType</th>
+                                <th>columnLength</th>
+                                <th>选择id点</th>
+                                    <th>fromTable</th>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                ${trBody}
+                                </tbody>
+                            </table>
+                        </div>`
+                        }
+                        else{
+                            li =   `<li name="${selectParent[0].name}" layui-nodeId="${selectArr[0].id}">${`${selectParent[0].name}:${selectArr[0].name}`}<i style="margin-left: 4px" class="centerI layui-icon layui-icon-close"></i>  </li>`
+
+                            let colDiv = ''
+                            let trTitle = ''
+                            let trBody = ''
+
+                            keyData.forEach((item1,index1)=>{
+                                colDiv += '<col >'
+                                trTitle += `<th>${keyData[index1]}</th>`
+                            })
+                            leftItem.forEach((item,index)=>{
+                                let subTrBody = `
+                                    <td >${item['columnName']}</td>
+                                    <td >${item['columnComment']}</td>
+                                    <td >${item['columnType']}</td>
+                                    <td >${item['columnLength']}</td>
+                                `;
+                                // keyData.forEach((item1,index1)=>{
+                                //     subTrBody += `<td >${item[item1]}</td>`
+                                // })
+                                trBody += `<tr class="centerTr"><td ><input class="checkboxTd" type="checkbox" name="item" ><label></td>${subTrBody}<td class="td5"></td>
+                                <td class="td6"></tr>`
+                            })
+
+                            tablecol =
+                                `<div class="layui-tab-item ">
+                                    <select  class="select0" style="height: 30px;width: 200px;margin: 5px 0 10px">
+                                        <option class="tableChectNode" class="" style="height: 30px" value ="node">node</option>
+                                        <option class="tableChectNode" style="height: 30px" value ="relation">relation-ship</option>
+                                    </select>
+                            <table class="layui-table , tab2centerTable" style="margin-top: 5px;">
+                                <colgroup>
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                <th style="display: flex;align-items: center"><input class="centerCheckAll" type="checkbox"/> 多选框</th>
+                                <th>columnName</th>
+                                <th>columnComment</th>
+                                <th>columnType</th>
+                                <th>columnLength</th>
+                                <th>选择id点</th>
+                                    <th>fromTable</th>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                ${trBody}
+
+                                </tbody>
+                            </table>
+                        </div>`
+                        }
+                        $('#centerTopUl').append(li)
+                        $('#centerTopDiv').append(tablecol)
+                        layer.msg('表格选中成功！');
+                        $('.empty').css('display','none')
+                        $('.centerTable').css('display','flex')
+                        selsctedTableNum += 1
+                    },
+                    error: function (request) {//请求失败之后的操作
+                        layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+
+                    }
+                });
+            }
+            else{
+                console.log('减少')
+                let length =  data.length
+                // console.log(`length:${length}`)
+                let lastData
+                if(length == 0){
+                    lastData = leftCheckedData[0]
+                }else{
+                    leftCheckedData.forEach((item,index)=>{
+                        let num = 0
+                        data.forEach((subItem,subIndex)=>{
+                            if(item.nodeId != subItem.nodeId){
+                                num += 1
+                                // console.log(`num:${num}`)
+                                if(num == length){
+                                    lastData =  item
+                                }
+                            }
+                        })
+                    })
+                }
+                let nodeId = lastData.nodeId
+                let name = leftData.filter((item)=>item.id == nodeId )
+                tableNameSelect = tableNameSelect.filter(item=>item.realName != name[0].tableName)
+                console.log(`tableNameSelect:${JSON.stringify(tableNameSelect)}`)
+                leftCheckedData = data
+                //第二屏去掉选中的表
+                $('#centerTopUl').find('li').eq(0).attr('class','layui-this')
+                $('#centerTopDiv').find('.layui-tab-item').eq(0).attr('class','layui-tab-item layui-show')
+                let selectArr = leftData.filter((item)=>item.id == nodeId )
+                let tdName = $(this).parent().parent().find('td').eq(1).html()
+                SelectedTableIdArr.forEach((item,index)=>{
+                    if(item.name ==selectArr[0].tableName ){
+                        SelectedTableIdArr.splice(index,1)
+                        $('#centerTopUl').find('li').eq(index).remove()
+                        $('#centerTopDiv').find('.layui-tab-item').eq(index).remove()
+                        layer.msg('表格已取消选中！');
+                        if($('#centerTopUl').children().length == 0){
+                            $('.empty').css('display','flex')
+                            $('.centerTable').css('display','none')
+                        }
+                    }
+                })
+            }
+        });
+        $('#searchButton').on('click',function () {
+            let params = $('#searchInput').val()
+            console.log(params)
+            let data = {
+                'name':params
+            }
+            $.ajax({
+                type: "get",
+                async: false,
+                url: `/dataMapping/getDataMappingList?name=${params}`,
+                // data: data,
+                dataType: 'json',
+                contentType: 'text/plain;charset=UTF-8',
+                success: function (resData) {
+                    // MappingList = resData.data
+                    leftArr = resData.data
+                    leftArr.forEach((item,index)=>{
+                        item.title = item.name
+                        if(params != ''){
+                            item.parentId = 1
+                        }
+                    })
+                    leftArr = leftArr.filter((item)=> item.type ==0)
+
+                    // console.log(JSON.stringify(leftArr))
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                }
+            });
+            let name =  {"id":1,"name":"主节点","tableName":"","parentId":0,"orderNum":1,"createTime":"2020-02-13 00:24:17","status":"0","updateTime":"2020-02-26 17:03:32","remarks":"备注","type":0,"modelId":null,"iconClass":"dtree-icon-weibiaoti5","ficonClass":"dtree-icon-jia","title":"主节点",}
+            if(params != ''){
+                leftArr.push(name)
+            }
+            let newData = treeDataConversion(leftArr)
+            let demoTree = newData
+            // 初始化树
+            DTree = dtree.render({
+                elem: "#demoTree",
+                toolbar:false,
+                data: demoTree, // 使用data加载
+                icon: ["0","0"],
+                ficon: ['1','-1'] , // 隐藏一级图标
+            });
+
+            // 绑定节点点击
+            dtree.on("node('demoTree')" ,function(obj){
+                console.log(JSON.stringify(obj))
+
+                // layer.msg(JSON.stringify(obj));
+                // layer.msg(JSON.stringify(obj.param));
+
+                let id = obj.param.nodeId
+
+            });
+
+
+            // });
+        })
+        //点击中部table关闭符号
+        $('#centerTopUl').on('click','.centerI',function ()  {
+            let nodeId = $(this).parent().attr('layui-nodeId')
+            DTree.clickNodeCheckbar(nodeId);// 点击节点选中复选框
+        })
+    });
+
+    //上传图片
+    function submitImg(){
+        $("#upload-pic").ajaxSubmit({
+            type: 'post',
+            url: "/file/upload/picture",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data.code === 200) {
+                    attarchIdImg = data.attarchId
+                    layer.msg('图片提交成功！');
+                } else {
+                    // layer.msg(data.);
+                }
+
+            }, error: function (XmlHttpRequest, textStatus, errorThrown) {
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+            }
+        });
+    }
+    //搜索新的数据
+    function leftButtom(){
+        let params = {
+            page:'',
+            limit:'',
+            tableName:$('.leftSearch').val(),
+        }
+
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/genTable/model_list_by_table_name",
+            data: (params),
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            success: function (resData) {
+                leftData = resData.data
+                $('.leftTable').find('tbody').empty()
+                resData.data.forEach((item,index)=>{
+                    let itemDiv = `
+                        <tr >
+                            <td><input class="leftcheckbox" type="checkbox" name="item" ></td>
+                            <td>${item.tableName}</td>
+                            <td>${item.tableComment}</td>
+                        </tr>
+                    `
+                    $('.leftTable').find('tbody').append(itemDiv)
+                })
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert(data.errMsg, {icon: 2})
+            }
+        });
+    }
+    //点击中部复选框全选功能
+    $('#centerTopDiv').on('click','.centerCheckAll',function () {
+        let $this = $(this)
+        let index = ($this.parents('.layui-tab-item').index())
+        let length = $this.parents('.layui-tab-item').find('tbody').children().length
+        let tbody = $this.parents('.layui-tab-item').find('tbody')
+        let nodeType = ($this.parents('.layui-tab-item').find('.select0').find('option:selected').val())
+        let tableName = ($('#centerTopUl').find('li').eq(index).html().split('<')[0])
+        if($(this).is(':checked')){
+            if(nodeType == 'node'){
+                for(let i = 0;i<length;i++){
+                    let radio = `<input class="nodeRadio" type="checkbox"  >`
+                    tbody.find('tr').eq(i).find('td').eq(5).empty()
+                    tbody.find('tr').eq(i).find('td').eq(6).empty()
+                    tbody.find('tr').eq(i).find('td').eq(5).append(radio)
+                    tbody.find('tr').eq(i).find('td').eq(6).append(tableName)
+                    tbody.find('tr').eq(i).find('td').eq(0).find('input').prop('checked',true)
+                }
+            }else if(nodeType == 'relation'){
+                for(let i = 0;i<length;i++){
+                    let positionSelect = `<select class="positionSelect" >
+                                        <option class="positionSelectitem"  value =""></option>
+                                        <option class="positionSelectitem"  value ="start">start</option>
+                                        <option class="positionSelectitem"  value ="end">end</option>
+                                    </select>`
+                    tbody.find('tr').eq(i).find('td').eq(5).empty()
+                    tbody.find('tr').eq(i).find('td').eq(5).append(positionSelect)
+                    tbody.find('tr').eq(i).find('td').eq(0).find('input').prop('checked',true)
+                }
+
+            }
+        }else{
+            for(let i = 0;i<length;i++){
+                tbody.find('tr').eq(i).find('td').eq(5).empty()
+                tbody.find('tr').eq(i).find('td').eq(6).empty()
+                tbody.find('tr').eq(i).find('td').eq(0).find('input').prop('checked',false)
+            }
+
+        }
+    })
+
+
+    //点击中部复选框
+    $('#centerTopDiv').on('click','.checkboxTd',function () {
+        // alert($(this).html())
+        let $this = $(this)
+        let index = ($this.parents('.layui-tab-item').index())
+        let tableName = ($('#centerTopUl').find('li').eq(index).html().split('<')[0])
+        let nodeType = ($this.parents('.layui-tab-item').find('.select0').find('option:selected').val())
+        if(nodeType == 'node'){  //node类型
+            if($(this).is(':checked')){
+                let radio = `<input class="nodeRadio" type="checkbox"  >`
+                $(this).parent().parent().find('td').eq(5).append(radio)
+                $(this).parent().parent().find('td').eq(6).append(tableName)
+            }else{
+                $(this).parent().parent().find('td').eq(5).empty()
+                $(this).parent().parent().find('td').eq(6).empty()
+            }
+        }else if(nodeType == 'relation'){  // relation类型
+            if($(this).is(':checked')){
+                let positionSelect = `<select class="positionSelect" >
+                                        <option class="positionSelectitem"  value =""></option>
+                                        <option class="positionSelectitem"  value ="start">start</option>
+                                        <option class="positionSelectitem"  value ="end">end</option>
+                                    </select>`
+                $(this).parent().parent().find('td').eq(5).append(positionSelect)
+            }else{
+                $(this).parent().parent().find('td').eq(5).empty()
+                $(this).parent().parent().find('td').eq(6).empty()
+            }
+        }
+    })
+
+    //点击start-end  下拉框
+    $('#centerTopDiv').on('change','.positionSelect',function () {
+        let $this = $(this)
+        let index = ($this.parents('.layui-tab-item').index())
+        let tableName = ($('#centerTopUl').find('li').eq(index).html().split('<')[0])
+        console.log(tableName)
+        let vs = $this.find('option:selected').val();
+        $(this).parent().siblings('.td6').empty()
+        if(vs == 'start' || vs == 'end'){
+            let opArr = ''
+            tableNameSelect.forEach((item,index)=>{
+                if(item != tableName){
+                    opArr += `<option  value ="${item.realName}">${item.name}</option>`
+                }
+            })
+            let selectTab = `<select class="selectTableName" >
+                            ${opArr}
+                        </select>`
+            $this.parent().siblings('.td6').append(selectTab)
+        }
+    })
+
+    // 点击下拉框
+    $('#centerTopDiv').on('change','.select0',function () {
+        var vs = $(this).find('option:selected').val();
+        // alert(vs)
+        console.log(vs)
+        if(vs == 'node'){
+            $(this).parents('.layui-tab-item').find('thead').find('th').eq(5).empty()
+            $(this).parents('.layui-tab-item').find('thead').find('th').eq(5).append('选择id点')
+            console.log(1)
+        }else{
+            $(this).parents('.layui-tab-item').find('thead').find('th').eq(5).empty()
+            $(this).parents('.layui-tab-item').find('thead').find('th').eq(5).append('选择起始点')
+        }
+        $(this).parents('.layui-tab-item').find('.checkboxTd').prop('checked',false)
+        $(this).parents('.layui-tab-item').find('.td5').empty()
+        $(this).parents('.layui-tab-item').find('.td6').empty()
+    })
+    //点击提交
+    $('#themeSubmit').on('click',function () {
+        let query = {
+            "createTime": "",
+            "mapComment": $('#topicComment').val(),
+            "mapId": 0,
+            "mapName": $('#topicName').val(),
+            "mapTables": [
+                {
+                    "columns": "",
+                    "hiveDBName": "",
+                    "tableName": "",
+                    "type": ""
+                }
+            ]
+        }
+        let tableLength = ($('#centerTopUl').find('li').length)
+        let nodeArr = []
+         for(let i = 0;i < tableLength;i++){
+            let nodeItem =   $('#centerTopDiv').find('.layui-tab-item').eq(i).find('.select0').find('option:selected').val()
+             nodeArr.push(nodeItem)
+         }
+         console.log(JSON.stringify(nodeArr))
+        let relationLength = ((nodeArr.filter(item => item == 'relation' )).length)
+        if(false){
+            layer.alert('relation-ship的数量必须为1!', {icon: 2})
+        }else{
+            let queryArr = []
+            for(let i = 0;i<tableLength;i++){
+              let tableName =   $('#centerTopUl').find('li').eq(i).html().split('<')[0]
+              let layuiNodeId =   $('#centerTopUl').find('li').eq(i).attr('layui-nodeid')
+                let newTableName = leftData.filter((item)=>item.id == layuiNodeId )[0].tableName
+                console.log(`newTableName:${newTableName}`)
+                // console.log($('#centerTopUl').find('li').eq(i).html())
+                let trLength =   $('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').length
+                let itemArr = []
+                for(let j = 0;j<trLength;j++){
+                   if( $('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').eq(j).find('.checkboxTd').is(':checked')){
+                       console.log(j)
+                       let columnName =  $('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').eq(j).find('td').eq(1).html()
+                       let itemStr
+                       if(nodeArr[i] == 'node'){
+                           let a
+                           if($('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').eq(j).find('.td5').find('input').is(':checked')){
+                                a  = `${columnName}:ID(${newTableName})`
+                           }else{
+                                a = columnName
+                           }
+                            itemStr =  {
+                               'type':nodeArr[i],
+                               'tableName':newTableName,
+                               'hivedbname':'',
+                               'column':a,
+                           }
+                       }else{
+                           let columnName =  $('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').eq(j).find('td').eq(1).html()
+                            let from = $('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').eq(j).find('.td6').find('option:selected').val()
+                           console.log(`from:${from}`)
+                           let startType = $('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').eq(j).find('.td5').find('option:selected').val()
+                            let dataType = $('#centerTopDiv').find('.layui-tab-item').eq(i).find('tbody').find('tr').eq(j).find('td').eq(3).html()
+                           console.log('startType:')
+                           console.log(startType)
+                           let b
+                            if(startType == 'start'){
+                                 b = `${columnName}:START_ID(${from})`
+                            }else if(startType == 'end'){
+                                 b = `${columnName}:END_ID(${from})`
+                            }else{
+                                 b = `${columnName}:${dataType}`
+                            }
+                            itemStr =  {
+                               'type':nodeArr[i],
+                               'tableName':newTableName,
+                               'hivedbname':'',
+                               'column':b,
+                           }
+                       }
+
+                       itemArr.push(itemStr)
+                   }
+                }
+                queryArr.push(itemArr)
+            }
+            console.log(JSON.stringify(queryArr))
+            queryArr.forEach((item,index)=>{
+                if(item[0].type == 'node'){
+                    let idNum = 0
+                    item.forEach((item1,index1)=>{
+                        if(item1.column.split(':').length == 2){
+                            idNum+= 1
+                        }
+                    })
+                    if(idNum != 1){
+                        layer.alert('type表格id数量必须为1!', {icon: 2})
+                        return
+                    }
+                }
+            })
+            let newQuery = []
+            queryArr.forEach((item,index)=>{
+                let newColumn = ''
+                item.forEach((item1,index1)=>{
+                    newColumn += `${item1.column},`
+                })
+                newColumn = newColumn.substring(0,newColumn.length - 1)
+                let newItem = {
+                    'type':item[0].type,
+                    'tableName':item[0].tableName,
+                    'hiveDBName':item[0].hivedbname,
+                    'columns':newColumn,
+                }
+                newQuery.push(newItem)
+            })
+            console.log('newQuery:')
+            console.log(JSON.stringify(newQuery))
+            let lateQuery = {
+                "attarchId" : attarchIdImg,
+                "createTime": "",
+                "mapComment": $('#topicComment').val(),
+                "mapId": 0,
+                "mapName": $('#topicName').val(),
+                "mapTables":newQuery,
+            }
+            $.ajax({
+                type: "post",
+                async: true,
+                url:'/map/create',
+                data:JSON.stringify(lateQuery),
+                dataType: 'json',
+                contentType: 'application/json',
+                beforeSend: function () {
+                    i=showLoad();
+                },
+                success: function (res) {
+                    if(res.code == 200){
+                        window.location.href='knowledge-graph-list.html';
+                        layer.alert('图库创建成功!', {icon: 1})
+                        closeLoad(i);
+                        showSuccess();
+                    }else{
+                        layer.alert(res.errMsg, {icon: 2})
+                        closeLoad(i);
+                    }
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert(request, {icon: 2})
+                }
+            });
+        }
+
+    })
+    function showLoad() {
+        return layer.msg('正在生成图库...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:100000});
+    }
+
+    function closeLoad(index) {
+        layer.close(index);
+    }
+    function showSuccess() {
+        layer.msg('执行成功！',{time: 1000,offset: 'auto'});
+    }
+
+
+    //点击中部table关闭符号
+    $('#centerTopUl').on('click','.centerI',function () {
+        let index = $(this).parent().index()
+        let tableName = $('#centerTopUl').find('li').eq(index).attr('name')
+        $('#centerTopUl').find('li').eq(index).remove()
+        let isThis = $(this).parent().attr('class')
+        $('#centerTopDiv').find('.layui-tab-item').eq(index).remove()
+        if(isThis == 'layui-this'){
+            $('#centerTopUl').find('li').eq(0).attr('class','layui-this')
+            $('#centerTopDiv').find('.layui-tab-item').eq(0).attr('class','layui-tab-item layui-show')
+        }
+        let tabName = SelectedTableIdArr[index].index
+        tableNameSelect = tableNameSelect.filter((item)=>item.realName !=SelectedTableIdArr[index].name)
+
+        let centerTopDivNum =  $('#centerTopDiv').find('.select0').length
+        let relationTableName = ''
+        for(let i = 0;i<centerTopDivNum;i++){
+            let type = $('#centerTopDiv').find('.select0').eq(i).find('option:selected').val()
+            if(type == 'relation'){
+                relationTableName = $('#centerTopUl').find('li').eq(i).attr('name')
+            }
+        }
+        let opArr = ''
+        tableNameSelect.forEach((item,index)=>{
+            if(item != relationTableName){
+                opArr += `<option  value ="${item.realName}">${item.name}</option>`
+            }
+        })
+        $('#centerTopDiv').find('.selectTableName').empty()
+        $('#centerTopDiv').find('.selectTableName').append(opArr)
+        SelectedTableIdArr.splice(index ,1)
+        // alert(tabName)
+        $('.leftTable').find('tbody').find('tr').eq(tabName).find('td').eq(0).find('input').prop('checked',false)
+        if($('#centerTopUl').children().length == 0){
+            $('.empty').css('display','flex')
+            $('.centerTable').css('display','none')
+        }
+        // if($(this).parents('#centerTopUl').children().length == 0){
+
+        // }
+    })
+
+    // 中部下方删除
+    $('.newTable').on('click', '.deleteDiv',function () {
+        let $this = $(this)
+        let index = $this.parent().parent().index()
+        $('.newTable').find('tr').eq(index).remove()
+        creatingTable.splice(index,1)
+        let Field =  ($this.parent().parent().find('td').eq(0).html())
+        selectedField.forEach((item,index)=>{
+            if(item == Field){
+                selectedField.splice(index,1)
+            }
+        })
+
+        if(creatingTable.length == 0){
+            $('.centerBottomTable').css('display','none')
+        }
+    })
+
+    /*
+    * 公用方法
+    *
+    */
+
+    function getStepStyle(num){
+        $('.stetConDiv').find('.stepline').css('background','#dddddd')
+        $('.stetConDiv').find('.stepNum').css('background','#dddddd')
+        $('.stetConDiv').find('.stepNum').css('color','#635454')
+        for(let i = 0;i <= 3;i++){
+            if(i <= num){
+                $('.stetConDiv').find(`.stepline${i+1}`).css('background','#4682b4')
+                $('.stetConDiv').find(`.stepNum${i+1}`).css('background','#4682b4')
+                $('.stetConDiv').find(`.stepNum${i+1}`).css('color','#fff')
+            }
+        }
+    }
+    function treeDataConversion(data){
+        let cloneData = JSON.parse(JSON.stringify(data))    // 对源数据深度克隆
+        let tree = cloneData.filter((father)=>{              //循环所有项
+            let branchArr = cloneData.filter((child)=>{
+                return father.id == child.parentId      //返回每一项的子级数组
+            });
+            if(branchArr.length>0){
+                father.children = branchArr;    //如果存在子级，则给父级添加一个children属性，并赋值
+            }
+            return father.parentId==0;      //返回第一层
+        });
+        return tree     //返回树形数据
+    }
+
+    layui.use(['carousel', 'form'], function(){
+        var carousel = layui.carousel
+            ,form = layui.form;
+        var ins2 = carousel.render({
+            elem: '#test2',
+            width:'100%',
+            height:'600px',
+            arrow: 'none',
+            interval: 1800,
+            autoplay:false,
+            indicator:'none',
+            anim:'fade',
+        });
+
+        //事件
+        var $ = layui.$,
+            active = {
+                set: function(othis){
+                    var THIS = 'layui-bg-normal'
+                        ,key = othis.data('key')
+                        ,options = {};
+
+                    othis.css('background-color', '#5FB878').siblings().removeAttr('style');
+                    options[key] = othis.data('value');
+                    ins3.reload(options);
+                }
+            };
+
+        $('.stepItem').on('click',function () {
+            let index = $(this).index()
+            stepIndex = index
+            $('#test2').find('.lunbo').removeClass("layui-this");
+            $('#test2').find('.lunbo').eq(index).addClass("layui-this")
+            getStepStyle(index)
+            // let options = {index:index}
+            // var ins2 = carousel.render(options);
+            // alert(stepIndex)
+            // ins2.reload({index:stepIndex});
+        })
+        $('.lunImgRight').on('click',function () {
+            if(stepIndex == 1){
+                stepIndex = 0
+            }else{
+                stepIndex +=1
+            }
+            $('#test2').find('.lunbo').removeClass("layui-this");
+            $('#test2').find('.lunbo').eq(stepIndex).addClass("layui-this")
+            getStepStyle(stepIndex)
+        })
+        $('.lunImgLeft').on('click',function () {
+            if(stepIndex == 0){
+                stepIndex = 1
+            }else{
+                stepIndex -=1
+            }
+            $('#test2').find('.lunbo').removeClass("layui-this");
+            $('#test2').find('.lunbo').eq(stepIndex).addClass("layui-this")
+            getStepStyle(stepIndex)
+        })
+    });
+</script>
+
+<script>layui.use(['form', 'layer', 'element'],
+    function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+
+    });</script>
+</body>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    </div>
+</script>
+
+
+</html>

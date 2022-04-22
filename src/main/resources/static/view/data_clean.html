@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>中科院机构信息-导入</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="/admin/css/data_clean1.css">
+    <link rel="stylesheet" href="/admin/css/data_clean2.css">
+    <link rel="stylesheet" href="/admin/css/data_clean3.css">
+    <link rel="stylesheet" href="/admin/css/data_clean4.css">
+    <link rel="stylesheet" href="/admin/css/data_clean5.css">
+    <link rel="stylesheet" href="/admin/css/data_clean6.css">
+    <link rel="stylesheet" href="/admin/css/data_clean7.css">
+    <link type="text/css" href="/css/select2.css" rel="stylesheet">
+    <script src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/select2.js"></script>
+    <script type="text/javascript" src="/js/select2_locale_zh-CN.js"></script>
+
+    <style id="detectElementResize" type="text/css">
+        @keyframes resizeanim {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .resize-triggers {
+            animation: 1ms resizeanim;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .resize-triggers,
+        .resize-triggers>div,
+        .contract-trigger:before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .resize-triggers>div {
+            background: #eee;
+            overflow: auto;
+        }
+
+        .contract-trigger:before {
+            width: 200%;
+            height: 200%;
+        }
+    </style>
+
+   
+    <style id="detectElementResize" type="text/css">
+        @keyframes resizeanim {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .resize-triggers {
+            animation: 1ms resizeanim;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .resize-triggers,
+        .resize-triggers>div,
+        .contract-trigger:before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .resize-triggers>div {
+            background: #eee;
+            overflow: auto;
+        }
+
+        .contract-trigger:before {
+            width: 200%;
+            height: 200%;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="prompt-container"></div>
+
+    <div id="share-container" class="m-block-stack" style="display: none;"></div>
+    <div id="page-container" class="m-block-stack">
+        <div data-id="transformer-container" class="m-block">
+            <div data-id="tour-overlay"></div>
+
+            <div class="m-block-stack page transformer">
+                <div class="navigation m-block-static">
+                    <div class="m-block-static-stack-padded">
+                     <!--   <div class="m-block-static">
+                            <div data-id="flow-header" class="m-nav-bar-breadcrumb-link">中科院机构信息-导入.xlsx/结果 Flow</div>
+                            <div data-size="small" class="m-icon tricon chevron-right"></div>
+                        </div>-->
+                        <div class="m-block-static">
+                            <div data-id="icon-header" class="m-block-static-inline">
+                                <div data-size="medium" class="m-icon tricon script"></div>
+                            </div>
+                            <div class="m-block-static-stack">
+                                <div data-id="dataset-header" class="m-block-static"   >
+                                    <input id="modelTypeId" name="tableId" style="width: 100%;" required="true">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-block"></div>
+                    <div data-id="panel-actions" class="m-block-static">
+                        <div class="m-block-static-inline"><a data-size="medium" data-id="search-action" tabindex="0"
+                                role="button" aria-label="Search transformations" class="m-icon tricon search"></a>
+                        </div>
+                        <div class="m-block-static-inline"><a data-size="medium" data-id="recipe-action" tabindex="0"
+                                role="button" aria-label="Open recipe panel" class="m-icon tricon open-recipe"></a>
+                        </div>
+                        <div class="m-block-static-inline"><a data-size="medium" data-id="sample-action" tabindex="0"
+                                role="button" aria-label="Open sample panel" class="m-icon tricon scale-change"></a>
+                        </div>
+                        <div data-id="nav-actions" class="m-block-static-inline">
+                            <div class="m-block-left-right-padded">
+                                <div class="tooltip-div"><button id="run-job" class="run-job m-button-small">Run
+                                        Job</button></div>
+                            </div>
+                        </div>
+                        <div data-id="dropdown" class="m-block-static-inline"></div>
+                    </div>
+                </div>
+                <div class="errors"></div>
+                <div data-id="project" class="m-block">
+                    <div data-id="data-workbench" class="m-block">
+                        <div data-id="data-workbench-content" class="m-block">
+                            <div class="m-block-stack">
+                                <div data-id="top-toolbar-container" class="m-block-static">
+                                    <!--头部功能按钮开始-->
+                                    <div data-id="default-toolbar" class="m-toolbar column-browser-toolbar">
+                                        <div data-id="main-view-selector" class="m-block-static">
+                                            <div class="m-button-group c-button-bar"><button data-index="0"
+                                                    data-text="false" data-value="grid" data-state="active"
+                                                    class="m-button-toggle">
+                                                    <div data-color="muted" class="m-icon tricon grid"></div>
+                                                </button><button data-index="1" data-text="false"
+                                                    data-value="column-browser" data-state="" class="m-button-toggle">
+                                                    <div data-color="muted" class="m-icon tricon columns"></div>
+                                                </button></div>
+                                        </div>
+                                        <div data-orientation="vertical" data-spacing="2" class="divider_divider_1Stgg">
+                                        </div>
+                                        <div data-id="script-undo-redo" class="m-block-static">
+                                            <div class="m-block-static"><button data-id="undo" class="m-button-toggle"
+                                                    data-state="disabled">
+                                                    <div class="m-icon tricon undo"></div>
+                                                </button><button data-id="redo" class="m-button-toggle" data-state="">
+                                                    <div class="m-icon tricon redo"></div>
+                                                </button></div>
+                                        </div>
+                                        <div data-orientation="vertical" data-spacing="2" class="divider_divider_1Stgg">
+                                        </div>
+                                        <!-- this should be an .m-block and everything else should be .m-block-static-->
+                                        <!-- because the tasks-toolbar is the "resizable" element-->
+                                        <div data-id="tasks-toolbar" class="m-block">
+                                            <div tabindex="-1">
+                                                <div class="m-button-toggle" id="Replace" data-id="Replace"
+                                                    data-state="" data-ts="Replace" data-type="toggle" role="button"
+                                                    tabindex="0" style="display: inline-block;">
+                                                    <div class="layout_m-layout_17Q_v" data-secondary-alignment="center"
+                                                        data-type="horizontal">
+                                                        <div class="m-icon replace tricon"></div>
+                                                        <div class="m-icon sort-down tricon" data-size="small"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="divider_divider_1Stgg" data-orientation="vertical"
+                                                data-spacing="2" data-style="solid" data-ts="divider"></div>
+                                            <div tabindex="-1">
+                                                <div class="m-button-toggle" data-id="ObjectsArrays" data-state=""
+                                                    data-ts="ObjectsArrays" data-type="toggle" role="button"
+                                                    tabindex="0" style="display: inline-block;">
+                                                    <div class="layout_m-layout_17Q_v" data-secondary-alignment="center"
+                                                        data-type="horizontal">
+                                                        <div class="m-icon toolbar-objects tricon"></div>
+                                                        <div class="m-icon sort-down tricon" data-size="small"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="divider_divider_1Stgg" data-orientation="vertical"
+                                                data-spacing="2" data-style="solid" data-ts="divider"></div>
+
+
+                                        </div>
+                                        <!--<div data-id="select" class="m-block-static"><button data-id="select-toggle"-->
+                                                <!--class="m-button-toggle" data-state="">-->
+                                                <!--<div data-secondary-alignment="center" data-type="horizontal"-->
+                                                    <!--data-flex="static" class="m-layout">-->
+                                                    <!--<div class="m-icon tricon select-all"></div>-->
+                                                    <!--<div data-size="small" class="m-icon tricon sort-down"></div>-->
+                                                    <!--<div data-id="columns-selected-metadata" data-size="small"-->
+                                                        <!--class="m-text hidden"></div>-->
+                                                <!--</div>-->
+                                            <!--</button></div>-->
+                                        <!--<div data-id="search" class="m-block-static"><button data-id="search-toggle"-->
+                                                <!--class="m-button-toggle">-->
+                                                <!--<div data-secondary-alignment="center" data-type="horizontal"-->
+                                                    <!--data-flex="static" class="m-layout">-->
+                                                    <!--<div class="m-icon tricon go-to-column"></div>-->
+                                                <!--</div>-->
+                                            <!--</button></div>-->
+                                        <!--<div data-id="filters" class="m-block-static"><button data-id="filter-toggle"-->
+                                                <!--class="m-button-toggle" data-state="">-->
+                                                <!--<div data-secondary-alignment="center" data-type="horizontal"-->
+                                                    <!--data-flex="static" class="m-layout">-->
+                                                    <!--<div class="m-icon tricon tune-setting"></div>-->
+                                                    <!--<div data-size="small" class="m-icon tricon sort-down"></div><span-->
+                                                        <!--data-id="filter-count-text" data-size="small"-->
+                                                        <!--class="m-text"></span>-->
+                                                <!--</div>-->
+                                            <!--</button></div>-->
+                                    </div>
+                                    <!--头部功能按钮结束-->
+                                    <div data-id="custom-toolbar" style="display: none;" class="m-layout"></div>
+                                </div>
+
+
+
+
+                                <div class="m-block">
+                                    <div style="overflow-x:auto;" data-id="grids" class="m-block-stack">
+                                        <div data-id="main-data-table" class="m-block main-data-table grid data-table"
+                                            data-state="rendered" style="height: 38px; width: 1864px;">
+
+
+
+
+                                            <div class="transformer-grid-part grid-table main-table"
+                                                style="width: 1816px; height: 463px; left: 48px; top: 0px; display: block;"
+                                                data-state="">
+
+                                                <div class="table-frame column-headers frame-container"
+                                                    style="width: 1816px; height: 25px; display: block;"
+                                                    data-stylesheet_root_pointer="6">
+                                                    <div class="frame-scroller" style="height: 24px; width: 1814px;">
+                                                        <div class="frame" style="width: 2061px;">
+                                                            <div class="cell cell column header column-0"
+                                                                style="width: 160px; left: 0px;">
+                                                                <div data-id="column-header"
+                                                                    class="content column header">
+                                                                    <div title="Integer" data-id="column-type-icon"
+                                                                        data-type="integer" role="button"
+                                                                        class="column-type-icon tricon integer"></div>
+                                                                    <div class="column-resize-handle"></div><a
+                                                                        tabindex="-1" role="button"
+                                                                        class="column-menu-toggle">
+                                                                        <div class="m-icon tricon dropdown-expand">
+                                                                        </div>
+                                                                    </a>
+                                                                    <div role="button" tabindex="-1" title="YID"
+                                                                        data-toggle="tooltip" data-id="column-name"
+                                                                        class="column-name"><span
+                                                                            class="value">YID</span></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell cell column header column-1"
+                                                                style="width: 243px; left: 160px;">
+                                                                <div data-id="column-header"
+                                                                    class="content column header">
+                                                                    <div title="String" data-id="column-type-icon"
+                                                                        data-type="string" role="button"
+                                                                        class="column-type-icon tricon string"></div>
+                                                                    <div class="column-resize-handle"></div><a
+                                                                        tabindex="-1" role="button"
+                                                                        class="column-menu-toggle">
+                                                                        <div class="m-icon tricon dropdown-expand">
+                                                                        </div>
+                                                                    </a>
+                                                                    <div role="button" tabindex="-1" title="YZD1"
+                                                                        data-toggle="tooltip" data-id="column-name"
+                                                                        class="column-name"><span
+                                                                            class="value">YZD1</span></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell cell column header column-2"
+                                                                style="width: 214px; left: 403px;" data-name="column-2">
+                                                                <div data-id="column-header"
+                                                                    class="content column header">
+                                                                    <div title="String" data-id="column-type-icon"
+                                                                        data-type="string" role="button"
+                                                                        class="column-type-icon tricon string"></div>
+                                                                    <div class="column-resize-handle"></div><a
+                                                                        tabindex="-1" role="button"
+                                                                        class="column-menu-toggle">
+                                                                        <div class="m-icon tricon dropdown-expand">
+                                                                        </div>
+                                                                    </a>
+                                                                    <div role="button" tabindex="-1" title="YJGMC"
+                                                                        data-toggle="tooltip" data-id="column-name"
+                                                                        class="column-name"><span
+                                                                            class="value">YJGMC</span></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell cell column header column-3"
+                                                                style="width: 160px; left: 617px;">
+                                                                <div data-id="column-header"
+                                                                    class="content column header">
+                                                                    <div title="String" data-id="column-type-icon"
+                                                                        data-type="string" role="button"
+                                                                        class="column-type-icon tricon string"></div>
+                                                                    <div class="column-resize-handle"></div><a
+                                                                        tabindex="-1" role="button"
+                                                                        class="column-menu-toggle">
+                                                                        <div class="m-icon tricon dropdown-expand">
+                                                                        </div>
+                                                                    </a>
+                                                                    <div role="button" tabindex="-1" title="YZD2"
+                                                                        data-toggle="tooltip" data-id="column-name"
+                                                                        class="column-name"><span
+                                                                            class="value">YZD2</span></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell cell column header column-4"
+                                                                style="width: 160px; left: 777px;">
+                                                                <div data-id="column-header"
+                                                                    class="content column header">
+                                                                    <div title="String" data-id="column-type-icon"
+                                                                        data-type="string" role="button"
+                                                                        class="column-type-icon tricon string"></div>
+                                                                    <div class="column-resize-handle"></div><a
+                                                                        tabindex="-1" role="button"
+                                                                        class="column-menu-toggle">
+                                                                        <div class="m-icon tricon dropdown-expand">
+                                                                        </div>
+                                                                    </a>
+                                                                    <div role="button" tabindex="-1" title="YZD3"
+                                                                        data-toggle="tooltip" data-id="column-name"
+                                                                        class="column-name"><span
+                                                                            class="value">YZD3</span></div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="table-frame grid frame-container"
+                                                    style="width: 1816px; display: block;"
+                                                    data-stylesheet_root_pointer="5">
+                                                 <!--内容在这里-->
+                                                    <div class="corner scrollbar"></div>
+                                                    <div class="vertical scrollbar" style="height: 334px;">
+                                                        <div class="gutter"></div>
+                                                        <div class="handle"
+                                                            style="height: 30px; transform: translateY(0px);">
+                                                            <div class="vertical-handle-tooltip handle-tooltip">
+                                                                <span>Row</span><strong> 1
+                                                                </strong><span>of</span><strong> 21,037</strong></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="horizontal scrollbar" style="width: 1804px;">
+                                                        <div class="gutter"></div>
+                                                        <div class="handle"
+                                                            style="width: 1579px; transform: translateX(0px);"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div data-id="bottom-toolbar" class="m-toolbar">
+                                    <div class="layout_m-layout_17Q_v" data-type="horizontal">
+                                        <div class="layout_m-layout_17Q_v" data-primary-alignment="start"
+                                            data-type="horizontal">
+                                            <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                data-secondary-alignment="center" data-type="horizontal">
+                                                <div data-id="edit-columns" class="layout_m-layout_17Q_v"
+                                                    data-flex="static" data-inset-horizontal="2" data-type="horizontal">
+                                                    <div tabindex="-1">
+                                                        <div class="m-button-toggle" data-id="edit-columns-toggle"
+                                                            data-state="" data-type="toggle" role="button" tabindex="0"
+                                                            style="display: inline-block;">
+                                                            <div class="m-icon tricon view-on"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div data-id="columns" class="layout_m-layout_17Q_v" data-flex="static"
+                                                    data-inset-horizontal="3" data-type="horizontal">
+                                                    <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                        data-spacing="2" data-type="horizontal">
+                                                        <div class="m-text">10 Columns</div>
+                                                    </div>
+                                                </div>
+                                                <div data-id="rows" class="layout_m-layout_17Q_v" data-flex="static"
+                                                    data-inset-horizontal="3" data-type="horizontal">
+                                                    <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                        data-spacing="2" data-type="horizontal">
+                                                        <div class="m-text">21,037 Rows</div>
+                                                    </div>
+                                                </div>
+                                                <div data-id="types" class="layout_m-layout_17Q_v" data-flex="static"
+                                                    data-inset-horizontal="3" data-type="horizontal">
+                                                    <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                        data-spacing="2" data-type="horizontal">
+                                                        <div class="m-text">4 Data Types</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div data-id="panel" data-state="open" id="panel" class="m-block-static" style="display:none;">
+                        <div data-id="panel-container" class="m-layout">
+                            <div data-id="selections" data-type="vertical" class="m-layout" tabindex="-1">
+                                <div data-id="selection" class="layout_m-layout_17Q_v" data-type="vertical">
+                                    <div class="layout_m-layout_17Q_v" data-flex="static" data-spacing="3"
+                                        data-type="vertical">
+                                        <div data-id="header" class="layout_m-layout_17Q_v" data-flex="static"
+                                            data-type="horizontal">
+                                            <div class="c-panel-toolbar">
+                                                <div class="layout_m-layout_17Q_v" data-type="horizontal">
+                                                    <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                        data-primary-alignment="start" data-secondary-alignment="center"
+                                                        data-size="100" data-type="horizontal"
+                                                        style="position: absolute;"></div>
+                                                    <div class="m-text" data-alignment="center" data-display="inline"
+                                                        data-size="large" data-wrap="false">Details</div>
+                                                    <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                        data-primary-alignment="end" data-secondary-alignment="center"
+                                                        data-type="horizontal">
+                                                        <div tabindex="-1" class="m-layout" data-id="tooltip-activator"
+                                                            data-flex="static"><a aria-label="Close" data-id="close"
+                                                                aria-disabled="false" class="m-button-link"
+                                                                data-state="" role="button" tabindex="0">
+                                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                                    data-secondary-alignment="center" data-spacing="2"
+                                                                    data-type="horizontal">
+                                                                    <div class="m-icon delete tricon"></div>
+                                                                </div>
+                                                            </a></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layout_m-layout_17Q_v" data-flex="static" data-inset-horizontal="4"
+                                            data-inset-vertical="3" data-secondary-alignment="center" data-spacing="2"
+                                            data-type="horizontal">
+                                            <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                data-type="horizontal">
+                                                <div tabindex="-1"><a aria-disabled="false" class="m-button-link"
+                                                        data-state="" role="button" tabindex="0">
+                                                        <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                            data-secondary-alignment="center" data-spacing="2"
+                                                            data-type="horizontal">
+                                                            <div class="m-icon string tricon"></div>
+                                                        </div>
+                                                    </a></div>
+                                            </div>
+                                            <div class="layout_m-layout_17Q_v" data-type="horizontal">
+                                                <div class="m-text" data-display="inline" data-size="large"
+                                                    data-wrap="false">YZD1</div>
+                                            </div>
+                                            <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                data-type="horizontal">
+                                                <div tabindex="-1"><a aria-disabled="false" class="m-button-link"
+                                                        data-state="" role="button" tabindex="0">
+                                                        <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                            data-secondary-alignment="center" data-spacing="2"
+                                                            data-type="horizontal">
+                                                            <div class="m-icon more tricon"></div>
+                                                        </div>
+                                                    </a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layout_m-layout_17Q_v" data-inset-vertical="3" data-overflow-y="overlay"
+                                        data-type="vertical">
+                                        <div data-id="main-panel" class="layout_m-layout_17Q_v" data-flex="static"
+                                            data-inset-horizontal="4" data-spacing="4" data-type="vertical">
+                                            <div class="layout_m-layout_17Q_v" data-flex="static" data-spacing="2"
+                                                data-type="vertical">
+                                                <div class="layout_m-layout_17Q_v" data-type="horizontal">
+                                                    <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                        data-type="horizontal">
+                                                        <div class="m-text" data-weight="bold">Quality</div>
+                                                    </div>
+                                                </div>
+                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                    data-type="horizontal">
+                                                    <div data-id="quality-bar-container" class="layout_m-layout_17Q_v"
+                                                        data-spacing="2" data-type="vertical" style="">
+                                                        <div data-id="quality-bar" class="layout_m-layout_17Q_v"
+                                                            data-secondary-alignment="center" data-spacing="2"
+                                                            data-type="horizontal"
+                                                            style="border-radius: 6px; height: 12px; position: relative;">
+                                                            <div class="quality-bar"
+                                                                style="border-radius: 2px; align-items: center;">
+                                                                <div tabindex="-1" class="segment selection-panel valid"
+                                                                    data-count="21037" data-segment="valid"
+                                                                    data-selected="false"
+                                                                    style="max-width: calc(100% - 0px); width: 100%; height: 8px; position: relative;">
+                                                                    <div style="height: 100%; width: 100%;">
+                                                                        <div class="brush" data-count="0"
+                                                                            style="width: 0%; position: absolute;">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-id="quality-bar-counts" class="layout_m-layout_17Q_v"
+                                                            data-flex="static" data-spacing="1" data-type="vertical">
+                                                            <div data-id="quality-bar-count-valid"
+                                                                class="layout_m-layout_17Q_v" data-spacing="2"
+                                                                data-type="horizontal">
+                                                                <div class="layout_m-layout_17Q_v"
+                                                                    data-type="horizontal">
+                                                                    <div class="m-text" data-color="muted"
+                                                                        data-size="small">Valid</div>
+                                                                </div>
+                                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                                    data-type="horizontal">
+                                                                    <div class="m-text" data-size="small">21037</div>
+                                                                </div>
+                                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                                    data-primary-alignment="end" data-type="horizontal"
+                                                                    style="width: 45px;">
+                                                                    <div class="layout_m-layout_17Q_v"
+                                                                        data-flex="static" data-type="horizontal">
+                                                                        <div class="m-text" data-color="muted"
+                                                                            data-size="small">100%</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div data-id="quality-bar-count-invalid"
+                                                                class="layout_m-layout_17Q_v" data-spacing="2"
+                                                                data-type="horizontal">
+                                                                <div class="layout_m-layout_17Q_v"
+                                                                    data-type="horizontal">
+                                                                    <div class="m-text" data-color="muted"
+                                                                        data-size="small">Mismatched</div>
+                                                                </div>
+                                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                                    data-type="horizontal">
+                                                                    <div class="m-text" data-size="small">0</div>
+                                                                </div>
+                                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                                    data-primary-alignment="end" data-type="horizontal"
+                                                                    style="width: 45px;">
+                                                                    <div class="layout_m-layout_17Q_v"
+                                                                        data-flex="static" data-type="horizontal">
+                                                                        <div class="m-text" data-color="muted"
+                                                                            data-size="small">0%</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div data-id="quality-bar-count-empty"
+                                                                class="layout_m-layout_17Q_v" data-spacing="2"
+                                                                data-type="horizontal">
+                                                                <div class="layout_m-layout_17Q_v"
+                                                                    data-type="horizontal">
+                                                                    <div class="m-text" data-color="muted"
+                                                                        data-size="small">Missing</div>
+                                                                </div>
+                                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                                    data-type="horizontal">
+                                                                    <div class="m-text" data-size="small">0</div>
+                                                                </div>
+                                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                                    data-primary-alignment="end" data-type="horizontal"
+                                                                    style="width: 45px;">
+                                                                    <div class="layout_m-layout_17Q_v"
+                                                                        data-flex="static" data-type="horizontal">
+                                                                        <div class="m-text" data-color="muted"
+                                                                            data-size="small">0%</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                    data-type="horizontal">
+                                                    <div class="m-text" data-weight="bold">Suggestions</div>
+                                                </div>
+                                                <div class="layout_m-layout_17Q_v" data-flex="static"
+                                                    data-type="horizontal">
+                                                    <div class="m-block-stack">
+                                                        <div class="m-block-stack">
+                                                            <div class="m-block-auto">
+                                                                <div data-id="cards" class="m-list">
+                                                                    <div class="m-card" data-expanded="true">
+                                                                        <div class="m-panel">
+                                                                            <div data-id="card-heading"
+                                                                                data-flex="static"
+                                                                                data-inset-horizontal="4"
+                                                                                data-inset-vertical="3" data-state=""
+                                                                                class="m-layout">
+                                                                                <div data-size="medium"
+                                                                                    data-weight="bold" data-id="group"
+                                                                                    class="m-text">Delete columns</div>
+                                                                                <div class="m-layout"></div>
+                                                                            </div>
+                                                                            <div class="m-panel-content">
+                                                                                <div data-id="suggestions"
+                                                                                    class="m-block-static-stack">
+                                                                                    <div class="c-pickable-list"
+                                                                                        tabindex="0">
+                                                                                        <div data-mode="radio"
+                                                                                            class="m-list">
+                                                                                            <div data-id="6d26317d72b17e4b9b944a143b15fa21"
+                                                                                                data-type="item"
+                                                                                                data-index="0"
+                                                                                                class="m-list-item-pickable"
+                                                                                                tabindex="-1"
+                                                                                                data-selected="false"
+                                                                                                data-state="">
+                                                                                                <div data-wrangle="drop col: YZD1 action: Drop"
+                                                                                                    class="m-block">
+                                                                                                    <div
+                                                                                                        class="m-block-stack">
+                                                                                                        <div
+                                                                                                            class="m-block">
+                                                                                                            <div data-size="small"
+                                                                                                                data-id="label"
+                                                                                                                class="m-text-mixed-mono">
+                                                                                                                <div class="m-language"
+                                                                                                                    data-type="column">
+                                                                                                                    YZD1
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="m-card" data-expanded="true">
+                                                                        <div class="m-panel">
+                                                                            <div data-id="card-heading"
+                                                                                data-flex="static"
+                                                                                data-inset-horizontal="4"
+                                                                                data-inset-vertical="3" data-state=""
+                                                                                class="m-layout">
+                                                                                <div data-size="medium"
+                                                                                    data-weight="bold" data-id="group"
+                                                                                    class="m-text">Rename</div>
+                                                                                <div class="m-layout"></div>
+                                                                            </div>
+                                                                            <div class="m-panel-content">
+                                                                                <div data-id="suggestions"
+                                                                                    class="m-block-static-stack">
+                                                                                    <div class="c-pickable-list"
+                                                                                        tabindex="0">
+                                                                                        <div data-mode="radio"
+                                                                                            class="m-list">
+                                                                                            <div data-id="d425363cf404c032a68eada830062468"
+                                                                                                data-type="item"
+                                                                                                data-index="0"
+                                                                                                class="m-list-item-pickable"
+                                                                                                tabindex="-1"
+                                                                                                data-selected="false"
+                                                                                                data-state="">
+                                                                                                <div data-wrangle="rename type: manual mapping: [YZD1,'YZD1']"
+                                                                                                    class="m-block">
+                                                                                                    <div
+                                                                                                        class="m-block-stack">
+                                                                                                        <div
+                                                                                                            class="m-block">
+                                                                                                            <div data-size="small"
+                                                                                                                data-id="label"
+                                                                                                                class="m-text-mixed-mono">
+                                                                                                                <div class="m-language"
+                                                                                                                    data-type="verb">
+                                                                                                                    Rename
+                                                                                                                </div>
+                                                                                                                <div class="m-language"
+                                                                                                                    data-type="column">
+                                                                                                                    YZD1
+                                                                                                                </div>
+                                                                                                                to <div
+                                                                                                                    class="m-language"
+                                                                                                                    data-type="string">
+                                                                                                                    'YZD1'
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tools hidden flex flex-column flex-spacer"></div>
+                <div class="loading-overlay" style="display: none;">
+                    <div class="m-loader-overlay">
+                        <div class="m-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- replace 后的小弹窗开始 -->
+    <div class="menu_m-menu_3Hj2A" id="menu-1" data-size="dynamic" data-ts="menu" data-placement="bottom"
+        data-alignment="left" style="position: absolute; top: 100.5px; left: 200px;">
+        <div class="menu_m-menu-item_3C_R1" data-id="ReplacePattern" data-state="" data-ts="menu-item" data-type="item"
+            role="button" tabindex="-1" style="text-decoration: none; outline: none;">
+            <div class="m-block">
+                <div class="m-text" data-color="normal">Text or pattern</div>
+            </div>
+        </div>
+        <div class="menu_m-menu-item_3C_R1" data-id="ReplaceCells" data-state="" data-ts="menu-item" data-type="item"
+            role="button" tabindex="-1" style="text-decoration: none; outline: none;">
+            <div class="m-block">
+                <div class="m-text" data-color="normal">Cells</div>
+            </div>
+        </div>
+        <div class="divider_divider_1Stgg" data-orientation="horizontal" data-style="solid" data-ts="divider"></div>
+        <div class="menu_m-menu-item_3C_R1" data-id="ReplaceDelimiters" data-state="" data-ts="menu-item"
+            data-type="item" role="button" tabindex="-1" style="text-decoration: none; outline: none;">
+            <div class="m-block">
+                <div class="m-text" data-color="normal">Between delimiters</div>
+            </div>
+        </div>
+        <div class="menu_m-menu-item_3C_R1" data-id="ReplacePositions" data-state="" data-ts="menu-item"
+            data-type="item" role="button" tabindex="-1" style="text-decoration: none; outline: none;">
+            <div class="m-block">
+                <div class="m-text" data-color="normal">Between positions</div>
+            </div>
+        </div>
+        <div class="divider_divider_1Stgg" data-orientation="horizontal" data-style="solid" data-ts="divider"></div>
+        <div class="menu_m-menu-item_3C_R1" data-id="ReplaceMismatched" data-state="" data-ts="menu-item"
+            data-type="item" role="button" tabindex="-1" style="text-decoration: none; outline: none;">
+            <div class="m-block">
+                <div class="m-text" data-color="normal">Mismatched values</div>
+            </div>
+        </div>
+        <div class="menu_m-menu-item_3C_R1" data-id="ReplaceMissing" data-state="" data-ts="menu-item" data-type="item"
+            role="button" tabindex="-1" style="text-decoration: none; outline: none;">
+            <div class="m-block">
+                <div class="m-text" data-color="normal">Missing</div>
+            </div>
+            <div class="m-block-static">
+                <div class="m-icon chevron-right tricon" data-color="muted"></div>
+            </div>
+        </div>
+        <div class="divider_divider_1Stgg" data-orientation="horizontal" data-style="solid" data-ts="divider"></div>
+        <div class="menu_m-menu-item_3C_R1" data-id="ConvertPatterns" data-state="hovered" data-ts="menu-item"
+            data-type="item" role="button" tabindex="-1" style="text-decoration: none; outline: none;">
+            <div class="m-block">
+                <div class="m-text" data-color="normal">Convert patterns</div>
+            </div>
+        </div>
+    </div>
+    <!-- replace 后的小弹窗开始 -->
+
+
+    <script type="text/javascript" src="/javascripts/data-import.js"></script>
+    <script>
+
+        $("#Replace").click(function () {
+            $("#menu-1").slideToggle();
+        });
+
+
+        $('.column.cell').on('click', function () {
+            var $this = $(this);
+            var index = $this.index();
+            console.log(index);
+            $('#panel').slideToggle();
+
+            console.log($('.fade-cells').find('.column-2'));
+            if ($this.find('.content').hasClass('column-selected')) {
+                $this.find('.content').removeClass('column-selected');
+            } else {
+
+                $this.find('.content').addClass('column-selected');
+            }
+            if ($(name).find('.content').hasClass('column-selected')) {
+                $(name).find('.content').removeClass('column-selected');
+            } else {
+                $(name).find('.content').addClass('column-selected');
+            }
+
+            if (index == 0) {
+                if ($('.fade-cells').find('.column-0').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-0').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-0').find('.content').addClass('column-selected');
+                }
+
+                if ($('.column-0').hasClass('column-selected')) {
+                    $('.column-0').removeClass('column-selected')
+                } else {
+                    $('.column-0').addClass('column-selected');
+                }
+            } else if (index == 1) {
+                if ($('.fade-cells').find('.column-1').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-1').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-1').find('.content').addClass('column-selected');
+                }
+                if ($('.column-1').hasClass('column-selected')) {
+                    $('.column-1').removeClass('column-selected')
+                } else {
+                    $('.column-1').addClass('column-selected');
+                }
+            } else if (index == 2) {
+                if ($('.fade-cells').find('.column-2').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-2').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-2').find('.content').addClass('column-selected');
+                }
+                if ($('.column-2').hasClass('column-selected')) {
+                    $('.column-2').removeClass('column-selected')
+                } else {
+                    $('.column-2').addClass('column-selected');
+                }
+            } else if (index == 3) {
+                if ($('.fade-cells').find('.column-3').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-3').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-3').find('.content').addClass('column-selected');
+                }
+                if ($('.column-3').hasClass('column-selected')) {
+                    $('.column-3').removeClass('column-selected')
+                } else {
+                    $('.column-3').addClass('column-selected');
+                }
+            } else if (index == 4) {
+                if ($('.fade-cells').find('.column-4').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-4').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-4').find('.content').addClass('column-selected');
+                }
+                if ($('.column-4').hasClass('column-selected')) {
+                    $('.column-4').removeClass('column-selected')
+                } else {
+                    $('.column-4').addClass('column-selected');
+                }
+            } else if (index == 5) {
+                if ($('.fade-cells').find('.column-5').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-5').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-5').find('.content').addClass('column-selected');
+                }
+                if ($('.column-5').hasClass('column-selected')) {
+                    $('.column-5').removeClass('column-selected')
+                } else {
+                    $('.column-5').addClass('column-selected');
+                }
+            } else if (index == 6) {
+                if ($('.fade-cells').find('.column-6').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-6').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-6').find('.content').addClass('column-selected');
+                }
+                if ($('.column-6').hasClass('column-selected')) {
+                    $('.column-6').removeClass('column-selected')
+                } else {
+                    $('.column-6').addClass('column-selected');
+                }
+            } else if (index == 7) {
+                if ($('.fade-cells').find('.column-7').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-7').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-7').find('.content').addClass('column-selected');
+                }
+                if ($('.column-7').hasClass('column-selected')) {
+                    $('.column-7').removeClass('column-selected')
+                } else {
+                    $('.column-7').addClass('column-selected');
+                }
+            } else if (index == 8) {
+                if ($('.fade-cells').find('.column-8').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-8').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-8').find('.content').addClass('column-selected');
+                }
+                if ($('.column-8').hasClass('column-selected')) {
+                    $('.column-8').removeClass('column-selected')
+                } else {
+                    $('.column-8').addClass('column-selected');
+                }
+            } else if (index == 9) {
+                if ($('.fade-cells').find('.column-9').find('.content').hasClass('column-selected')) {
+                    $('.fade-cells').find('.column-9').find('.content').removeClass('column-selected')
+                } else {
+                    $('.fade-cells').find('.column-9').find('.content').addClass('column-selected');
+                }
+                if ($('.column-9').hasClass('column-selected')) {
+                    $('.column-9').removeClass('column-selected')
+                } else {
+                    $('.column-9').addClass('column-selected');
+                }
+            }
+        })
+        $('.delete.tricon').on('click',function(){
+              $('#panel').css('display','none');
+        })
+
+    </script>
+    <style>
+        #menu-1,
+        #menu-2 {
+            display: none;
+        }
+
+        .scroller-box {
+            overflow-x: scroll !important;
+        }
+    </style>
+</body>
+<script>
+</script>
+
+</html>

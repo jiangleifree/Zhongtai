@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link type="text/css" href="/css/select2.css" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <script type="text/javascript" src="/js/select2.js"></script>
+    <script type="text/javascript" src="/js/select2_locale_zh-CN.js"></script>
+    <script>
+        let xmSelected = []
+    </script>
+    <script type="text/javascript" src="/javascripts/data-import.js"></script>
+    <script src="/js/vue/vue.js"></script>
+
+    <!--    //书写json-->
+    <script src="/js/ace/jsoneditor.js"></script>
+    <link rel="stylesheet" href="/js/ace/jsoneditor.css" type="text/css">
+
+
+    <style>
+        .layui-form-label{
+            width: 120px !important;
+        }
+        .layui-input-inline-new{
+             /*width: 900px ;*/
+             width: 900px !important;
+         }
+        .layui-input-inline-new2{
+             /*width: 900px ;*/
+             width: 800px !important;
+         }
+        .jsoneditor{
+            border: thin solid #e6e6e6 !important;
+
+
+        }
+        .layui-form-select{
+            display: none !important;
+        }
+        .opacity{
+            height: 30px !important;
+        }
+    </style>
+</head>
+
+<body>
+<div class="layui-fluid" id="appCon">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <div style="width: 100%;display: flex;justify-content: left">
+                        <div style="width:1200px">
+                            <div class="layui-btn-container" style="">
+                                <button class="layui-btn layui-btn-sm" onclick="window.history.go(-1)">返回上一级</button>
+                            </div>
+                            <form class="layui-form layui-col-space5" id="dataFtpFrom">
+                                <div class="layui-col-md12" >
+                                    <div class="layui-card"  style="">
+                                        <div class="layui-card-body ">
+                                            <div class="layui-form-item">
+                                                <label for="create-title" class="layui-form-label">
+                                                    <span class="x-red">*</span>标题</label>
+                                                <div class="layui-input-inline layui-input-inline-new">
+                                                    <input data-id="" type="text"   name="modelTypeName" lay-verify="required" id="create-title"
+                                                           autocomplete="off" v-model="title"
+                                                           class="layui-input"></div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <label for="creat-url" class="layui-form-label">
+                                                        <span class="x-red">*</span>url</label>
+                                                    <div class="layui-input-inline htp" style="width: 230px;margin-right:-10px;">
+                                                        <div style="width:230px;height: 30px;line-height: 30px;font-size: 13px">/api/topicService/<span>{{topicName}}</span>/</div>
+                                                    </div>
+                                                    <div class="layui-input-inline">
+                                                        <input data-id="" type="text"   name="modelTypeName"  lay-verify="required" id="creat-url"
+                                                               autocomplete="off"  v-model="url"
+                                                               class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <label for="create-type" class="layui-form-label">
+                                                        <span class="x-red">*</span>type</label>
+                                                    <div class="layui-input-inline" style="width: 300px">
+                                                        <select id="create-type" style="width: 100px;height: 30px;display: block;margin-left: 30px" lay-filter="create-type" class="valid" v-model="type">
+                                                            <option value="GET">GET</option>
+                                                            <option value="POST">POST</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="layui-form-item"  style="height: 110px">
+                                                <label for="create-summary" class="layui-form-label">
+                                                    <span class="x-red">*</span>说明</label>
+                                                <div class="layui-input-inline layui-input-inline-new">
+                                                    <textarea class="layui-textarea" id="create-summary" v-model="summary" name="content" lay-verify="content" id=""></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-form-item">
+                                                <label  class="layui-form-label">
+                                                    <span class="x-red">*</span>输入参数</label>
+                                                <div class="layui-input-inline layui-input-inline-new">
+                                                    <table class="layui-table">
+                                                        <colgroup>
+                                                            <col width="400">
+                                                            <col width="150">
+                                                            <col width="150">
+                                                            <col width="500">
+                                                            <col width="150">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th>参数名称</th>
+                                                            <th>参数类型</th>
+                                                            <th>是否必须</th>
+                                                            <th>参数描述</th>
+                                                            <th>操作</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr v-for="(item,index) in parameterList" :key="index">
+                                                            <td>
+                                                                <input data-id="" type="text"   name="modelTypeName"  lay-verify="required"
+                                                                       autocomplete="off" v-model="item.name"
+                                                                       class="layui-input">
+                                                            </td>
+                                                            <td>
+                                                                <select style="width: 80%;height: 30px;display: block" lay-filter="dataImportType" class="valid" v-model="item.type">
+                                                                    <option value="string">string</option>
+                                                                    <option value="int">int</option>
+                                                                    <option value="date">date</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select style="width: 80%;height: 30px;display: block" lay-filter="dataImportType" class="valid" v-model="item.required">
+                                                                    <option value="false">false</option>
+                                                                    <option value="true">true</option>
+                                                                </select>
+                                                            </td>
+                                                            <td><input data-id="" type="text"   name="modelTypeName"  lay-verify="required"
+                                                                       autocomplete="off" v-model="item.description"
+                                                                       class="layui-input">
+                                                            </td>
+                                                            <td style="display: flex">
+                                                                <a class="layui-btn layui-btn-danger layui-btn-xs parameterListDelete" @click="parameterListDelete(index)" lay-event="getLog">删除</a>
+
+                                                                <a v-if="index == parameterList.length-1"  @click="parameterListAdd" class="layui-btn  layui-btn-xs responseListDelete" lay-event="getLog">新增</a>
+
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+<!--                                                <button style="margin-top: 6px;" @click="parameterListAdd" data-method="offset2" data-type="auto" class="layui-btn">新增</button>-->
+<!--                                                <div class="layui-input-inline" style="width:100px;text-align: right">-->
+
+<!--                                                </div>-->
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label  class="layui-form-label">
+                                                    <span class="x-red">*</span>输出参数</label>
+                                                <div class="layui-input-inline layui-input-inline-new">
+                                                    <table class="layui-table">
+                                                        <colgroup>
+                                                            <col width="400">
+                                                            <col width="300">
+                                                            <col width="500">
+                                                            <col width="150">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th>参数名称</th>
+                                                            <th>参数类型</th>
+                                                            <th>参数描述</th>
+                                                            <th>操作</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>code</td>
+                                                            <td>int</td>
+                                                            <td>返回状态码,200成功,500失败</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>msg</td>
+                                                            <td>string</td>
+                                                            <td>系统返回信息</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>errMsg</td>
+                                                            <td>string</td>
+                                                            <td>返回数据集</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td> <span v-if="isOpen" @click="openData('open')"><i class="layui-icon layui-icon-right"></i></span> <span v-else @click="openData('close')"><i class="layui-icon layui-icon-down"></i></span> data</td>
+                                                            <td>array</td>
+                                                            <td>返回数据集</td>
+                                                            <td>
+                                                                <a style="margin-top: 6px;" @click="responseListAdd" class="layui-btn  layui-btn-xs responseListDelete" lay-event="getLog">新增</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr v-if="!isOpen" v-for="(item,index) in responseList[3].item" :key="index">
+                                                            <td  style="display: flex;justify-content: flex-end;">
+                                                                <input data-id="" type="text"   name="modelTypeName"  lay-verify="required"
+                                                                       autocomplete="off" v-model="item.name" style="width: 90%"
+                                                                       class="layui-input">
+                                                            </td>
+                                                            <td>
+                                                                <select style="width: 80%;height: 30px;display: block"  v-model="item.type">
+                                                                    <option style="height: 30px"  value="string">string</option>
+                                                                    <option style="height: 30px" value="int">int</option>
+                                                                    <option style="height: 30px" value="date">date</option>
+                                                                </select>
+<!--                                                                <div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="string" class="">string</dd><dd lay-value="int" class="">int</dd><dd lay-value="date" class="">date</dd></dl></div>-->
+                                                            </td>
+                                                            <td><input data-id="" type="text"   name="modelTypeName"  lay-verify="required"
+                                                                       autocomplete="off" v-model="item.description"
+                                                                       class="layui-input">
+                                                            </td>
+                                                            <td>
+<!--                                                                <button class="responseListDelete" data-method="" data-type="auto" class="layui-btn">删除</button>-->
+                                                                <a class="layui-btn layui-btn-danger layui-btn-xs responseListDelete" @click="responseListDelete(index)" lay-event="getLog">删除</a>
+
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+<!--                                                <button style="margin-top: 6px;" @click="responseListAdd" data-method="offset2" data-type="auto" class="layui-btn">新增</button>-->
+<!--                                                <div class="layui-input-inline" style="width:100px;text-align: right">-->
+
+<!--                                                </div>-->
+
+                                            </div>
+
+                                            <div class="layui-form-item" style="height: 110px">
+                                                <label  class="layui-form-label">
+                                                    <span class="x-red">*</span>sql</label>
+                                                <div class="layui-input-inline layui-input-inline-new2">
+                                                    <textarea class="layui-textarea"  v-model="sql" name="content" lay-verify="content" ></textarea>
+
+                                                </div>
+                                                <div class="layui-input-inline" style="width:100px;text-align: right">
+                                                    <a style="margin-top: 6px;" @click="sqlDebug" class="layui-btn  layui-btn-xs responseListDelete" lay-event="getLog">调试</a>
+                                                </div>
+                                            </div>
+
+<!--                                            <div class="layui-form-item" style="height: 110px" v-if="isDebug">-->
+<!--                                                <label  class="layui-form-label">-->
+<!--                                                    <span class="x-red">*</span>sql调试结果</label>-->
+<!--                                                <div class="layui-input-inline layui-input-inline-new">-->
+<!--                                                    <textarea class="layui-textarea"  v-model="sqlDebugData" name="content" lay-verify="content" ></textarea>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+                                            <div class="layui-form-item" style="text-align: right">
+<!--                                                <button  class="layui-btn"  @click="dataAdd()" type='button'>创建</button>-->
+                                                <a @click="dataAdd" class="layui-btn  layui-btn-xs " lay-event="getLog">创建</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--                                <hr>-->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['laydate', 'form'],
+        function () {
+            var layer = layui.layer
+                ,form = layui.form;
+        }
+    )
+</script>
+<script>
+
+    let vm = new Vue({
+        el:'#appCon',
+        data:{
+            isDebug:false,
+            isOpen:false,  //data树形下拉
+            leftData:{},
+            a:'11111',
+            jsonLeft:{},
+            editor:null,
+            editor2:null,
+            parameterList:[
+                {
+                    "name":"",   //入参名称, 用户自己输入
+                    "type":"int", //入参类型. 用户选择  目前支持string date int
+                    "required":"false",   //是否必须, 用户选择 默认false
+                    "description": "" //字段描述, 用户自己输入
+                }
+            ],
+            // responseList:[
+            //     {
+            //         "name":"", //出参名称, 用户自己输入
+            //         "type":"int", //出参类型. 用户选择  目前支持string date int
+            //         "description": ""  //字段描述, 用户自己输入
+            //
+            //     }
+            // ],
+            responseList:[
+
+                {
+                    "name":"code",
+                    "type":"int",
+                    "description": "返回状态码,200成功,500失败"
+
+                },
+                {
+                    "name":"msg",
+                    "type":"string",
+                    "description": "系统返回信息"
+
+                },
+                {
+                    "name":"errMsg",
+                    "type":"string",
+                    "description": "系统返回错误信息"
+
+                },
+                {
+                    "name":"data",
+                    "type":"array",
+                    "description": "返回结果集",
+                    "item":[{
+                        "name":"",
+                        "type":"int",
+                        "description": "",
+                    },]
+
+                }
+
+            ],
+            title:'',    //标题
+            summary:'',  //说明
+            type:'POST',
+            url:'',     //url
+            topicName:'',     //url
+            sql:'',
+            sqlDebugData:'',
+
+
+        },
+        created(){
+            let that = this
+            let url = decodeURI(decodeURI(location.search)); //获取url中"?"符后的字串
+            let topicName = '';
+            if (url.indexOf("?") != -1) {
+                topicName = url.substr(1);
+                this.topicName = topicName
+            }
+            window.topicName2 = this.topicName
+            console.log(`11111111111111111111111111111111111111111111111111111111111111111111111111`)
+            console.log(`topicName:${this.topicName}`)
+        },
+        mounted(){
+
+        },
+        methods:{
+            openData(){
+                this.isOpen = !this.isOpen
+            },
+            sqlDebug(){
+                let that = this
+                layer.open({
+                    type: 2,
+                    // area: ['550px', '300px'],
+                    area: ['950px', '550px'],
+                    title:'sql调试',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    // content: 'dataAddBrowse/replaceOrSkip.html'
+                    content: 'sqlDebug.html',
+                    success: function (layero, index) {    //成功获得加载changefile.html时，预先加载，将值从父窗口传到 子窗口
+                        let body = layer.getChildFrame('body', index);
+                        body.find(".filename").val(that.topicName);   //通过class名进行获取数据
+                        layui.form.render();
+                    },
+                });
+            },
+            //输入参数删除
+            parameterListDelete(val){
+                this.parameterList.splice(val,1)
+            },
+
+            //输出参数删除
+            responseListDelete(val){
+                this.responseList[3].item.splice(val,1)
+            },
+
+
+            //输入参数新增
+            parameterListAdd(){
+                let item = {
+                    "name":"",   //入参名称, 用户自己输入
+                    "type":"int", //入参类型. 用户选择  目前支持string date int
+                    "required":"false",   //是否必须, 用户选择 默认false
+                    "description": "" //字段描述, 用户自己输入
+                }
+                this.parameterList.push(item)
+            },
+            responseListAdd(){
+                let item = {
+                    "name":"", //出参名称, 用户自己输入
+                    "type":"int", //出参类型. 用户选择  目前支持string date int
+                    "description": ""  //字段描述, 用户自己输入
+
+                }
+                // this.responseList.push(item)
+                this.responseList[3].item.push(item)
+            },
+            dataAdd(){
+                let that = this
+                let params = {
+                    "url":`/api/topicService/${that.topicName}/${that.url}`,
+                    "type":that.type,
+                    "topicName":that.topicName,
+                    "title":that.title,
+                    "summary":that.summary,
+                    "sql":that.sql,
+                    "parameterList":that.parameterList,
+                    "responseList":that.responseList
+                }
+                console.log(JSON.stringify(params))
+
+
+                $.ajax({
+                    type: "post",
+                    async: false,
+                    url: "/topic/interface/create",
+                    data: JSON.stringify(params),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (resData) {
+                        if(resData.code == 200){
+                            layer.msg('创建成功！')
+                            window.location.href=encodeURI(encodeURI('theme-details.html?'+this.topicName ))
+                        }else{
+                            layer.alert(resData.errMsg, {icon: 2})
+                        }
+                    },
+                    error: function (request) {//请求失败之后的操作
+                        layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    }
+                });
+            },
+        }
+    })
+</script>
+
+</html>

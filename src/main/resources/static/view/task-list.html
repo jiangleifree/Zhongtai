@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="/admin/css/font.css">
+        <link rel="stylesheet" href="/admin/css/xadmin.css">
+        <script src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <style>
+        @font-face {
+            font-family: 'iconfont';  /* project id 1752117 */
+            src: url('//at.alicdn.com/t/font_1752117_zb9960ckpb.eot');
+            src: url('//at.alicdn.com/t/font_1752117_zb9960ckpb.eot?#iefix') format('embedded-opentype'),
+            url('//at.alicdn.com/t/font_1752117_zb9960ckpb.woff2') format('woff2'),
+            url('//at.alicdn.com/t/font_1752117_zb9960ckpb.woff') format('woff'),
+            url('//at.alicdn.com/t/font_1752117_zb9960ckpb.ttf') format('truetype'),
+            url('//at.alicdn.com/t/font_1752117_zb9960ckpb.svg#iconfont') format('svg');
+        }
+    </style>
+    <body>
+        <div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a>
+                    <cite style="font-size: 22px;">任务管理</cite></a>
+            </span>
+            <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+                <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+            </a>
+        </div>
+        <i class="iconfont icon-yiwancheng"></i>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+
+
+
+                    <div class="layui-card">
+
+                        <div class="layui-card-body ">
+                            <table class="layui-table" id="layui_table_model"  lay-filter="dataTable">
+
+                                <script type="text/html" id="barDemo">
+                                    <a class="layui-btn layui-btn-xs" lay-event="getLog"><i class="layui-icon">&#xe615;</i>查看日志</a>
+                                </script>
+
+                                <script type="text/html" id="barTransition">
+                                    {{#  if(d.status=='done'){ }}
+                                    <i class="iconfont " style="font-size:16px;color:#009688">&#xe669;</i>
+                                    {{#  } else if(d.status == 'failed') { }}
+                                    <i class="iconfont" style="font-size:16px;color:#FF5722">&#xe610;</i>
+                                    {{#  } else if(d.status == 'runing') { }}
+                                    <i class="iconfont" style="font-size:16px;color:#5FB878">&#xe68a;</i>
+                                    {{#  } else if(d.status == 'waiting') { }}
+                                    <i class="iconfont" style="font-size:16px;color:#FFB800">&#xe6af;</i>
+                                    {{#  } }}
+                                </script>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/html" id="toolbarDemo">
+
+    </script>
+
+    <script>layui.use('laydate',
+        function() {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+
+        });</script>
+    <script>
+        layui.use('table',
+        function() {
+            var table = layui.table;
+            let tableTask = layui.table;
+            table.render({
+                id:"dataTable",//
+                elem: '#layui_table_model',//指定表格元素
+                url: '/task/getAllTask',  //请求路径
+                cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,skin: 'line ' //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
+                //,even: true    //隔行换色
+                ,page: true  //开启分页
+                ,limits: [10,20,50,100]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+                ,limit: 10 //每页默认显示的数量
+                ,method:'get'  //提交方式
+                ,toolbar: '#toolbarDemo'
+                ,cols: [[
+                    {type:'checkbox'}, //开启多选框
+                    {
+                        field: 'taskId', //json对应的key
+                        title: 'taskId',   //列名
+                        sort: true,   // 默认为 false,true为开启排序
+                        width: '5%',
+                        hide:true
+                    },
+                    {
+                        field: 'appId', //json对应的key
+                        title: 'appId',   //列名
+                        width: '15%',
+                        style: 'color:red;'
+                    },
+                    {
+                        field: 'taskName', //json对应的key
+                        title: '任务名称',   //列名
+                        width: '15%',
+                        style: 'color:red;'
+                    },
+                    {
+                        field: 'taskType', //json对应的key
+                        title: '任务类型',   //列名
+                    }
+                    ,
+                    {
+                        field: 'status', //json对应的key
+                        title: '任务状态',   //列名
+                        toolbar: '#barTransition'
+
+                    }
+                    ,{
+                        field: 'errorCause', //json对应的key
+                        title: '任务可能失败原因',   //列名
+                    }
+                    ,
+                    {
+                        field: 'createTime', //json对应的key
+                        title: '创建时间',   //列名
+                        sort: true,   // 默认为 false,true为开启排序
+                        width: '20%',
+                    }, {
+                        field: 'operation',
+                        title: '操作',
+                        align: 'center',
+                        toolbar: '#barDemo'
+                    }
+                ]]
+            });
+            //头工具栏事件
+            table.on('toolbar(dataTable)',
+                function(obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'getCheckData':
+                            var data = checkStatus.data;
+                            layer.alert(JSON.stringify(data));
+
+                            break;
+                        case 'getCheckLength':
+                            var data = checkStatus.data;
+                            layer.msg('选中了：' + data.length + ' 个');
+                            break;
+                        case 'delAll':
+                            var data = checkStatus.data;
+                            if(0 === data.length){
+                                layer.msg('请至少选中一项后进行删除');
+                                break;
+                            }
+                            var isStr="";
+                            for(var i=0; i<data.length; i++){
+                                isStr = isStr + "," + data[i].tableId;
+                            }
+                                layer.confirm('确定删除所选项吗？',function (index) {
+                                    $.ajax({
+                                        url: '/genTable/deleteTables',
+                                        type:'post',
+                                        dataType:'json',
+                                        data:{"tableId":isStr},
+                                        success:function (data,statusText) {
+                                            if(data.code===200){
+                                                layer.alert(data.errMsg,{icon: 6},
+                                                    function() {
+                                                        location.reload(true);
+                                                    });
+                                            }else{
+                                                layer.msg(data.errMsg);
+                                            }
+                                        },
+                                        'error':function () {
+                                            layer.msg('系统错误');
+                                        }
+                                    });
+                                })
+
+
+
+                    };
+                });
+
+            //监听行工具事件
+            table.on('tool(dataTable)', function(obj){
+                var data = obj.data;
+                if(obj.event === 'del'){
+                    layer.confirm('真的删除行么', function(index){
+                        layer.close(index);
+                        $.ajax({
+                            url: '/genTable/deleteTables',
+                            type:'post',
+                            dataType:'json',
+                            data:{"tableId":data.tableId},
+                            success:function (data,statusText) {
+                                if(data.code===200){
+                                    layer.alert(data.errMsg,{icon: 6},
+                                        function() {
+                                            location.reload(true);
+                                        });
+                                }else{
+                                    layer.msg(data.errMsg);
+                                }
+                            },
+                            'error':function () {
+                                layer.msg('系统错误');
+                            }
+                        });
+
+
+                    });
+                } else if(obj.event === 'edit'){
+                    layer.prompt({
+                        formType: 2
+                        ,value: data.email
+                    }, function(value, index){
+                        obj.update({
+                            email: value
+                        });
+                        layer.close(index);
+                    });
+                }
+                else if(obj.event === 'getLog'){
+                    if(null == data.appId){
+                        layer.alert("appId 为空,日志查询失败", {icon: 2});
+                        return false;
+                    }
+                    getLogUrl(data.appId);
+                    // xadmin.open('模型详细信息','model-details-data.html?'+data.tableId)
+                }
+            });
+
+
+        });
+
+
+    var stdoutLog;
+    var stderrLog
+    function getLogUrl(applicationId) {
+        var window_width = $(window).width();//Get browser window width
+        var window_height = $(window).height();//Get browser window width
+        var open_window_width = (window_width > 300 ? window_width - 200 : window_width);
+        var open_window_height = (window_height > 300 ? window_height - 150 : window_height);
+        var logContent = '<div style="height: ' + (open_window_height - 90) + 'px;width: 100%;">'
+            + '<div id="divPreId" style="height: ' + (open_window_height - 115) + 'px;margin-top: 10px;">'
+            + '<div style="font-size: 90px;text-align: center;margin-top: 15px;"><span>loading....</span></div>'
+            + '</div>'
+            // + '<div style="margin-top: 5px;margin-bottom: 5px;margin-left: 10px;">'
+            // + '<input type="button" class="btn btn-default" onclick="changeUrl(1)" value="stdout">'
+            // + '<input type="button" class="btn btn-default" onclick="changeUrl(2)" value="stderr">'
+            // + '</div>'
+            + '</div>';
+        $.ajax({
+            cache: true,//Keep cached data
+            type: "POST",//Request type post
+            url: "/task/getSparkLogByAppId",//This is the name of the file where I receive data in the background.
+            //data:$('#loginForm').serialize(),//Serialize the form
+            data: {"applicationId": applicationId},
+            async: true,//Setting it to true indicates that other code can still be executed after the request has started. If this option is set to false, it means that all requests are no longer asynchronous, which also causes the browser to be locked.
+            error: function (request) {//Operation after request failure
+                layer.msg("Request Failed", {icon: 2, shade: 0, time: 2000}, function () {
+                });
+                return;
+            },
+            success: function (data) {//Operation after request successful
+                layer.open({
+                    type: 1,
+                    title: '<span style="color: #269252;">Log Windows</span>',
+                    shadeClose: true,
+                    closeBtn: 1,
+                    shift: 7,
+                    area: [open_window_width + 'px', open_window_height + 'px'], //Width height
+                    skin: 'layui-layer-rim', //Add borders
+                    content: logContent
+                });
+                console.info(data);
+                if (200 === data.code) {
+                    stdoutLog = data.stdoutLog;
+                    stderrLog = data.stderrLog;
+                    changeUrl(2);
+                }
+            }
+        });
+    }
+
+
+    function changeUrl(key) {
+        var url
+        switch (key) {
+            case 1:
+                url = stdoutLog;
+                break;
+            case 2:
+                url = stderrLog;
+                break;
+            default:
+                break;
+        }
+        $.ajax({
+            cache: true,//Keep cached data
+            type: "POST",//Request type post
+            url: "/task/getLog",
+            data: {url: url},
+            async: true,//Setting it to true indicates that other code can still be executed after the request has started. If this option is set to false, it means that all requests are no longer asynchronous, which also causes the browser to be locked.
+            error: function (request) {//Operation after request failure
+                return;
+            },
+            success: function (data) {//Operation after request successful
+                var showLogHtmlWidth = $("#divPreId").width() - 20;
+                var showLogHtml = ('<pre id="preId" style="height: 100%; width: ' + showLogHtmlWidth + 'px; margin: 0 auto;">');
+                if ('' !== data) {
+                    var all_td = $(data).find('td');
+                    var content_td = '';
+                    for (var i = 0; i < all_td.length; i++) {
+                        if ($(all_td[i]).attr('class') === 'content') {
+                            content_td = $(all_td[i]);
+                            break;
+                        }
+                    }
+                    var content_td_pres = (('' !== content_td) ? content_td.find('pre') : '');
+                    var preHtml = '';
+                    if ('' !== content_td_pres) {
+                        for (var i = 0; i < content_td_pres.length; i++) {
+                            if (content_td_pres[i]) {
+                                preHtml += $(content_td_pres[i]).text();
+                            }
+                        }
+                    }
+                    var content_td_html = '';
+                    content_td_html = ((content_td !== '') ? content_td.html() : content_td)
+                    preHtml = (preHtml === '') ? content_td_html : preHtml;
+                    showLogHtml += (preHtml + '</pre>');
+                } else {
+                    showLogHtml += 'Load Log Filed</pre>';
+                }
+                //alert(data);
+                //console.log(showLogHtml);
+                $("#divPreId").html(showLogHtml);
+                $("#preId").scrollTop($("#preId")[0].scrollHeight)
+            }
+        });
+    }
+
+
+
+    </script>
+
+
+</html>

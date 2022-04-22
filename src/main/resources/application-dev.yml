@@ -1,0 +1,114 @@
+spring:
+  activemq:
+    broker-url: tcp://127.0.0.1:61617
+    user: admin
+    password: admin
+    close-timeout: 15s   # 在考虑结束之前等待的时间
+    in-memory: true      # 默认代理URL是否应该在内存中。如果指定了显式代理，则忽略此值。
+    non-blocking-redelivery: false  # 是否在回滚回滚消息之前停止消息传递。这意味着当启用此命令时，消息顺序不会被保留。
+    send-timeout: 0     # 等待消息发送响应的时间。设置为0等待永远。
+    queue-name: active.queue
+    topic-name: active.topic.name.model
+  pool:
+    enabled: true
+    max-connections: 10   #连接池最大连接数
+    idle-timeout: 30000   #空闲的连接过期时间，默认为30秒
+  devtools:
+    restart:
+      enabled: true #设置开启热部署
+      additional-paths: src/main/java #重启目录
+      exclude: src/main/resources/**
+  application:
+    name: zhongtai
+  datasource:
+    mysqlMain: #mysql主数据源
+      type: com.alibaba.druid.pool.DruidDataSource
+      password: xxx
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3307/dp2?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+      username: root
+    hive: #hive数据源
+      url: jdbc:hive2://127.0.0.1:10000/default
+      type: com.alibaba.druid.pool.DruidDataSource
+      username: root
+      password: xxx
+      driver-class-name: org.apache.hive.jdbc.HiveDriver
+    common-config: #连接池统一配置，应用到所有的数据源
+      initialSize: 1
+      minIdle: 1
+      maxIdle: 5
+      maxActive: 50
+      maxWait: 10000
+      timeBetweenEvictionRunsMillis: 10000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+      filters: stat
+  # thymeleaf静态资源配置
+  # 默认路径
+  thymeleaf:
+     prefix: classpath:/templates/view/
+     suffix: .html
+     mode: HTML5
+     encoding: UTF-8
+     cache: false
+  #设置文件上传大小：
+  #maxFileSize 是单个文件大小
+  #maxRequestSize是设置总上传的数据大小
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+  data:
+    neo4j:
+      uri: bolt://127.0.0.1:7472
+      username: neo4j
+      password: neo4j
+      open-in-view: true
+server:
+  port: 666
+  servlet:
+    session:
+      timeout: 7200
+syspara:
+  csvPath: zhongtai/dataImportFile/offlineFile/csv/
+  jsonPath: zhongtai/dataImportFile/offlineFile/json/
+  ftpCsvPath: zhongtai/dataImportFile/OnlineFile/csv/
+  ftpJsonPath: zhongtai/dataImportFile/OnlineFile/json/
+  TransferStation: /D:/zhongtai/dataFile/  #本地文件中转地
+  DbName: dp2 #mysql默认库 如果改变这里也一定要改
+  HiveDbName: default #hive默认库
+  hdfs_path: hdfs://127.0.0.1:8020 #HDFS的路径,core-site.xml中配置的端口号
+  user: hdfs #解决无权限访问,设置远程hadoop的linux用户名称
+  hdfsOnlineFile: /dataFiles/OnlineFile/  #hdfs在线接入存放文件目录
+  hdfsOfflineFile: /dataFiles/offlineFile/ #hdfs手动导入存放文件目录
+hiveServer:
+  ip: 127.0.0.1
+  port: 22
+  username: root
+  password: xxx
+mybatis:
+  configuration:
+    aggressive-lazy-loading: false
+    lazy-loading-enabled: true
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:cn/cnic/zhongtai/system/mapper/*.xml
+  type-aliases-package: cn.cnic.zhongtai.system.*.model
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari:
+          HikariDataSource: error
+    cn:
+      cnic:
+        zhongtai:
+          system:
+              mapper: debug
+
+
+

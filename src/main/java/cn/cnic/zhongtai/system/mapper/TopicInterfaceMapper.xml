@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.TopicInterfaceMapper" >
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.TopicInterface">
+        <id column="id" property="id"></id>
+        <result column="url" property="url"></result>
+        <result column="topic_name" property="topicName"></result>
+    </resultMap>
+
+    <insert id="create">
+        insert into topic_interface(url, type, topic_name, topic_id) value
+            (#{url},#{type},#{topicName},#{topicId})
+    </insert>
+
+    <select id="getByUrl" resultMap="BaseResultMap">
+        select * from topic_interface where url = #{url}
+    </select>
+
+    <select id="getAllByTopicName" resultMap="BaseResultMap">
+        select * from topic_interface where topic_name = #{topicName}
+    </select>
+
+    <select id="getInterfaceIdByUrl" resultType="String">
+        select id from topic_interface where url = #{url}
+    </select>
+
+    <delete id="deleteByTopicName">
+        delete  from topic_interface where topic_name = #{topicName}
+    </delete>
+
+    <select id="getTotalCount" resultType="Integer">
+        select count(*) from topic_interface
+    </select>
+
+    <select id="checkStatus" resultType="Integer">
+        select status from topic_interface where url = #{url}
+    </select>
+
+</mapper>

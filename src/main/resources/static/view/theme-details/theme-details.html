@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/css/jquery.json-viewer.css">
+    <script src="/js/jquery.json-viewer.js"></script>
+    <script src="/js/vue/vue.js"></script>
+
+    <script src="/js/ace/jsoneditor.js"></script>
+    <link rel="stylesheet" href="/js/ace/jsoneditor.css" type="text/css">
+
+    <link rel="stylesheet" href="webjars/bycdao-ui/cdao/swaggerbootstrapui-md.css?v=1.9.6" />
+    <link rel="stylesheet" href="webjars/bycdao-ui/cdao/swaggerbootstrapui.css" />
+    <link rel="stylesheet" href="webjars/bycdao-ui/highlight/styles/style.css" />
+
+
+    <style>
+        .jsoneditorDiv {
+            font: 10.5pt arial;
+            color: #4d4d4d;
+            line-height: 150%;
+            width: 500px;
+        }
+
+        code {
+            background-color: #f5f5f5;
+        }
+
+        #jsoneditor {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+        #jsoneditor2 {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+        .jsoneditor {
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            border: none;
+        }
+        .jsoneditor-menu{
+            background: #fff;
+            border-bottom: none;
+        }
+        .leftItem{
+            height: 40px;background: #f9f9f9;line-height: 40px;text-indent: 10px;font-size: 13px;
+            border-bottom: 1px solid #e5e5e5;
+            cursor: pointer;
+        }
+        .leftItem2{
+            text-indent: 20px;
+        }
+        .leftItem:hover{
+            background: #eeeeee;
+        }
+        .navCon{
+            height: 40px;
+            border-bottom: 1px solid #ededed;
+            display: flex;
+        }
+        .navCon div{
+            border-right: 1px solid #f6f6f6;
+            border-left: 1px solid #f6f6f6;
+            line-height: 40px;
+            text-align: center;
+            padding: 0 20px;
+            cursor: pointer;
+        }
+        .navCon div:hover{
+            background: #f6f6f6;
+        }
+        .cardLi{
+            padding: 0 30px !important;
+        }
+        .cardLi i:hover{
+            color: red;
+        }
+
+        [v-cloak] {
+            display: none !important;
+        }
+
+        .layui-tab-item-new{
+            display: flex !important;
+        }
+
+        .inline-new{
+            width: 600px !important;
+        }
+        .inline-new2{
+            margin-right: 0 !important;
+            width: 100px !important;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #5bc0de;
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+    </style>
+</head>
+<body style="position: relative">
+<div class="layui-fluid" style="position: absolute;top: 0;left: 0;bottom: 0;height: 100%;width: 100%;padding: 0 0 0 0;box-sizing: border-box">
+    <div id="appCon"  style="position: relative;height: 100%;display: flex;flex-direction: column">
+        <div class="sbu-header" id="sbu-header" style="padding-left:5px;background-color:#fff; ">
+            <button  class="layui-btn layui-btn-sm " onclick="window.history.go(-1)">返回主题库首页</button>
+            <button  class="layui-btn layui-btn-sm "@click="add">新建</button>
+        </div>
+        <div style="flex: 1" >
+            <div class="layui-row" style="height: 100%;position: relative;display: flex;">
+                <div style="width: 300px;min-height: 100%;margin-right: 3px ">
+                    <div class="leftItem" >
+                        <i class="layui-icon layui-icon-home"></i><span>主页</span>
+                    </div>
+
+                    <div @click="leftItemClick(item.url,item.id)" class="leftItem leftItem2" v-for="(item, index) in leftData" :key = "index">
+<!--                        <span style="">{{item.type}}</span>-->
+                        <span v-cloak>{{item.url}}</span>
+                    </div>
+                </div>
+                <div style="flex: 1;min-height:100%;">
+                    <div class="layui-tab layui-tab-card" style="margin: 0">
+                        <ul class="layui-tab-title" id="tabUl">
+                            <li lay-id="0" @click="tabTitltItem(0)" class="layui-this">主页</li>
+                            <li :lay-id="index+1" @click="tabTitltItem(index+1, item.url)" v-for="(item,index) in selectedData" :key="index" v-cloak style="position: relative" class="cardLi">
+                                {{item.summary}}
+                                <span style="position: absolute;height: 100%;width: 15px;top: 0;right: 15px;text-align: center"><i @click.stop="deleteItem(item.url,index+1)" class="layui-icon layui-icon-close"></i></span>
+                            </li>
+                        </ul>
+                        <div class="layui-tab-content" style="min-height: 1000px" id="tabDiv">
+                            <div v-if="tabContentIndex == 0" lay-id="0" class="layui-tab-item layui-show">
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="800">
+                                </colgroup>
+                                <thead>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>主题库名称</td>
+                                    <td>{{topicInfo.topicName}}</td>
+                                </tr>
+                                <tr>
+                                    <td>创建时间</td>
+                                    <td>{{topicInfo.createTime}}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>详细描述</td>
+                                    <td>{{topicInfo.comment}}</td>
+                                </tr>
+                                <tr>
+                                    <td>接口数量</td>
+                                    <td>{{topicInfo.interfaceCount}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                            <div v-if=" tabContentIndex == index+1" :lay-id="index+1" v-for="(item,index) in selectedData" :key="index" class="layui-tab-item layui-tab-item-new" v-cloak >
+                                <div style="height: 100%;width: 80px;min-height:800px;border-right:1px solid #dddddd;margin-right: 7px">
+                                    <div @click="debugSwitch('tab1')" style="font-size:16px;width: 79px;height: 40px;line-height: 40px;text-align: center;cursor: pointer" :style="isDebug == 'tab1'?style:''">文档</div>
+                                    <div @click="debugSwitch('tab2')" style="font-size:16px;width: 79px;height: 40px;line-height: 40px;text-align: center;cursor: pointer" :style="isDebug == 'tab2'?style:''">调试</div>
+                                    <div @click="debugSwitch('tab3')" style="font-size:16px;width: 79px;height: 40px;line-height: 40px;text-align: center;cursor: pointer" :style="isDebug == 'tab3'?style:''">统计</div>
+                                </div>
+                                <div style="flex: 1" v-if="isDebug == 'tab1'">
+                                    <div class="swbu-main" itemprop="articleBody">
+                                        <div id="contentDocApiInfo937734">
+                                            <p><span class="sbu-api-title">接口地址</span> <code style="background-color: transparent;">{{item.url}}</code></p>
+                                            <p><span class="sbu-api-title">请求方式</span> <code style="background-color: transparent;">{{item.type}}</code></p>
+                                            <p><span class="sbu-api-title">consumes</span> <code style="background-color: transparent;">{{item.consumes}}</code></p>
+                                            <p><span class="sbu-api-title">produces</span> <code style="background-color: transparent;">{{item.produces}}</code></p>
+                                            <p><span class="sbu-api-title">接口描述</span> <code style="background-color: transparent;">{{item.summary}}</code></p>
+
+                                            <p><strong>请求参数</strong></p>
+                                            <table id="requestParameterApiInfo937734" class="layui-table" lay-filter="requestParameterApiInfo937734" style="display: none;">
+
+                                            </table>
+                                            <div class="layui-form layui-border-box layui-table-view treeTable" lay-filter="LAY-table-3" style=" " treelinkage="true">
+                                                <table class="layui-table">
+                                                    <colgroup>
+                                                        <col width="150">
+                                                        <col width="200">
+                                                        <col width="200">
+                                                        <col width="600">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th>参数名称</th>
+                                                        <th>参数类型</th>
+                                                        <th>是否必须</th>
+                                                        <th>参数描述</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr v-for="(item,index) in selectItem.parameters" :key="index">
+                                                        <td>{{item.name}}</td>
+                                                        <td>{{item.type}}</td>
+                                                        <td>{{item.required}}</td>
+                                                        <td>{{item.description}}</td>
+
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <p><strong>响应参数</strong></p>
+                                                <table class="layui-table">
+                                                    <colgroup>
+                                                        <col width="150">
+                                                        <col width="200">
+                                                        <col width="800">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th>参数名称</th>
+                                                        <th>参数类型</th>
+                                                        <th>参数描述</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>code</td>
+                                                        <td>int</td>
+                                                        <td>返回状态码,200成功,500失败</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>msg</td>
+                                                        <td>string</td>
+                                                        <td>系统返回信息</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>errMsg</td>
+                                                        <td>string</td>
+                                                        <td>返回数据集</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <span v-if="isOpen" @click="openData('open')"><i style="font-size: 12px" class="layui-icon layui-icon-right"></i></span> <span v-else @click="openData('close')"><i style="font-size: 12px" class="layui-icon layui-icon-down"></i></span> data</td>
+                                                        <td>array</td>
+                                                        <td>返回数据集</td>
+                                                    </tr>
+                                                    <tr v-if="!isOpen" v-for="(item,index) in selectItem.responses[3].item" :key="index">
+                                                        <td  style="display: flex;text-indent: 20px">{{item.name}}</td>
+                                                        <td>{{item.type}}</td>
+                                                        <td>{{item.description}}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <p><strong>响应示例</strong></p>
+                                                <div id="editorSampleApiInfo937734" style="width: auto;bottom: 10px;">
+                                                    string
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="flex: 1" v-else-if="isDebug == 'tab2'">
+                                    <form class="layui-form layui-col-space5" >
+                                        <div class="layui-form-item">
+                                            <label for="create-title" class="layui-form-label">
+                                                <span class="x-red"></span></label>
+                                            <div class="layui-input-inline inline-new2">{{selectItem.type}}</div>
+                                            <div class="layui-input-inline inline-new">
+                                                <input data-id="" type="text"   name="modelTypeName" lay-verify="required" id="create-title"
+                                                       autocomplete="off" :value="selectItem.url"
+                                                       class="layui-input"></div>
+                                            <a class="layui-btn  layui-btn-xs parameterListDelete" @click="debugClick" lay-event="getLog">调试</a>
+                                        </div>
+                                    </form>
+                                    <table class="layui-table">
+                                        <colgroup>
+                                            <col width="150">
+                                            <col width="200">
+                                            <col width="200">
+
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>参数类型</th>
+                                            <th>参数名称</th>
+                                            <th>参数值</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="(item,index) in selectItem.pair" :key="index">
+                                            <td>{{item.type}}</td>
+                                            <td>
+                                                <input data-id="" type="text"   name="modelTypeName"  lay-verify="required"
+                                                       autocomplete="off" v-model="item.key"
+                                                       class="layui-input">
+                                            </td>
+                                            <td>
+                                                <input data-id="" type="text"   name="modelTypeName"  lay-verify="required"
+                                                       autocomplete="off" v-model="item.value"
+                                                       class="layui-input">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p style="line-height: 1.9em;margin: 1.6em 0;"><strong>响应内容</strong></p>
+
+                                    <div style="position: relative">
+                                                                <textarea class="layui-textarea"  v-model="responsesData" name="content" lay-verify="content" id="copyTextarea" >
+                                                            </textarea>
+                                        <img @click="copy" style="width: 76px;height: 37px;position: absolute;top: 0;right: 0;cursor: pointer" src="../../img/copy.png" alt="">
+                                    </div>
+
+                                    <!--                                    <textarea name="responsesData" v-model="responsesData"  id="" cols="30" rows="10"></textarea>-->
+                                </div>
+                                <div id="statisticsDiv" style="flex: 1" v-else-if="isDebug == 'tab3'">
+                                    <table class="layui-table">
+                                        <colgroup>
+                                            <col width="150">
+                                            <col width="200">
+                                            <col width="200">
+
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>callTime</th>
+                                            <th>param</th>
+                                            <th>userIp</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="(item,index) in tab3Data" :key="index">
+                                            <td>{{item.callTime}}</td>
+                                            <td>{{item.param}}</td>
+                                            <td>{{item.userIp}}</td>
+<!--                                            <td>-->
+<!--                                                <input data-id="" type="text"   name="modelTypeName"  lay-verify="required"-->
+<!--                                                       autocomplete="off" v-model="item.param"-->
+<!--                                                       class="layui-input">-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <input data-id="" type="text"   name="modelTypeName"  lay-verify="required"-->
+<!--                                                       autocomplete="off" v-model="item.userIp"-->
+<!--                                                       class="layui-input">-->
+<!--                                            </td>-->
+                                        </tr>
+                                        </tbody>
+                                    </table>
+<!--                                    <table class="layui-table" id="layui_table_model"  lay-filter="dataTable"></table>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+    layui.use('table', function(){
+        // var element = layui.element;
+        let table = layui.table;
+        let tableTask = layui.table;
+
+        let vm = new Vue({
+            el:'#appCon',
+            data:{
+                leftData:[],
+                topicInfo:{},
+                jsonLeft:{},
+                editor:null,
+                editor2:null,
+                topicName:'',
+                selectedData:[],
+                selectItem:{},  //当前被选中的
+                isOpen:false,
+                style:'border: 1px solid #ddd;border-right: 1px solid #fff',
+                isDebug:'tab1',
+                responsesData:'',
+                tabContentIndex:0,
+                interfaceId:'',
+                tab3Data:[],
+
+            },
+            created(){
+            },
+            mounted(){
+                this.getleftData()
+                // this.getstatistics()
+            },
+            methods:{
+                add(){
+                    window.location.href=encodeURI(encodeURI('create.html?'+this.topicName))
+                },
+                openData(){
+                    this.isOpen = !this.isOpen
+                },
+                copy(){
+                    var dd = $('#copyTextarea');
+                    dd.select();
+                    document.execCommand("copy");
+                    layer.msg('复制成功！');
+                },
+                //调试接口
+                debugClick(){
+                    let that = this
+                    if(this.selectItem.type == 'POST'){
+                        let params = {}
+                        this.selectItem.pair.forEach((item,index)=>{
+                            params[item.key] = item.value
+                        })
+                        console.log(params)
+                        $.ajax({
+                            type: "post",
+                            async: false,
+                            url: `${this.selectItem.url}`,
+                            data: params,
+                            dataType: 'json',
+                            success: function (resData) {
+                                that.responsesData = JSON.stringify(resData)
+                            },
+                            error: function (request) {//请求失败之后的操作
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+                    }else if(this.selectItem.type == 'GET'){
+                        let params = []
+                        this.selectItem.pair.forEach((item,index)=>{
+                            let paramsItem =  `${item.key}=${item.value}`
+                            params.push(paramsItem)
+                        })
+                        params = `?${params.join('&')}`
+                        console.log(params)
+                        $.ajax({
+                            type: "get",
+                            async: false,
+                            url: `${this.selectItem.url}${params}`,
+                            dataType: 'json',
+                            contentType: 'text/plain;charset=UTF-8',
+                            success: function (resData) {
+                                that.responsesData = JSON.stringify(resData)
+                            },
+                            error: function (request) {//请求失败之后的操作
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+                    }
+                },
+
+                //切换调试或文档
+                debugSwitch(val){
+                    let that = this
+                    that.isDebug = val
+                    if(val == 'tab3'){
+                        that.getstatistics()
+                    }else{
+                        $('#statisticsDiv').html()
+                    }
+                },
+
+                //点击左侧的item
+                leftItemClick(val,id){
+                    this.interfaceId = id
+                    let arr = this.leftData.filter(item => item.url == val)
+                    let arr2 = this.selectedData.filter(item => item.url == val)
+                    if(arr2.length == 0){
+                        this.selectedData.push(arr[0])
+                        this.selectItem = arr[0]
+                        this.setSelectItemPair(this.selectItem.parameters)
+                        let length = this.selectedData.length
+                        this.tabContentIndex = length
+                        setTimeout(function () {
+                            $('#tabUl').find('li').removeClass('layui-this')
+                            $('#tabDiv').find('.layui-tab-item').removeClass('layui-show')
+                            $('#tabUl').find('li').eq(length).addClass('layui-this')
+                            $('#tabDiv').find('.layui-tab-item').eq(length).addClass('layui-show')
+                            // element.tabChange('tabDemo', length);
+
+                        },300)
+
+                        this.isDebug = 'tab1'
+                    }
+                },
+                tabTitltItem(index, val){
+                    // element.tabChange('tabDemo', index);
+                    this.tabContentIndex = index
+                    if(index == 0){
+                        $('#tabUl').find('li').removeClass('layui-this')
+                        $('#tabDiv').find('.layui-tab-item').removeClass('layui-show')
+                        $('#tabUl').find('li').eq(0).addClass('layui-this')
+                        $('#tabDiv').find('.layui-tab-item').eq(0).addClass('layui-show')
+                    }else{
+                        this.isDebug = 'tab1'
+                        this.selectItem =  this.leftData.filter(item => item.url == val)[0]
+                        this.setSelectItemPair(this.selectItem.parameters)
+                        $('#tabUl').find('li').removeClass('layui-this')
+                        $('#tabDiv').find('.layui-tab-item').removeClass('layui-show')
+                        $('#tabUl').find('li').eq(index).addClass('layui-this')
+                        $('#tabDiv').find('.layui-tab-item').eq(index).addClass('layui-show')
+                    }
+                },
+
+                setSelectItemPair(val){
+                    let pair = []
+                    val.forEach((item,index)=>{
+                        let pairItem = {
+                            key: item.name,
+                            value: '',
+                            type:item.type
+                        }
+                        pair.push(pairItem)
+                    })
+                    this.selectItem.pair = pair
+                },
+                deleteItem(val,index) {
+                    console.log(val)
+                    this.selectedData = this.selectedData.filter(item => item.url != val)
+                    if (index == this.tabContentIndex) {
+                        $('#tabUl').find('li').removeClass('layui-this')
+                        $('#tabDiv').find('.layui-tab-item').removeClass('layui-show')
+                        $('#tabUl').find('li').eq(0).addClass('layui-this')
+                        $('#tabDiv').find('.layui-tab-item').eq(0).addClass('layui-show')
+                        this.tabContentIndex = 0
+                    }
+                    if (index < this.tabContentIndex) {
+                        this.tabContentIndex = this.tabContentIndex - 1
+                        $('#tabUl').find('li').eq(this.tabContentIndex).addClass('layui-this')
+                    }
+                },
+                getJSONeditor(){
+                    let container = document.getElementById('jsoneditor')
+                    let options = {
+                        mode: 'code',
+                        modes: ['code'], // allowed modes
+                        onError: function (err) {
+                            alert(err.toString())
+                        },
+                        onModeChange: function (newMode, oldMode) {
+                            console.log('Mode switched from', oldMode, 'to', newMode)
+                        }
+                    }
+                    let json = {}
+                    this.editor = new JSONEditor(container, options, json)
+                    $('.jsoneditor-menu').attr('class','jsoneditor-menu2')
+                    $('.jsoneditor-menu2').empty()
+                },
+
+                getleftData() {
+                    let that = this
+                    let url = decodeURI(decodeURI(location.search)); //获取url中"?"符后的字串
+                    let topicName = '';
+                    if (url.indexOf("?") != -1) {
+                        topicName = url.substr(1);
+                        that.topicName = topicName
+                    }
+                    $.ajax({
+                        type: "get",
+                        async: false,
+                        url: `/topic/getTopicInterfaceInfo?topicName=${that.topicName}`,
+                        dataType: 'json',
+                        contentType: 'text/plain;charset=UTF-8',
+                        success: function (res) {
+                            that.leftData = res.paths
+                            that.topicInfo = res.info
+                            // that.interfaceId = res.paths.
+                            console.log(JSON.stringify(res))
+
+                        },
+                        error: function (request) {//请求失败之后的操作
+                            layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                        }
+                    });
+                },
+
+                getstatistics(){
+                    let that = this
+                    let id = this.interfaceId
+                    setTimeout(function () {
+                        $.ajax({
+                            type: "get",
+                            async: false,
+                            url: `/topic/interface/statistics?interfaceId=`+id,
+                            // data: params,
+                            dataType: 'json',
+                            success: function (resData) {
+                                that.tab3Data = (resData.data)
+                            },
+                            error: function (request) {//请求失败之后的操作
+                                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                            }
+                        });
+
+                        // table.render({
+                        //     id:"dataTable",//
+                        //     elem: '#layui_table_model',//指定表格元素
+                        //     url: `/topic/interface/statistics?interfaceId=`+id,  //请求路径
+                        //     cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                        //     ,skin: 'line ' //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
+                        //     //,even: true    //隔行换色
+                        //     ,page: true  //开启分页
+                        //     ,limits: [10,20,50,100]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+                        //     ,limit: 10 //每页默认显示的数量
+                        //     ,method:'get'  //提交方式
+                        //     // ,toolbar: '#toolbarDemo'
+                        //     ,cols: [[
+                        //         {
+                        //             field: 'callTime', //json对应的key
+                        //             title: 'callTime',   //列名
+                        //         },
+                        //         {
+                        //             field: 'param', //json对应的key
+                        //             title: 'param',   //列名
+                        //         },
+                        //         {
+                        //             field: 'userIp', //json对应的key
+                        //             title: 'userIp',   //列名
+                        //         },
+                        //     ]]
+                        // });
+
+                    },200)
+
+                },
+
+
+
+            }
+        })
+
+    });
+
+</script>
+</body>
+</html>

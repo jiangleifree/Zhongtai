@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <link href="/css/fileinput.min.css" rel="stylesheet">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <script src="/js/fileinput.min.js"></script>
+    <script src="/js/fileinput_locale_zh.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .aclass {
+            display: block;	/*垂直排列，且点击区域为方块*/
+            width: 200px;	/*block可设置width*/
+            line-height: 50px; /*获得垂直居中效果*/
+            text-decoration: none;
+            color: white;
+            background-color: #009688;
+            border: 10px solid white;
+            font-size: 20px;
+        }
+        .aclass:hover{
+            text-decoration: none;
+            background-color: #04564e;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">演示</a>
+            <a>
+              <cite>导航元素</cite></a>
+          </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <h1>清洗数据配置
+                    </h1>
+                </div>
+
+                <div class="layui-card-body " style="height: 650px;">
+                    <div class="col-md-3" style="float: left;">
+
+                        <ul   style="list-style-type: none; padding: 0; margin: 0;text-align: center;" >
+                            <li>
+                                <a   href="javascript:void(0);" class="aclass" >人名清洗</a>
+                            </li>
+                            <li>
+                                <a   href="javascript:void(0);" class="aclass"  >机构清洗</a>
+                            </li>
+                            <li>
+                                <a   href="javascript:void(0);" class="aclass">项目清洗</a>
+                            </li>
+                            <li>
+                                <a   href="javascript:void(0);" class="aclass" >自定义规则1</a>
+                            </li>
+                            <li>
+                                <a   href="javascript:void(0);" class="aclass"  >自定义规则2</a>
+                            </li>
+                            <li>
+                                <a   href="javascript:void(0);" class="aclass">自定义规则3</a>
+                            </li>
+                        </ul>
+
+                        <button style="margin-left: 16px;float: right;" onclick="download('project')" class="btn btn-success insert">
+                            自定义规则
+                        </button>
+
+                    </div>
+
+                    <div class="col-md-9" style="float: right">
+                        <label class="control-label" for="attachment">清洗数据配置</label>
+
+
+
+                        <div class="form-group" >
+                            <div class="col-sm-8" style="border: solid 1px #211c1c ;height: 430px;">
+                                <div style="height: 300px">
+                                    <br>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label for="projectName">规则名称：</label><input
+                                                    class="form-control" placeholder="项目名称" id="projectName">
+                                            </div>
+
+                                            <div class="form-group"><label for="projectSource">数据模型：</label><select
+                                                    class="form-control project_type" id="projectSource"
+                                                    name="projectSource" required="true">
+                                                <option value="">请选择</option>
+                                                <option value="层级1单位1">数据模型1</option>
+                                                <option value="研究所1">数据模型2</option>
+                                                <option value="单位30">数据模型3</option>
+                                                <option value="单位2">数据模型4</option>
+                                                <option value="大单位1">数据模型5</option>
+                                            </select></div>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label for="projectNumber">规则编号：</label><input
+                                                    class="form-control" id="projectNumber" placeholder="项目编号"></div>
+                                            <div class="form-group"><label for="projectYearDiv">清洗字段：</label>
+                                                <select
+                                                        class="form-control project_type" id="projectSource"
+                                                        name="projectSource" required="true">
+                                                    <option value="">请选择</option>
+                                                    <option value="层级1单位1">name</option>
+                                                    <option value="研究所1">id</option>
+                                                    <option value="单位30">sex</option>
+                                                    <option value="单位2">age</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="projectName">规则名称：</label>
+                                                <textarea class="form-control"   rows="3" cols="20" style="resize:none;">
+
+                                                </textarea>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                                <button style="margin-left: 16px;float: right;" onclick="download('project')" class="btn btn-success insert">
+                                    提交
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+    $(window).load(function () {
+        $('#dataAcquisition').addClass('active');
+        $("#attachment").fileinput({
+            language: 'zh', //设置语言
+            showCancel:false,
+            browseClass: "btn btn-primary",
+            // uploadUrl: "http://127.0.0.1:80/collection/importExcel",//上传的地址
+            allowedFileExtensions: ['xls', 'xlsx', 'zip'],//接收的文件后缀
+            maxFileCount: 1,//最大文件数量
+            enctype: 'multipart/form-data',
+            showPreview:false, //取消预览
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+            maxFileSize: 102400,//单位为kb，如果为0表示不限制文件大小
+            dropZoneEnabled: false,//是否显示拖拽区域
+        });
+
+        //提交按钮样式
+        var chtml = "<button onclick='upload(\"person\");' type='button' tabindex='500' title='提交' class='btn btn-default'><i class='glyphicon glyphicon-upload text-info'></i> <span class='hidden-xs'>&nbsp;提交</span></button>"
+        $(".input-group-btn").append(chtml);
+    });
+
+    layui.use(['laydate','form'], function(){
+        var laydate = layui.laydate;
+        var  form = layui.form;
+
+
+        // 监听全选
+        form.on('checkbox(checkall)', function(data){
+
+            if(data.elem.checked){
+                $('tbody input').prop('checked',true);
+            }else{
+                $('tbody input').prop('checked',false);
+            }
+            form.render('checkbox');
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+
+
+    });
+
+    /*用户-停用*/
+    function member_stop(obj,id){
+        layer.confirm('确认要停用吗？',function(index){
+
+            if($(obj).attr('title')=='启用'){
+
+                //发异步把用户状态进行更改
+                $(obj).attr('title','停用')
+                $(obj).find('i').html('&#xe62f;');
+
+                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                layer.msg('已停用!',{icon: 5,time:1000});
+
+            }else{
+                $(obj).attr('title','启用')
+                $(obj).find('i').html('&#xe601;');
+
+                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                layer.msg('已启用!',{icon: 5,time:1000});
+            }
+
+        });
+    }
+
+    /*用户-删除*/
+    function member_del(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            //发异步删除数据
+            $(obj).parents("tr").remove();
+            layer.msg('已删除!',{icon:1,time:1000});
+        });
+    }
+
+
+
+    function delAll (argument) {
+        var ids = [];
+
+        // 获取选中的id
+        $('tbody input').each(function(index, el) {
+            if($(this).prop('checked')){
+                ids.push($(this).val())
+            }
+        });
+
+        layer.confirm('确认要删除吗？'+ids.toString(),function(index){
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+            $(".layui-form-checked").not('.header').parents('tr').remove();
+        });
+    }
+</script>
+</html>

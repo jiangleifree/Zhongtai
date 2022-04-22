@@ -1,0 +1,31 @@
+footer p{
+    line-height: 22px;
+}
+footer .info{
+    background: #373d41;
+    color: #777b7e;
+    padding: 15px 0;
+    overflow: auto;
+}
+footer .info .container div{
+    width:33.3333333333%;
+    float: left;
+}
+footer .info h5{
+    font-size: 16px;
+    font-weight: normal;
+    color: #909396;
+    margin-bottom: 12px;
+}
+footer .info a{
+    color: #777b7e;
+}
+footer .info a:hover{
+    color: #909396;
+}
+footer .copyright{
+    padding: 19px;
+    text-align: center;
+    background: #1f2428;
+    color:#73777a;
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">演示</a>
+                <a>
+                    <cite>导航元素</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+
+
+                <div class="layui-card-body ">
+                    <table class="layui-table" id="layui_table_model"  lay-filter="dataTable">
+                        <script type="text/html" id="barDemo">
+                            <a class="layui-btn layui-btn-xs" lay-event="select"><i class="layui-icon">&#xe615;</i>下载</a>
+                            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+                        </script>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="toolbarDemo">
+    <div class = "layui-btn-container" >
+        <button class="layui-btn layui-btn-danger" lay-event="delAll">批量删除</button >
+    </div >
+</script>
+
+
+<script>layui.use('table',
+    function() {
+        var table = layui.table;
+
+        table.render({
+            id:"dataTable",//
+            elem: '#layui_table_model',//指定表格元素
+            url: '/dataManage/dataManage_list',  //请求路径
+            cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,skin: 'line ' //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
+            //,even: true    //隔行换色
+            ,page: true  //开启分页
+            ,limits: [10,20,50,100]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+            ,limit: 10 //每页默认显示的数量
+            ,method:'get'  //提交方式
+            ,toolbar: '#toolbarDemo'
+            ,cols: [[
+                {type:'checkbox'}, //开启多选框
+                {
+                    field: 'id', //json对应的key
+                    title: 'id',   //列名
+                    sort: true,   // 默认为 false,true为开启排序
+                    width: '5%',
+                    hide:true
+                },
+                {
+                    field: 'fileName', //json对应的key
+                    title: '文件名称',   //列名
+                    width: '20%',
+                    style: 'color:red;'
+                },
+                {
+                    field: 'dataType', //json对应的key
+                    title: '文件类型',   //列名
+                    width: '8%'
+                },
+                {
+                    field: 'fileSize', //json对应的key
+                    title: '文件大小',   //列名
+                    width: '15%'
+                }
+                ,
+                {
+                    field: 'createTime', //json对应的key
+                    title: '创建时间',   //列名
+                    sort: true,   // 默认为 false,true为开启排序
+                    width: '15%',
+                }, {
+                    field: 'operation',
+                    title: '操作',
+                    align: 'center',
+                    toolbar: '#barDemo'
+                }
+            ]]
+        });
+        //头工具栏事件
+        table.on('toolbar(dataTable)',
+            function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'delAll':
+                        var data = checkStatus.data;
+                        if(0 === data.length){
+                            layer.msg('请至少选中一项后进行删除');
+                            break;
+                        }
+                        layer.msg('功能正在开发中');
+                        break;
+                        var isStr="";
+                        for(var i=0; i<data.length; i++){
+                            isStr = isStr + "," + data[i].tableId;
+                        }
+                        layer.confirm('确定删除所选项吗？',function (index) {
+                            $.ajax({
+                                url: '/genTable/deleteTdables',
+                                type:'post',
+                                dataType:'json',
+                                data:{"tableId":isStr},
+                                success:function (data,statusText) {
+                                    if(data.code===200){
+                                        layer.alert(data.errMsg,{icon: 6},
+                                            function() {
+                                                location.reload(true);
+                                            });
+                                    }else{
+                                        layer.msg(data.errMsg);
+                                    }
+                                },
+                                'error':function () {
+                                    layer.msg('系统错误');
+                                }
+                            });
+                        })
+                };
+            });
+
+        //监听行工具事件
+        table.on('tool(dataTable)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    layer.close(index);
+                    layer.msg('正在开发中');
+                    return false;
+                    $.ajax({
+                        url: '/genTable/deleteTables',
+                        type:'post',
+                        dataType:'json',
+                        data:{"tableId":data.tableId},
+                        success:function (data,statusText) {
+                            if(data.code===200){
+                                layer.alert(data.errMsg,{icon: 6},
+                                    function() {
+                                        location.reload(true);
+                                    });
+                            }else{
+                                layer.msg(data.errMsg);
+                            }
+                        },
+                        'error':function () {
+                            layer.msg('系统错误');
+                        }
+                    });
+
+
+                });
+            } else if(obj.event === 'select'){
+                window.location.href  =  "/dataManage/downloadFile?path="+data.filePath;
+            }
+        });
+
+
+    });</script>
+
+
+</html>

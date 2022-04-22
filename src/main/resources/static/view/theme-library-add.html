@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <script type="text/javascript" src="/javascripts/theme-library.js"></script>
+    <script type="text/javascript" src="/js/jquery.form.js"></script>
+
+
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/dtree.css">
+    <!--    <script type="text/javascript" src="/admin/layui_ext/dtree/dtree.js"></script>-->
+    <link rel="stylesheet" href="/admin/layui_ext/dtree/font/dtreefont.css">
+    <style>
+
+        .scrollStyle::-webkit-scrollbar{
+            width:10px;
+            height:10px;
+            /**/
+        }
+        .scrollStyle::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb{
+            background: #fff;
+            /*background: #cfd9e3;*/
+            border-radius:10px;
+        }
+        .scrollStyle::-webkit-scrollbar-thumb:hover{
+            background: #cfd9e3;
+        }
+        .scrollStyle::-webkit-scrollbar-corner{
+            background: #fff;
+        }.scrollStyle::-webkit-scrollbar-track{
+            background: #fff;
+        }
+
+        .lidiv1{
+            background: #f2f2f2;
+            width: 100%;
+            height: 42px;
+            line-height: 42px;
+            text-indent: 22px;
+            font-size: 15px;
+            border-bottom: 1px solid #e6e6e6;
+            cursor:pointer;
+        }
+        .lidiv2{
+            width: 100%;
+            background: #ffffff;
+            word-wrap: break-word;
+            /*width: 100%;*/
+            /*height: 42px;*/
+            line-height: 42px;
+            text-indent: 36px;
+            color: #666666;
+            font-size: 15px;
+            border-bottom: 1px solid #e6e6e6;
+            cursor:pointer;
+        }
+
+        .stepItem{
+            cursor: pointer;
+            flex: 1;
+            height: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        .stepline{
+            position: absolute;
+            background: #dddddd;
+            height: 6px;
+            width: 100%;
+            top: 7px;
+        }
+        .stepline1{
+            background: #4682b4;
+        }
+        .stepNum{
+            width: 20px;
+            height: 20px;
+            background:#dddddd ;
+            border-radius: 20px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            color: #635454;
+            position: relative;
+            z-index: 10;
+        }
+        .stepNum{
+            background:#4682b4 ;
+            color: #fff;
+        }
+        .stepNum .stepText{
+            position: absolute;
+            top: -25px;
+            left: -40px;
+            height: 20px;
+            width: 100px;
+            font-size: 13px;
+            color: #746868;
+            text-align: center;
+        }
+        .lunbo{
+            background: #fff;
+        }
+        .lunDiv:hover .lunImg{
+            display: block;
+        }
+        .lunImg{
+            width: 45px;
+            height: 46px;
+        }
+        .lunImg img{
+            width: 100%;
+            height: 100%;
+            float: left;
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        #demoTree{
+            width: 80%!important;
+        }
+    </style>
+</head>
+<body>
+<!--<div class="x-nav">-->
+<!--          <span class="layui-breadcrumb">-->
+<!--            <a href="">首页</a>-->
+<!--            <a href="">演示</a>-->
+<!--            <a>-->
+<!--              <cite>导航元素</cite></a>-->
+<!--          </span>-->
+<!--    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">-->
+<!--        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>-->
+<!--</div>-->
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+
+
+                <div class="layui-card-body " style="/*height: 650px*/;" style="widows: 50%;">
+
+
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" onclick="window.location.href='theme-library-list.html';">返回主题库首页</button>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >主题库名称</label>
+                        <div class="layui-input-block">
+                            <input onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" type="text" value="" id="topicName"name="topicName" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-text">
+                        <label class="layui-form-label">主题库描述</label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" value="" class="layui-textarea" id="topicComment"
+                                      name="topicComment"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-top: 20px">
+                        <label class="layui-form-label" >主题库权限</label>
+                        <div style="width: 80%;display: flex;justify-content: flex-start">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" >访问账号：</label>
+                                <div class="layui-input-block">
+                                    <input id="AuthorityUsername" type="text" name="" lay-verify="required"
+                                           onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+                                           autocomplete="off" value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" >访问密码：</label>
+                                <div class="layui-input-block">
+                                    <input id="Authoritypassword" type="text" name="" lay-verify="required"
+                                           onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+                                           autocomplete="off" value="" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-text">
+                        <label class="layui-form-label">主题库头像</label>
+                        <div class="layui-input-block" style="display: flex;align-items: center">
+                            <form method="post" enctype="multipart/form-data" id="upload-pic" action="" style="display: flex;align-items: center">
+<!--                                <input   name="file" type="file"/>-->
+                                <input onchange="submitImg()"  name="file" type="file"/>
+<!--                                <button type="button" onclick="submitImg()">上传</button>-->
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                        <legend>创建流程</legend>
+                    </fieldset>
+
+                    <div class="stepsDiv" style="width: 100%;display: flex;justify-content: center;margin:10px 0">
+                        <div class="stetConDiv" style="display: flex;width: 80%;height: 40px">
+                            <div class="stepItem" onclick="stepClick(1)">
+                                <div class="stepline stepline1"></div>
+                                <div class="stepNum stepNum1">1<div class="stepText">选取表格</div></div>
+                            </div>
+                            <div class="stepItem" onclick="stepClick(2)">
+                                <div class="stepline stepline2"></div>
+                                <div class="stepNum stepNum2">2<div  class="stepText" >选取字段</div></div>
+                            </div>
+                            <div class="stepItem" onclick="stepClick(3)">
+                                <div class="stepline stepline3"></div>
+                                <div class="stepNum stepNum3">3<div class="stepText">新创建的表</div></div>
+                            </div>
+                            <div class="stepItem" onclick="stepClick(4)">
+                                <div class="stepline stepline4"></div>
+                                <div class="stepNum stepNum4">4<div class="stepText">已创建的表格</div></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="lunDiv" style="width: 100%;height: 600px;position: relative">
+                        <div class="layui-carousel"  id="test2"  lay-filter="test4">
+                            <div carousel-item="" style="position: relative">
+                                <div class="lunbo1 lunbo" style="display: flex;justify-content: center;background: #fff">
+                                    <div  class="layui-col-xs2 scrollStyle" style="width:100%;">
+                                        <fieldset class="layui-elem-field">
+                                            <legend>选取表格</legend>
+                                            <div class="layui-field-box">
+                                                <div class="grid-demo grid-demo-bg1" style="display: flex;justify-content: center">
+                                                    <div class="scrollStyle" style="height: 500px;overflow-y: scroll;width: 80%">
+                                                        <div style="height: 100%;margin-top: 10px">
+                                                            <div style="height: 5%;width: 100%;display: flex;align-items: center">
+                                                                <input id="searchInput" style="width: 70%;height: 26px" type="text" placeholder="请输入关键字">
+                                                                <button id="searchButton" style="margin-left: 4px" class="layui-btn"  delete_all="">搜索</button>
+                                                            </div>
+                                                            <ul style="height:95%;width: 100%;margin-top: 10px"  id="demoTree" class="dtree" data-id="0"></ul>
+                                                        </div>
+<!--                                                        <div style="display: flex;align-items: center">-->
+<!--                                                            <input  style="width: 400px" type="text" name="title" required lay-verify="required" placeholder="请输入您要搜索的条件" autocomplete="off" class="leftSearch layui-input">-->
+<!--                                                            <button style="height: 30px;width: 60px" onclick="leftButtom()">搜索</button>-->
+<!--                                                        </div>-->
+
+<!--                                                        <table  class="leftTable layui-table" style="margin-top: 5px;">-->
+<!--                                                            <colgroup>-->
+<!--                                                                <col width="80">-->
+<!--                                                                <col width="200">-->
+<!--                                                                <col>-->
+<!--                                                            </colgroup>-->
+<!--                                                            <thead>-->
+<!--                                                            <tr>-->
+<!--                                                                <th>复选框</th>-->
+<!--                                                                <th>表名称</th>-->
+<!--                                                                <th>表描述</th>-->
+<!--                                                            </tr>-->
+<!--                                                            </thead>-->
+<!--                                                            <tbody>-->
+
+<!--                                                            </tbody>-->
+<!--                                                        </table>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <!--                                <blockquote class="layui-elem-quote">选取表格</blockquote>-->
+                                        <!--                                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;"/>-->
+
+                                    </div>
+                                </div>
+                                <div class="lunbo2 lunbo" style="background: #fff">
+                                    <div class="scrollStyle" style="width: 100%;">
+                                        <!--                                        <blockquote class="layui-elem-quote">选取字段</blockquote>-->
+                                        <fieldset class="layui-elem-field">
+                                            <legend>选取字段</legend>
+                                            <div class="layui-field-box">
+                                                <div id="centerConDiv" class="scrollStyle centerTable"
+                                                     style="width: 100%;display: none;flex-direction:column;align-items: center;height: 500px;overflow-y: scroll;">
+<!--                                                        <div style="width: 90%;text-align: left">双击选取字段</div>-->
+                                                            <div  class="layui-tab layui-tab-card scrollStyle" style="min-height: 220px;margin-bottom:20px;width:80%;overflow-x: scroll">
+                                                                <ul class="layui-tab-title" id="centerTopUl">
+<!--                                                                    <li class="layui-this">table1</li>-->
+<!--                                                                    <li>table2</li>-->
+<!--                                                                    <li>table3</li>-->
+                                                                </ul>
+                                                                <div class="layui-tab-content" id="centerTopDiv">
+                                                    <!--                                                    <div class="layui-tab-item layui-show">-->
+                                                    <!--                                                        <table class="layui-table" style="margin-top: 5px;">-->
+                                                    <!--                                                            <colgroup>-->
+                                                    <!--                                                                <col width="150">-->
+                                                    <!--                                                                <col width="200">-->
+                                                    <!--                                                                <col>-->
+                                                    <!--                                                            </colgroup>-->
+                                                    <!--                                                            <thead>-->
+                                                    <!--                                                            <tr>-->
+                                                    <!--                                                                <th>昵称</th>-->
+                                                    <!--                                                                <th>加入时间</th>-->
+                                                    <!--                                                                <th>签名</th>-->
+                                                    <!--                                                            </tr>-->
+                                                    <!--                                                            </thead>-->
+                                                    <!--                                                            <tbody>-->
+                                                    <!--                                                            <tr class="trdiv1">-->
+                                                    <!--                                                                <td>贤心gggggg</td>-->
+                                                    <!--                                                                <td>2016-11-29</td>-->
+                                                    <!--                                                                <td>人生就像是一场修行</td>-->
+                                                    <!--                                                            </tr>-->
+                                                    <!--                                                            <tr>-->
+                                                    <!--                                                                <td>许闲心</td>-->
+                                                    <!--                                                                <td>2016-11-28</td>-->
+                                                    <!--                                                                <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>-->
+                                                    <!--                                                            </tr>-->
+                                                    <!--                                                            </tbody>-->
+                                                    <!--                                                        </table>-->
+                                                    <!--                                                    </div>-->
+
+                                                                </div>
+
+                                                            </div>
+                                                </div>
+                                                <div class="empty" style="height: 500px;width: 100%;display: flex;flex-direction: column;justify-content: flex-start;align-items: center">
+                                                    <img style="width: 210px;height: 146px;margin-top: 20px" src="../../img/Empty.png" alt="">
+                                                    <p>暂无被选中的表格</p>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                </div>
+                                <div class="lunbo3 lunbo" style="background: #fff">
+                                    <div class="scrollStyle" style="width: 100%;">
+                                    <!--                                        <blockquote class="layui-elem-quote">新创建的表</blockquote>-->
+
+                                        <fieldset class="layui-elem-field">
+                                            <legend>新创建的表</legend>
+                                            <div class="layui-field-box">
+                                                <div class="scrollStyle" style="width: 100%;height: 500px;overflow-y: scroll;">
+
+                                                    <div style="display: flex;flex-direction: column;align-items: center;width: 100%">
+
+
+                                                        <div style="width: 80%">
+                                                            <div class="centerBottomTable" style="width: 100%;display: none">
+                                                                <table  class=" layui-table" >
+                                                                    <colgroup>
+                                                                        <col >
+                                                                        <col >
+                                                                        <col>
+                                                                        <col>
+                                                                        <col>
+<!--                                                                        <col>-->
+                                                                    </colgroup>
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>columnName</th>
+                                                                        <th>columnComment</th>
+                                                                        <th>columnType</th>
+                                                                        <th>columnLength</th>
+                                                                        <th>from</th>
+<!--                                                                        <th>operating</th>-->
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody class="newTable">
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                            <div style="display: flex;justify-content: flex-end;margin-bottom: 15px">
+<!--                                                                <button id="generateTable" type="button" class="layui-btn">生成表</button>-->
+                                                            </div>
+                                                        </div>
+                                                        <div style="width: 80%;display: flex;justify-content: flex-start;margin-top: 20px">
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label" >表名：</label>
+                                                                <div class="layui-input-block">
+                                                                    <input id="input1" type="text" name="topicName" lay-verify="required"
+                                                                           autocomplete="off" value="" class="layui-input">
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label" >表描述：</label>
+                                                                <div class="layui-input-block">
+                                                                    <input id="input2" type="text" name="topicName" lay-verify="required"
+                                                                           autocomplete="off" value="" class="layui-input">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+<!--                                                        <div style="width: 80%;display: flex;justify-content: flex-start">-->
+<!--                                                            <div class="layui-form-item" style="width: 100%">-->
+<!--                                                                <label class="layui-form-label" >关联条件：</label>-->
+<!--                                                                <div class="layui-input-block"style="width: 80%">-->
+<!--                                                                    <textarea id="input3" name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+                                                        <div style="width: 80%;display: flex;justify-content: flex-start">
+                                                            <div class="layui-form-item" style="width: 100%">
+                                                                <label class="layui-form-label" >关联条件：</label>
+                                                                <div class="associationCondition  layui-input-block"style="width: 80%">
+
+                                                                   <div class="layui-form-item">
+                                                                       <label class="layui-form-label" >from：</label>
+                                                                       <div class="layui-input-block" style="display: flex;align-items: center">
+                                                                           <select class="select1 select1New sel1" style="height: 30px;width: 200px">
+
+                                                                           </select>
+                                                                       </div>
+                                                                   </div>
+                                                                    <div class="addTopDiv">
+                                                                        <div class="topCon">
+                                                                            <div class="layui-form-item">
+                                                                                <div style="width:100%;display: flex;align-items: center">
+                                                                                    <label  style="margin-left: 30px">
+                                                                                        <select class="select4 sel2" style="height: 30px;width: 60px">
+                                                                                            <option value ="">下拉选择</option>
+                                                                                            <option value ="left join">left join</option>
+                                                                                            <option value ="right join">right join</option>
+                                                                                        </select>
+                                                                                    </label>
+                                                                                    <div  style="margin-left: 20px">
+                                                                                        <select class="select1 sel3" style="height: 30px;width: 200px">
+
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="parameterIDivTop" style="font-size:16px;width:60px;height: 40px;margin-left: 50px;display: flex;justify-content: space-between;align-items: center">
+                                                                                        <i tyle="font-size: 16px" class="addClickTop layui-icon layui-icon-add-1"></i>
+                                                                                        <i tyle="font-size: 16px" class="deleteClickTop layui-icon layui-icon-delete"></i>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="addBottomDiv">
+                                                                                <div class="layui-form-item bottomDivCon">
+                                                                                    <div style="width:100%;display: flex;align-items: center">
+                                                                                        <label  style="margin-left: 110px">
+                                                                                            <select class="select2 sel4" style="height: 30px;width: 60px">
+                                                                                                <option value ="">下拉选择</option>
+                                                                                                <option value ="on">on</option>
+                                                                                                <option value ="like">and</option>
+                                                                                            </select>
+                                                                                        </label>
+                                                                                        <div  style="margin-left: 20px">
+                                                                                            <select class="select3 sel5" style="height: 30px;width: 200px">
+                                                                                                <!--                                                                                   <option value =" like ">包含(like)</option>-->
+                                                                                                <!--                                                                                   <option value =" <= ">小于等于</option>-->
+                                                                                                <!--                                                                                   <option value =" >= ">大于等于</option>-->
+                                                                                                <!--                                                                                   <option value =" = ">等于</option>-->
+                                                                                            </select>
+                                                                                        </div>
+                                                                                        <div style="margin-left: 20px"> = </div>
+                                                                                        <div  style="margin-left: 20px">
+                                                                                            <select class="select3 sel6" style="height: 30px;width: 200px">
+
+                                                                                            </select>
+                                                                                        </div>
+                                                                                        <div class="parameterIDivBottom" style="font-size:16px;width:60px;height: 40px;margin-left: 50px;display: flex;justify-content: space-between;align-items: center">
+                                                                                            <i tyle="font-size: 16px" class="addClickBottom layui-icon layui-icon-add-1"></i>
+                                                                                            <i tyle="font-size: 16px" class="deleteClickBottom layui-icon layui-icon-delete"></i>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div style="width: 80%;display: flex;justify-content: flex-start">
+                                                            <div class="layui-form-item" style="width: 100%">
+                                                                <label class="layui-form-label" >where：</label>
+                                                                <div class="layui-input-block" style="width: 80%">
+                                                                    <textarea id="input4" name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div style="width:80%;display: flex;justify-content: center;margin-bottom: 15px">
+                                                            <button id="generateTable" type="button" class="layui-btn">生成表</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                </div>
+                                <div class="lunbo4 lunbo" style="background: #fff">
+                                    <div style="width: 100%;height: 500px">
+                                        <fieldset class="layui-elem-field">
+                                            <legend>已创建的表格</legend>
+                                            <div class="layui-field-box">
+                                                <div class="grid-demo" style="display: flex;justify-content: center">
+                                                    <div class="scrollStyle" style="min-height:500px;overflow-y: scroll;width: 80%">
+<!--                                                        <ul id="ulRight" style="border: 1px solid #e6e6e6">-->
+                <!--                                        <li>-->
+                <!--                                            <div class="lidiv1"><i class="layui-icon layui-icon-right"></i> table1 </div>-->
+                <!--                                            <div class="lidiv2" style="display: none">我是table的详情</div>-->
+                <!--                                        </li>-->
+                <!--                                            <li>-->
+                <!--                                            <div><i class="layui-icon layui-icon-right"></i> table2 </div>-->
+                <!--                                            <div style="display: none">我是table的详情</div>-->
+                <!--                                        </li>-->
+                <!--                                            <li>-->
+                <!--                                            <div><i class="layui-icon layui-icon-right"></i> table3 </div>-->
+                <!--                                            <div style="display: none">我是table的详情</div>-->
+                <!--                                        </li>-->
+                <!--                                            <li>-->
+                <!--                                            <div><i class="layui-icon layui-icon-right"></i> table4 </div>-->
+                <!--                                            <div style="display: block">我是table的详情</div>-->
+                <!--                                        </li>-->
+<!--                                                        </ul>-->
+                                                        <table  class="rightTable layui-table" style="margin-top: 5px;">
+                                                            <colgroup>
+                                                                <col width="150">
+                                                                <col >
+                                                                <col width="150">
+                                                            </colgroup>
+                                                            <thead>
+                                                            <tr>
+                                                                <th>表名称</th>
+                                                                <th>表描述</th>
+                                                                <th>操作</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                            </tbody>
+                                                        </table>
+
+                                                        <div style="display: flex;justify-content: flex-end">
+                                                            <button id="themeSubmit" type="button" class="layui-btn">提交主题库</button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="lunImg lunImgLeft" style="position: absolute;top: 270px;left: 30px;transition: 0.5s"><img src="../../img/toleft.png" alt=""></div>
+                        <div class="lunImg lunImgRight" style="position: absolute;top: 270px;right: 30px;transition: 0.5s"><img src="../../img/toright.png" alt=""></div>
+
+                    </div>
+
+                </div>
+
+
+<!--                <div class="layui-collapse" id="tableList">-->
+
+<!--                </div>-->
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    // var DTree
+    let leftData = []
+    let keyData = []
+    let SelectedTableIdArr = [] //左侧被选中的让步了id
+    let selsctedTableNum = 0    //中部被选取的table个数
+    let selectedField = []      //被选中的字段的columnName值
+    let selectedFromTable = []  //被选中字段的来源表格数组
+    let selectedFromTableAndField = []  //被选中字段的来源表格和字段
+    let selectTableAllField = []        //被选中表格的全部字段
+    let attarchIdImg = ''                  //主题库头像
+    let creatingTable = []                 //正在进行操作的table
+    let MappingList = []                   //树形图的总数据
+    let leftArr = []                   //树形图搜索后的数据
+    let leftCheckedData = []
+
+    let SelectedTableData = {
+        comment:'',
+        createTime:'',
+        dbName:'',
+        topicId:'',
+        topicName:'',
+        tables:[],
+    }
+    let createdData = {}
+    // let createdTable = []
+
+
+    $this = $(this)
+    //获取数据
+    $.ajax({
+        type: "post",
+        async: false,
+        url: "/dataMapping/getDataMappingList",
+        data: '',
+        dataType: 'json',
+        contentType: 'text/plain;charset=UTF-8',
+        success: function (resData) {
+            MappingList = resData.data
+            leftData = resData.data
+            leftArr = resData.data
+            leftArr.forEach((item,index)=>{
+                item.title = item.name
+                if(item.type == 1){
+                    item.checkArr = '0'
+                }
+            })
+            // leftArr = leftArr.filter((item)=> item.type ==0)
+
+            // console.log(JSON.stringify(leftArr))
+        },
+        error: function (request) {//请求失败之后的操作
+            layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+        }
+    });
+
+
+    let newData = treeDataConversion(leftArr)
+    let demoTree = newData
+    layui.extend({
+        dtree: '{/}virtivalList/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    }).use(['dtree','layer','jquery'], function(){
+        var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery;
+
+        // 初始化树
+        let DTree = dtree.render({
+            elem: "#demoTree",
+            toolbar:false,
+            checkbar:true,
+            checkbarData: "choose",
+            checkbarType:'self',
+            data: demoTree, // 使用data加载
+            icon: ["0","0"],
+            ficon: ['1','-1'] , // 隐藏一级图标
+        });
+        // 绑定节点点击事件
+        dtree.on("node(demoTree)", function(obj){
+            var nodeId = obj.param.nodeId;
+            DTree.clickNodeCheckbar(nodeId);// 点击节点选中复选框
+        });
+        dtree.on("chooseDone('demoTree')" ,function(obj){
+            let data = obj.checkbarParams
+            // console.log(JSON.stringify(data))
+            if(data.length > leftCheckedData.length){
+                console.log('增加')
+                let length =  leftCheckedData.length
+                // console.log(`length:${length}`)
+                let lastData
+                if(length == 0){
+                    lastData = data[0]
+                }else{
+                    data.forEach((item,index)=>{
+                        let num = 0
+                        leftCheckedData.forEach((subItem,subIndex)=>{
+                            if(item.nodeId != subItem.nodeId){
+                                num += 1
+                                // console.log(`num:${num}`)
+                                if(num == length){
+                                    lastData =  item
+                                }
+                            }
+                        })
+                    })
+                }
+                let nodeId = lastData.nodeId
+                console.log(JSON.stringify(lastData))
+
+                leftCheckedData = data
+                let a = lastData
+                    let selectArr = leftData.filter((item)=>item.id == nodeId )
+                    let selectParent = leftData.filter((item)=>item.id == selectArr[0].parentId )
+                    console.log(JSON.stringify(selectArr))
+                    let arrItem = {
+                        name:selectArr[0].tableName,
+                        index:nodeId
+                    }
+                    SelectedTableIdArr.push(arrItem)
+                    let tableID  = {
+                        id:selectArr[0].id,
+                    }
+                    console.log(`SelectedTableIdArr:${JSON.stringify(SelectedTableIdArr)}`)
+                    console.log(`tableID:${JSON.stringify(tableID)}`)
+                    $.ajax({
+                        type: "get",
+                        async: false,
+                        url: "/dataMapping/getTableInfoById",
+                        data: tableID,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (data) {
+                            let tableName = data.data.tableName
+                            let leftItem = data.data.columns
+                            leftItem.forEach((item,index)=>{
+                                let val = `${tableName}.${item.columnName}`
+                                selectTableAllField.push(val)
+                            })
+                            console.log(JSON.stringify(selectTableAllField))
+
+                            if(keyData.length == 0){
+                                for(var key in leftItem[0]){
+                                    keyData.push(key)
+                                }
+                            }
+                            var num = $('#centerTopUl').children().length
+                            let li = ''
+                            let tablecol = ''
+                            if(num == 0){
+                                li =   `<li class="layui-this" layui-nodeId="${selectArr[0].id}">${`${selectParent[0].name}:${selectArr[0].name}`}<i style="margin-left: 4px"  class="centerI layui-icon layui-icon-close"></i></li>`
+
+                                let colDiv = ''
+                                let trTitle = ''
+                                let trBody = ''
+
+                                keyData.forEach((item1,index1)=>{
+                                    colDiv += '<col >'
+                                    trTitle += `<th>${keyData[index1]}</th>`
+                                })
+                                leftItem.forEach((item,index)=>{
+                                    let subTrBody = `
+                                    <td >${item['columnName']}</td>
+                                    <td >${item['columnComment']}</td>
+                                    <td >${item['columnType']}</td>
+                                    <td >${item['columnLength']}</td>
+                                `;
+                                    // keyData.forEach((item1,index1)=>{
+                                    //     subTrBody += `<td >${item[item1]}</td>`
+                                    // })
+                                    trBody += `<tr class="centerTr"><td ><input class="checkboxTd" type="checkbox" name="item" ><label></td>${subTrBody}</tr>`
+                                })
+
+                                tablecol =
+                                    `<div class="layui-tab-item layui-show">
+                            <table class="layui-table , tab2centerTable" style="margin-top: 5px;">
+                                <colgroup>
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                <th style="display: flex;align-items: center">
+                                <input class="centerCheckBoxAll"  type="checkbox"/>
+                                多选框</th>
+                                <th>columnName</th>
+                                <th>columnComment</th>
+                                <th>columnType</th>
+                                <th>columnLength</th>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                ${trBody}
+                                </tbody>
+                            </table>
+                        </div>`
+                            }
+                            else{
+                                li =   `<li layui-nodeId="${selectArr[0].id}">${`${selectParent[0].name}:${selectArr[0].name}`}<i style="margin-left: 4px" class="centerI layui-icon layui-icon-close"></i>  </li>`
+
+                                let colDiv = ''
+                                let trTitle = ''
+                                let trBody = ''
+
+                                keyData.forEach((item1,index1)=>{
+                                    colDiv += '<col >'
+                                    trTitle += `<th>${keyData[index1]}</th>`
+                                })
+                                leftItem.forEach((item,index)=>{
+                                    let subTrBody = `
+                                    <td >${item['columnName']}</td>
+                                    <td >${item['columnComment']}</td>
+                                    <td >${item['columnType']}</td>
+                                    <td >${item['columnLength']}</td>
+                                `;
+                                    // keyData.forEach((item1,index1)=>{
+                                    //     subTrBody += `<td >${item[item1]}</td>`
+                                    // })
+                                    trBody += `<tr class="centerTr"><td ><input class="checkboxTd" type="checkbox" name="item" ><label></td>${subTrBody}</tr>`
+                                })
+
+                                tablecol =
+                                    `<div class="layui-tab-item ">
+                            <table class="layui-table , tab2centerTable" style="margin-top: 5px;">
+                                <colgroup>
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                <col >
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                <th style="display: flex;align-items: center"><input class="centerCheckBoxAll" type="checkbox"/> 多选框</th>
+                                <th>columnName</th>
+                                <th>columnComment</th>
+                                <th>columnType</th>
+                                <th>columnLength</th>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                ${trBody}
+                                </tbody>
+                            </table>
+                        </div>`
+                            }
+                            $('#centerTopUl').append(li)
+                            $('#centerTopDiv').append(tablecol)
+                            layer.msg('表格选中成功！');
+                            $('.empty').css('display','none')
+                            $('.centerTable').css('display','flex')
+                            selsctedTableNum += 1
+                        },
+                        error: function (request) {//请求失败之后的操作
+                            layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+
+                        }
+                    });
+
+
+
+            }
+            else{
+                console.log('减少')
+                let length =  data.length
+                // console.log(`length:${length}`)
+                let lastData
+                if(length == 0){
+                    lastData = leftCheckedData[0]
+                }else{
+                    leftCheckedData.forEach((item,index)=>{
+                        let num = 0
+                        data.forEach((subItem,subIndex)=>{
+                            if(item.nodeId != subItem.nodeId){
+                                num += 1
+                                // console.log(`num:${num}`)
+                                if(num == length){
+                                    lastData =  item
+                                }
+                            }
+                        })
+                    })
+                }
+                let nodeId = lastData.nodeId
+                leftCheckedData = data
+                //第二屏去掉选中的表
+                // $('#centerTopUl').find('li').eq(0).attr('class','layui-this')
+                // $('#centerTopDiv').find('.layui-tab-item').eq(0).attr('class','layui-tab-item layui-show')
+                // let selectArr = leftData.filter((item)=>item.id == nodeId )
+                // let tdName = $(this).parent().parent().find('td').eq(1).html()
+                // selectTableAllField = selectTableAllField.filter((item)=>{
+                //     return item.split('.')[0] != selectArr[0].name
+                // })
+                // console.log(JSON.stringify(selectTableAllField))
+                // SelectedTableIdArr.forEach((item,index)=>{
+                //     if(item.name ==selectArr[0].tableName ){
+                //         SelectedTableIdArr.splice(index,1)
+                //         $('#centerTopUl').find('li').eq(index).remove()
+                //         $('#centerTopDiv').find('.layui-tab-item').eq(index).remove()
+                //         layer.msg('表格已取消选中！');
+                //         if($('#centerTopUl').children().length == 0){
+                //             $('.empty').css('display','flex')
+                //             $('.centerTable').css('display','none')
+                //         }
+                //     }
+                // })
+            }
+        });
+        $('#searchButton').on('click',function () {
+            let params = $('#searchInput').val()
+            console.log(params)
+            let data = {
+                'name':params
+            }
+            $.ajax({
+                type: "get",
+                async: false,
+                url: `/dataMapping/getDataMappingList?name=${params}`,
+                // data: data,
+                dataType: 'json',
+                contentType: 'text/plain;charset=UTF-8',
+                success: function (resData) {
+                    // MappingList = resData.data
+                    leftArr = resData.data
+                    leftArr.forEach((item,index)=>{
+                        item.title = item.name
+                        if(params != ''){
+                            item.parentId = 1
+                        }
+                    })
+                    leftArr = leftArr.filter((item)=> item.type ==0)
+
+                    // console.log(JSON.stringify(leftArr))
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                }
+            });
+            let name =  {"id":1,"name":"主节点","tableName":"","parentId":0,"orderNum":1,"createTime":"2020-02-13 00:24:17","status":"0","updateTime":"2020-02-26 17:03:32","remarks":"备注","type":0,"modelId":null,"iconClass":"dtree-icon-weibiaoti5","ficonClass":"dtree-icon-jia","title":"主节点",}
+            if(params != ''){
+                leftArr.push(name)
+            }
+            let newData = treeDataConversion(leftArr)
+            let demoTree = newData
+            // 初始化树
+            DTree = dtree.render({
+                elem: "#demoTree",
+                toolbar:false,
+                data: demoTree, // 使用data加载
+                icon: ["0","0"],
+                ficon: ['1','-1'] , // 隐藏一级图标
+            });
+
+            // 绑定节点点击
+            dtree.on("node('demoTree')" ,function(obj){
+                console.log(JSON.stringify(obj))
+
+                // layer.msg(JSON.stringify(obj));
+                // layer.msg(JSON.stringify(obj.param));
+
+                let id = obj.param.nodeId
+
+            });
+
+
+            // });
+        })
+        //点击中部table关闭符号
+        $('#centerTopUl').on('click','.centerI',function ()  {
+            let nodeId = $(this).parent().attr('layui-nodeId')
+            DTree.clickNodeCheckbar(nodeId);// 点击节点选中复选框
+        })
+    });
+
+
+    // function getTables() {
+    //     var url = "/genTable/model_list";
+    //     requestGetAjax(url, function (resData) {
+    //         if ("0" == resData.code) {
+    //             leftData = resData.data
+    //             resData.data.forEach((item,index)=>{
+    //                 // let li = `<li style="">
+    //                 //         <div class="lidiv1"><i class="layui-icon layui-icon-table"></i> ${item.tableName} </div>
+    //                 //         <div class="lidiv2 " style="display: none;">${item.tableComment}</div>
+    //                 //         </li>`
+    //                 // $('.leftUl').append(li)
+    //
+    //                 let itemDiv = `
+    //                     <tr >
+    //                         <td><input class="leftcheckbox" type="checkbox" name="item" ></td>
+    //                         <td>${item.tableName}</td>
+    //                         <td>${item.tableComment}</td>
+    //                     </tr>
+    //                 `
+    //                 $('.leftTable').find('tbody').append(itemDiv)
+    //             })
+    //         } else {
+    //             layer.close(index);
+    //             layer.alert(resData.msg, {icon: 2});
+    //         }
+    //     });
+    // }
+
+    function submitImg(){
+        $("#upload-pic").ajaxSubmit({
+            type: 'post',
+            url: "/file/upload/picture",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data.code === 200) {
+                    attarchIdImg = data.attarchId
+                    layer.msg('图片提交成功！');
+                } else {
+                    layer.msg(data.errMsg);
+                }
+
+            }, error: function (XmlHttpRequest, textStatus, errorThrown) {
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+            }
+        });
+    }
+    //搜索新的数据
+    function leftButtom(){
+        let params = {
+            page:'',
+            limit:'',
+            tableName:$('.leftSearch').val(),
+        }
+
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "/genTable/model_list_by_table_name",
+            data: (params),
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            success: function (resData) {
+                leftData = resData.data
+                $('.leftTable').find('tbody').empty()
+                resData.data.forEach((item,index)=>{
+                    let itemDiv = `
+                        <tr >
+                            <td><input class="leftcheckbox" type="checkbox" name="item" ></td>
+                            <td>${item.tableName}</td>
+                            <td>${item.tableComment}</td>
+                        </tr>
+                    `
+                    $('.leftTable').find('tbody').append(itemDiv)
+                })
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+            }
+        });
+    }
+
+    //中部多选框点击后全选
+    $('#centerTopDiv').on('click','.centerCheckBoxAll',function () {
+        let $this = $(this)
+        let tableName = $this.parents('.layui-tab').find('.layui-this').html()
+        let tableId = $this.parents('.layui-tab').find('.layui-this').attr('layui-nodeid')
+
+        tableName = tableName.split('<')[0]
+        let length = $this.parents('.layui-tab-item').find('tbody').children().length
+        let tbody = $this.parents('.layui-tab-item').find('tbody')
+        // alert(length)
+        if($(this).is(':checked')){
+            for(let i = 0;i<length;i++){
+                let Field1  =   tbody.find('tr').eq(i).find('td').eq(1).html()
+                let Field = `${tableName}.${Field1}`
+                // selectedField.push(Field)
+                let num = (selectedField.findIndex((item)=> item == Field))
+                console.log(JSON.stringify(selectedField))
+                if(num == -1){
+                    selectedField.push(Field)
+
+                    let str = {
+                        columnName:'',
+                        columnComment:'',
+                        columnType:'',
+                        columnLength:'',
+                        fromTable:'',
+                        realColumnName:'',
+                    }
+                    str.columnName =tbody.find('tr').eq(i).find('td').eq(1).html()
+                    str.columnComment = tbody.find('tr').eq(i).find('td').eq(2).html()
+                    str.columnType = tbody.find('tr').eq(i).find('td').eq(3).html()
+                    str.columnLength = tbody.find('tr').eq(i).find('td').eq(4).html()
+                    let realTableName = leftData.filter((item)=> item.id == tableId)[0].tableName
+
+                    str.fromTable = realTableName
+                    str.realColumnName = ''
+                    let newTd  = `
+                   <td>${str.columnName}</td>
+                   <td>${str.columnComment}</td>
+                   <td>${str.columnType}</td>
+                   <td>${str.columnLength}</td>
+            `
+                    let addTr = `<tr>${newTd}<td>${tableName}</td></tr>`
+                    creatingTable.push(str)
+                    // selectedFromTable.push(str.fromTable)
+                    selectedFromTable.push({name:tableName,realName:realTableName})
+                    selectedFromTableAndField.push(`${str.fromTable}.${str.columnName}`)
+                    getFromTableSelect()
+                    $('.newTable').append(addTr)
+                    $('.centerBottomTable').css('display','block')
+                    tbody.find('tr').eq(i).find('td').eq(0).find('input').prop('checked',true)
+                }
+                layer.msg('字段选中成功！');
+
+            }
+        }else{
+            for(let i = 0;i<length;i++){
+                let Field1  =   tbody.find('tr').eq(i).find('td').eq(1).html()
+                let Field = `${tableName}.${Field1}`
+                let num = (selectedField.findIndex((item)=> item == Field))
+                if(num != -1){
+                    selectedField.splice(num,1)
+                    creatingTable.splice(num,1)
+                    selectedFromTable.splice(num,1)
+                    selectedFromTableAndField.splice(num,1)
+                    getFromTableSelect()
+                    $('.newTable').find('tr').eq(num).remove()
+                    if(creatingTable.length == 0){
+                        $('.centerBottomTable').css('display','none')
+                    }
+                    tbody.find('tr').eq(i).find('td').eq(0).find('input').prop('checked',false)
+                }
+            }
+            layer.msg('字段已取消选中！');
+        }
+    })
+
+    //点击中部复选框
+    $('#centerTopDiv').on('click','.checkboxTd',function () {
+        // alert($(this).html())
+        let $this = $(this)
+        let tableName = $this.parents('.layui-tab').find('.layui-this').html()
+        let tableId = $this.parents('.layui-tab').find('.layui-this').attr('layui-nodeid')
+
+        tableName = tableName.split('<')[0]
+        if($(this).is(':checked')){
+            let tableIndex = $this.parent().parent().parent().index()   //from table id
+            let Field1 =  ($this.parent().parent().find('td').eq(1).html())
+            let Field = `${tableName}.${Field1}`
+            selectedField.push(Field)
+
+            let str = {
+                columnName:'',
+                columnComment:'',
+                columnType:'',
+                columnLength:'',
+                fromTable:'',
+                realColumnName:'',
+            }
+            str.columnName =$this.parent().parent().find('td').eq(1).html()
+            str.columnComment = $this.parent().parent().find('td').eq(2).html()
+            str.columnType = $this.parent().parent().find('td').eq(3).html()
+            str.columnLength = $this.parent().parent().find('td').eq(4).html()
+            let realTableName = leftData.filter((item)=> item.id == tableId)[0].tableName
+
+            str.fromTable = realTableName
+            str.realColumnName = ''
+            // newTd.find('td').eq(0).remove()
+            let newTd  = `
+                   <td>${str.columnName}</td>
+                   <td>${str.columnComment}</td>
+                   <td>${str.columnType}</td>
+                   <td>${str.columnLength}</td>
+            `
+            let addTr = `<tr>${newTd}<td>${tableName}</td></tr>`
+            // let addTr = `<tr>${newTd}<td>${tableName}</td><td><a class="deleteDiv" href="javascripts:;">删除</a></td></tr>`
+
+            creatingTable.push(str)
+            // selectedFromTable.push(str.fromTable)
+            selectedFromTable.push({name:tableName,realName:realTableName})
+
+            selectedFromTableAndField.push(`${str.fromTable}.${str.columnName}`)
+            getFromTableSelect()
+            $('.newTable').append(addTr)
+            layer.msg('字段选中成功！');
+            $('.centerBottomTable').css('display','block')
+        }else{
+            // let tableName = $this.parent().parent().find('td').eq(1).html()
+            let Field1 =  ($this.parent().parent().find('td').eq(1).html())
+            let Field = `${tableName}.${Field1}`
+            let num = (selectedField.findIndex((item)=> item == Field))
+            selectedField.splice(num,1)
+            creatingTable.splice(num,1)
+            selectedFromTable.splice(num,1)
+            selectedFromTableAndField.splice(num,1)
+            getFromTableSelect()
+            $('.newTable').find('tr').eq(num).remove()
+            if(creatingTable.length == 0){
+                $('.centerBottomTable').css('display','none')
+            }
+            layer.msg('字段已取消选中！');
+        }
+    })
+    function getFromTableSelect(){
+        let select = ''
+        // let newArr = [...new Set(selectedFromTable)]
+        let newArr = [];
+        let obj = {};
+        for (var i = 0; i < selectedFromTable.length; i++) {
+            if (!obj[selectedFromTable[i].realName]) {
+                newArr.push(selectedFromTable[i]);
+                obj[selectedFromTable[i].realName] = true;
+            }
+        }
+        newArr.forEach((item,index)=>{
+            select+= `<option value ="${item.realName}">${item.name}</option>`
+        })
+        let newSelect = `<option value ="">下拉选择</option>${select}`
+        $('.select1').empty()
+        $('.select1').append(newSelect)
+        $('.select1New').empty()
+        $('.select1New').append(select)
+        let select3 = ''
+        selectTableAllField.forEach((item,index)=>{
+            select3+= `<option value ="${item}">${item}</option>`
+        })
+        let newSelect3 = `<option value ="">下拉选择</option>${select3}`
+        $('.select3').empty()
+        $('.select3').append(newSelect3)
+    }
+
+    //点击添加参数按钮
+    $('.addTopDiv').on('click','.addClickBottom',function () {
+        let select = ``
+        selectTableAllField.forEach((item,index)=>{
+            select+= `<option value ="${item}">${item}</option>`
+        })
+
+        let div = `
+            <div class="layui-form-item bottomDivCon">
+               <div style="width:100%;display: flex;align-items: center">
+                   <label  style="margin-left: 110px">
+                       <select class="select2 sel4" style="height: 30px;width: 60px">
+                           <option value ="">下拉选择</option>
+                           <option value ="on">on</option>
+                           <option value ="and">and</option>
+                       </select>
+                   </label>
+                   <div  style="margin-left: 20px">
+                       <select class="select3 sel5" style="height: 30px;width: 200px">
+                            <option value ="">下拉选择</option>
+                           ${select}
+                       </select>
+                   </div>
+                   <div style="margin-left: 20px"> = </div>
+                   <div  style="margin-left: 20px">
+                       <select class="select3 sel6" style="height: 30px;width: 200px">
+                            <option value ="">下拉选择</option>
+                            ${select}
+                       </select>
+                   </div>
+                   <div class="parameterIDivBottom" style="font-size:16px;width:60px;height: 40px;margin-left: 50px;display: flex;justify-content: space-between;align-items: center">
+                       <i tyle="font-size: 16px" class="addClickBottom layui-icon layui-icon-add-1"></i>
+                       <i tyle="font-size: 16px" class="deleteClickBottom layui-icon layui-icon-delete"></i>
+                   </div>
+               </div>
+            </div>
+        `
+        // $('.addBottomDiv').append(div)
+        $(this).parents('.addBottomDiv').append(div)
+        $(this).parents('.addBottomDiv').find('.parameterIDivBottom').hide()
+        $(this).parents('.addBottomDiv').find('.parameterIDivBottom').last().show()
+    })
+    //点击添加参数按钮 上部 left
+    $('.addTopDiv').on('click','.addClickTop',function () {
+        let select = ``
+        let newArr = [];
+        let obj = {};
+        for (var i = 0; i < selectedFromTable.length; i++) {
+            if (!obj[selectedFromTable[i].realName]) {
+                newArr.push(selectedFromTable[i]);
+                obj[selectedFromTable[i].realName] = true;
+            }
+        }
+        newArr.forEach((item,index)=>{
+            select+= `<option value ="${item.realName}">${item.name}</option>`
+        })
+
+        let select2 = ``
+        selectTableAllField.forEach((item,index)=>{
+            select2+= `<option value ="${item}">${item}</option>`
+        })
+
+        let div = `
+            <div class="layui-form-item">
+                <div style="width:100%;display: flex;align-items: center">
+                    <label  style="margin-left: 30px">
+                        <select class="select4 sel2" style="height: 30px;width: 60px">
+                            <option value ="">下拉选择</option>
+                            <option value ="left join">left join</option>
+                            <option value ="right join">right join</option>
+                        </select>
+                    </label>
+                    <div  style="margin-left: 20px">
+                        <select class="select1 sel3" style="height: 30px;width: 200px">
+                            <option value ="">下拉选择</option>
+                            ${select}
+                        </select>
+                    </div>
+                    <div class="parameterIDivTop" style="font-size:16px;width:60px;height: 40px;margin-left: 50px;display: flex;justify-content: space-between;align-items: center">
+                        <i tyle="font-size: 16px" class="addClickTop layui-icon layui-icon-add-1"></i>
+                        <i tyle="font-size: 16px" class="deleteClickTop layui-icon layui-icon-delete"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="addBottomDiv">
+                <div class="layui-form-item bottomDivCon">
+                    <div style="width:100%;display: flex;align-items: center">
+                        <label  style="margin-left: 110px">
+                            <select class="select2 sel4" style="height: 30px;width: 60px">
+                                <option value ="">下拉选择</option>
+                                <option value ="on">on</option>
+                                <option value ="like">and</option>
+                            </select>
+                        </label>
+                        <div  style="margin-left: 20px">
+                            <select class="select3 sel5" style="height: 30px;width: 200px">
+                                 <option value ="">下拉选择</option>
+                                 ${select2}
+                            </select>
+                        </div>
+                        <div style="margin-left: 20px"> = </div>
+                        <div  style="margin-left: 20px">
+                            <select class="select3 sel6" style="height: 30px;width: 200px">
+                               <option value ="">下拉选择</option>
+                                ${select2}
+                            </select>
+                        </div>
+                        <div class="parameterIDivBottom" style="font-size:16px;width:60px;height: 40px;margin-left: 50px;display: flex;justify-content: space-between;align-items: center">
+                            <i tyle="font-size: 16px" class="addClickBottom layui-icon layui-icon-add-1"></i>
+                            <i tyle="font-size: 16px" class="deleteClickBottom layui-icon layui-icon-delete"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+        let newDiv  = `<div class="topCon">${div}</div>`
+        $('.addTopDiv').append(newDiv)
+        $('.addTopDiv').find('.parameterIDivTop').hide()
+        $('.addTopDiv').find('.parameterIDivTop').last().show()
+    })
+    // 关联条件上部删除
+    $('.addTopDiv').on('click','.deleteClickTop',function () {
+        let index = $(this).parents('.topCon').index()
+        if(index == 0){
+            layer.msg('参数条件不可删除！');
+        }else{
+            $(this).parents('.topCon').remove()
+            $('.addTopDiv').find('.parameterIDivTop').last().show()
+        }
+    })
+    // 关联条件下部删除
+    $('.addTopDiv').on('click','.deleteClickBottom',function () {
+        let index = $(this).parents('.layui-form-item').index()
+        let index2 = $(this).parents('.topCon').index()
+        if(index == 0){
+            layer.msg('参数条件不可删除！');
+        }else{
+            $(this).parents('.bottomDivCon').remove()
+            $('.addTopDiv').find('.topCon').eq(index2).find('.bottomDivCon').last().find('.parameterIDivBottom').show()
+        }
+    })
+
+    //左侧复选框
+    $('.leftTable').on('click','.leftcheckbox',function () {
+        let $this = $(this)
+        if($(this).is(':checked')){
+            let index = $(this).parent().parent().index()
+            let arrItem = {
+                name:leftData[index].tableName,
+                index:index
+            }
+            SelectedTableIdArr.push(arrItem)
+            let tableID  = {
+                tableId:leftData[index].tableId,
+            }
+            $.ajax({
+                type: "get",
+                async: false,
+                url: "/genTable/findTableInfoByTableId",
+                data: tableID,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    let tableName = data.data.tableName
+                    let leftItem = data.data.genTableColumn
+                    leftItem.forEach((item,index)=>{
+                        let val = `${tableName}.${item.columnName}`
+                        selectTableAllField.push(val)
+                    })
+                    console.log(JSON.stringify(selectTableAllField))
+
+                    if(keyData.length == 0){
+                        for(var key in leftItem[0]){
+                            keyData.push(key)
+                        }
+                    }
+                    var num = $('#centerTopUl').children().length
+                    let li = ''
+                    let tablecol = ''
+                    if(num == 0){
+                        li =   `<li class="layui-this">${leftData[index].tableName}<i style="margin-left: 4px"  class="centerI layui-icon layui-icon-close"></i></li>`
+
+                        let colDiv = ''
+                        let trTitle = ''
+                        let trBody = ''
+
+                        keyData.forEach((item1,index1)=>{
+                            colDiv += '<col >'
+                            trTitle += `<th>${keyData[index1]}</th>`
+                        })
+                        leftItem.forEach((item,index)=>{
+                            let subTrBody = '';
+                            keyData.forEach((item1,index1)=>{
+                                subTrBody += `<td >${item[item1]}</td>`
+                            })
+                            trBody += `<tr class="centerTr"><td ><input class="checkboxTd" type="checkbox" name="item" ><label></td>${subTrBody}</tr>`
+                        })
+
+                        tablecol =
+                            `<div class="layui-tab-item layui-show">
+                            <table class="layui-table , tab2centerTable" style="margin-top: 5px;">
+                                <colgroup>
+                                <col >
+                                ${colDiv}
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                <th style="display: flex;align-items: center">
+                                <input class="centerCheckBoxAll"  type="checkbox"/>
+                                多选框</th>
+                                ${trTitle}
+                                </tr>
+                                </thead>
+                                <tbody >
+                                ${trBody}
+                                </tbody>
+                            </table>
+                        </div>`
+                    }else{
+                        li =   `<li >${leftData[index].tableName}<i style="margin-left: 4px" class="centerI layui-icon layui-icon-close"></i>  </li>`
+
+                        let colDiv = ''
+                        let trTitle = ''
+                        let trBody = ''
+
+                        keyData.forEach((item1,index1)=>{
+                            colDiv += '<col >'
+                            trTitle += `<th>${keyData[index1]}</th>`
+                        })
+                        leftItem.forEach((item,index)=>{
+                            let subTrBody = '';
+                            keyData.forEach((item1,index1)=>{
+                                subTrBody += `<td >${item[item1]}</td>`
+                            })
+                            trBody += `<tr class="centerTr"><td ><input class="checkboxTd" type="checkbox" name="item" ><label></td>${subTrBody}</tr>`
+                        })
+
+                        tablecol =
+                            `<div class="layui-tab-item ">
+                            <table class="layui-table , tab2centerTable" style="margin-top: 5px;">
+                                <colgroup>
+                                ${colDiv}
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                <th style="display: flex;align-items: center"><input class="centerCheckBoxAll" type="checkbox"/> 多选框</th>
+                                ${trTitle}
+                                </tr>
+                                </thead>
+                                <tbody >
+                                ${trBody}
+                                </tbody>
+                            </table>
+                        </div>`
+                    }
+                    $('#centerTopUl').append(li)
+                    $('#centerTopDiv').append(tablecol)
+                    layer.msg('表格选中成功！');
+                    $('.empty').css('display','none')
+                    $('.centerTable').css('display','flex')
+                    selsctedTableNum += 1
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+
+                }
+            });
+        }else{
+            let tdName = $(this).parent().parent().find('td').eq(1).html()
+            selectTableAllField = selectTableAllField.filter((item)=>{
+                return item.split('.')[0] != tdName
+            })
+            console.log(JSON.stringify(selectTableAllField))
+            SelectedTableIdArr.forEach((item,index)=>{
+                if(item.name ==tdName ){
+                    SelectedTableIdArr.splice(index,1)
+                    $('#centerTopUl').find('li').eq(index).remove()
+                    $('#centerTopDiv').find('.layui-tab-item').eq(index).remove()
+                    layer.msg('表格已取消选中！');
+                    if($('#centerTopUl').children().length == 0){
+                        $('.empty').css('display','flex')
+                        $('.centerTable').css('display','none')
+                    }
+                }
+            })
+        }
+    })
+
+
+
+    // 中部下方删除
+    $('.newTable').on('click', '.deleteDiv',function () {
+        let $this = $(this)
+        let index = $this.parent().parent().index()
+        $('.newTable').find('tr').eq(index).remove()
+        creatingTable.splice(index,1)
+        let Field =  ($this.parent().parent().find('td').eq(0).html())
+        selectedField.forEach((item,index)=>{
+            if(item == Field){
+                selectedField.splice(index,1)
+            }
+        })
+
+        if(creatingTable.length == 0){
+            $('.centerBottomTable').css('display','none')
+        }
+    })
+
+    let stepIndex = 0
+    function stepClick(){
+
+    }
+    function getStepStyle(num){
+        $('.stetConDiv').find('.stepline').css('background','#dddddd')
+        $('.stetConDiv').find('.stepNum').css('background','#dddddd')
+        $('.stetConDiv').find('.stepNum').css('color','#635454')
+        for(let i = 0;i <= 3;i++){
+            if(i <= num){
+                $('.stetConDiv').find(`.stepline${i+1}`).css('background','#4682b4')
+                $('.stetConDiv').find(`.stepNum${i+1}`).css('background','#4682b4')
+                $('.stetConDiv').find(`.stepNum${i+1}`).css('color','#fff')
+            }
+        }
+    }
+
+    layui.use(['carousel', 'form'], function(){
+        var carousel = layui.carousel
+            ,form = layui.form;
+        var ins2 = carousel.render({
+            elem: '#test2',
+            width:'100%',
+            height:'600px',
+            arrow: 'none',
+            interval: 1800,
+            autoplay:false,
+            indicator:'none',
+            anim:'fade',
+        });
+
+        //事件
+        var $ = layui.$,
+            active = {
+            set: function(othis){
+                var THIS = 'layui-bg-normal'
+                    ,key = othis.data('key')
+                    ,options = {};
+
+                othis.css('background-color', '#5FB878').siblings().removeAttr('style');
+                options[key] = othis.data('value');
+                ins3.reload(options);
+            }
+        };
+
+        $('.stepItem').on('click',function () {
+            let index = $(this).index()
+            stepIndex = index
+            $('#test2').find('.lunbo').removeClass("layui-this");
+            $('#test2').find('.lunbo').eq(index).addClass("layui-this")
+            getStepStyle(index)
+            // let options = {index:index}
+            // var ins2 = carousel.render(options);
+            // alert(stepIndex)
+            // ins2.reload({index:stepIndex});
+        })
+        $('.lunImgRight').on('click',function () {
+            if(stepIndex == 3){
+                stepIndex = 0
+            }else{
+                stepIndex +=1
+            }
+            $('#test2').find('.lunbo').removeClass("layui-this");
+            $('#test2').find('.lunbo').eq(stepIndex).addClass("layui-this")
+            getStepStyle(stepIndex)
+        })
+        $('.lunImgLeft').on('click',function () {
+            if(stepIndex == 0){
+                stepIndex = 3
+            }else{
+                stepIndex -=1
+            }
+            $('#test2').find('.lunbo').removeClass("layui-this");
+            $('#test2').find('.lunbo').eq(stepIndex).addClass("layui-this")
+            getStepStyle(stepIndex)
+        })
+    });
+
+
+
+
+
+
+
+
+    var timeoutID = null
+    //左侧单击
+    $('.leftUl').on('click','.lidiv1',function () {
+        let $this = $(this)
+        clearTimeout(timeoutID);
+        timeoutID = window.setTimeout(function (){
+            if($this.next().css('display') == 'none'){
+                $this.next().css('display','block')
+            }else{
+                $this.next().css('display','none')
+
+            }
+        },200)
+    })
+
+
+
+
+    //已被选中的表格进行删除
+    $('#centerConDiv').on('click','.closeDiv',function () {
+        let tableName = ($(this).parent().find('.layui-this').html())
+        SelectedTableIdArr.forEach((item,index)=>{
+            if(item ==tableName ){
+                SelectedTableIdArr.splice(index ,1)
+            }
+        })
+        $(this).parent().remove()
+        layer.msg('表格已取消选中！');
+        selsctedTableNum -= 1
+        if(selsctedTableNum == 0){
+            $('.empty').css('display','flex')
+            $('.centerTable').css('display','none')
+        }
+
+    })
+    //生成表按钮
+    $('#generateTable').on('click',function () {
+        if($('#input1').val() == ''){
+            layer.alert('表名不能为空!', {icon: 2})
+        }else if($('#input2').val() == ''){
+            layer.alert('表描述不能为空!', {icon: 2})
+        }else if(creatingTable.length == 0){
+            layer.alert('新创建的表数据不能为空!', {icon: 2})
+        }else{
+            let emptyNum = 0
+            let a = $('.sel1').find('option:selected').val()
+            let b = ''
+            let num1 = $('.addTopDiv').children().length
+            for(let i = 0;i < num1;i++){
+                let val1 = $('.addTopDiv').find('.topCon').eq(i).find('.sel2').find('option:selected').val()
+                let val2 = $('.addTopDiv').find('.topCon').eq(i).find('.sel3').find('option:selected').val()
+                if(i>0 &&(val1 == '' || val2 == '')){
+                    emptyNum = 1
+                }
+                if(val1 != '' && val2 != ''){
+                    let val2New = leftData.filter((item)=>item.name == val2.split(':')[1] )
+                    b += ` ${val1} ${val2New[0].tableName}`
+                }
+
+                let numBottom = $('.addTopDiv').find('.topCon').eq(i).find('.bottomDivCon').children().length
+                console.log(`numBottom:${numBottom}`)
+                for(let j = 0;j < numBottom;j++){
+                    let val4 = $('.addTopDiv').find('.topCon').eq(i).find('.bottomDivCon').eq(j).find('.sel4').find('option:selected').val()
+                    let val5 = $('.addTopDiv').find('.topCon').eq(i).find('.bottomDivCon').eq(j).find('.sel5').find('option:selected').val()
+                    let val6 = $('.addTopDiv').find('.topCon').eq(i).find('.bottomDivCon').eq(j).find('.sel6').find('option:selected').val()
+                    if(i>0 &&(val4 == '' || val5 == ''|| val6 == '')){
+                        emptyNum = 1
+                    }
+                    if(val4 != '' && val5 != ''&& val6 != ''){
+                        let val5New = leftData.filter((item)=>item.name == val5.split('.')[0] )
+                        let val6New = leftData.filter((item)=>item.name == val6.split('.')[0] )
+
+
+                        b += ` ${val4} ${val5New[0].tableName}.${val5.split('.')[1]} = ${val6New[0].tableName}.${val6.split('.')[1]}`
+                    }
+                }
+            }
+            if(emptyNum == 1){
+                layer.alert('请完善您的关联条件!', {icon: 2})
+            }else {
+                let n = selectedFromTableAndField.join(',')
+                let fromArr = leftData.filter((item)=>item.name == a.split(':')[1] )
+                let val = `from ${a}${b}`
+                console.log('关联条件：'+JSON.stringify(val))
+                let tableItem = {}
+                tableItem.tableName = $('#input1').val()
+                tableItem.tableComment = $('#input2').val()
+                tableItem.associatedConditions = val
+                tableItem.where = $('#input4').val()
+                tableItem.tableId = 0
+                tableItem.genTableColumn =  [...creatingTable]
+                console.log(`tableItem:${tableItem}`)
+                SelectedTableData.tables.push(tableItem)
+                let newTr = `
+                        <tr >
+                            <td>${$('#input1').val()}</td>
+                            <td>${$('#input2').val()}</td>
+                            <td class="opacity" style="cursor: pointer">操作</td>
+                        </tr>
+                    `
+
+
+                $('.rightTable').find('tbody').append(newTr)
+
+                $('.newTable').empty()
+                creatingTable = []
+                $('#input1').val('')
+                $('#input2').val('')
+                $('#input3').val('')
+                $('#input4').val('')
+                layer.alert('表创建成功!', {icon: 1})
+                selectedField = []
+                stepIndex = 3
+                $('#test2').find('.lunbo').removeClass("layui-this");
+                $('#test2').find('.lunbo').eq(3).addClass("layui-this")
+                getStepStyle(3)
+            }
+
+        }
+    })
+    //右侧点击操作
+    $('.rightTable').on('click','.opacity',function () {
+        let index = $(this).parent().index()
+        let table = SelectedTableData.tables[index]
+        SelectedTableData.tables.splice(index,1)
+        $(this).parent().remove()
+        $('#input1').val(table.tableName)
+        $('#input2').val(table.tableComment)
+        $('#input3').val(table.associatedConditions)
+        $('#input4').val(table.where)
+        $('.newTable').empty()
+        creatingTable = []
+        creatingTable = [...table.genTableColumn]
+        table.genTableColumn.forEach((item,index)=>{
+            let addTr = ''
+            addTr = `
+                <tr>
+                    <td>${item.columnName}</td>
+                    <td>${item.columnComment}</td>
+                    <td>${item.columnType}</td>
+                    <td>${item.columnLength}</td>
+                    <td>${item.fromTable}</td>
+<!--                    <td><a class="deleteDiv" href="javascripts:;">删除</a></td>-->
+                </tr>
+            `
+            $('.newTable').append(addTr)
+        })
+        stepIndex = 2
+        $('#test2').find('.lunbo').removeClass("layui-this");
+        $('#test2').find('.lunbo').eq(2).addClass("layui-this")
+        getStepStyle(2)
+
+    })
+
+
+    //点击生成主题库
+    function showLoad() {
+        return layer.msg('正在生成主题库...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:100000});
+    }
+
+    function closeLoad(index) {
+        layer.close(index);
+    }
+    function showSuccess() {
+        layer.msg('执行成功！',{time: 1000,offset: 'auto'});
+    }
+
+    $('#themeSubmit').on('click',function () {
+        if($('#topicName').val() == ''){
+            layer.alert('主题库名称不能为空!', {icon: 2})
+        }else if($('#topicComment').val() == ''){
+            layer.alert('主题库描述不能为空!', {icon: 2})
+        }else if($('#AuthorityUsername').val() == ''){
+            layer.alert('权限账号不能为空!', {icon: 2})
+        }else if($('#Authoritypassword ').val() == ''){
+            layer.alert('权限密码不能温控!', {icon: 2})
+        }else if(SelectedTableData.length == 0){
+            layer.alert('主题库表格不能为空!', {icon: 2})
+        }else{
+            let i;
+            i=showLoad();
+            SelectedTableData.topicName = $('#topicName').val()
+            SelectedTableData.comment = $('#topicComment').val()
+            SelectedTableData.userName = $('#AuthorityUsername').val()
+            SelectedTableData.password = $('#Authoritypassword ').val()
+            SelectedTableData.attarchId = attarchIdImg
+            let newtables = SelectedTableData.tables
+            // SelectedTableData.tables.forEach((item,index)=>{
+            //     item.genTableColumn.forEach((subItem,subIndex)=>{
+            //         let text = subItem.fromTable.split(':')[1]
+            //         let newTable = leftData.filter((item)=>item.name == text )
+            //         subItem.fromTable = newTable[0].tableName
+            //     })
+            // })
+            console.log(`SelectedTableData:${JSON.stringify(SelectedTableData)}`)
+
+            $.ajax({
+                type: "post",
+                async: true,
+                url: "/topic/createTopic",
+                data: JSON.stringify(SelectedTableData),
+                dataType: 'json',
+                contentType: 'application/json',
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    // debugger
+                    if(data.code == 200){
+                        $('#ulRight').remove()
+                        window.location.href='theme-library-list.html';
+                        layer.alert('主题库创建成功!', {icon: 1})
+                        closeLoad(i);
+                        showSuccess();
+                    }else{
+                        layer.alert(data.errMsg, {icon: 2})
+                        closeLoad(i);
+                    }
+
+                },
+                error: function (request) {//请求失败之后的操作
+                    layer.alert("服务器内部错误,请稍后再试！", {icon: 2});
+                    layer.close(index);
+                    closeLoad(i);
+                }
+            });
+        }
+
+    })
+
+
+
+    function treeDataConversion(data){
+        let cloneData = JSON.parse(JSON.stringify(data))    // 对源数据深度克隆
+        let tree = cloneData.filter((father)=>{              //循环所有项
+            let branchArr = cloneData.filter((child)=>{
+                return father.id == child.parentId      //返回每一项的子级数组
+            });
+            if(branchArr.length>0){
+                father.children = branchArr;    //如果存在子级，则给父级添加一个children属性，并赋值
+            }
+            return father.parentId==0;      //返回第一层
+        });
+        return tree     //返回树形数据
+    }
+
+
+
+
+</script>
+
+<script>layui.use(['form', 'layer', 'element'],
+    function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+
+    });</script>
+</body>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    </div>
+</script>
+
+
+</html>

@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.GenTableMapper">
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.GenTable">
+        <id column="table_id" property="tableId" jdbcType="BIGINT"/>
+        <result column="table_name" property="tableName" jdbcType="VARCHAR"/>
+        <result column="table_comment" property="tableComment" jdbcType="VARCHAR"/>
+        <result column="class_name" property="className" jdbcType="VARCHAR"/>
+        <result column="tpl_category" property="tplCategory" jdbcType="VARCHAR"/>
+        <result column="package_name" property="packageName" jdbcType="VARCHAR"/>
+        <result column="module_name" property="moduleName" jdbcType="VARCHAR"/>
+        <result column="business_name" property="businessName" jdbcType="VARCHAR"/>
+        <result column="function_name" property="functionName" jdbcType="VARCHAR"/>
+        <result column="function_author" property="functionAuthor" jdbcType="VARCHAR"/>
+        <result column="options" property="options" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="CHAR"/>
+    </resultMap>
+
+    <resultMap id="TableInfosMap" type="cn.cnic.zhongtai.system.model.GenTable">
+        <result column="table_id" property="tableId"></result>
+        <result column="table_name" property="tableName" jdbcType="VARCHAR"/>
+        <result column="table_comment" property="tableComment" jdbcType="VARCHAR"/>
+        <collection property="genTableColumn" ofType="cn.cnic.zhongtai.system.model.GenTableColumn">
+            <result column="column_name" property="columnName" jdbcType="VARCHAR"/>
+            <result column="column_type" property="columnType" jdbcType="VARCHAR"/>
+            <result column="column_length" property="columnLength" jdbcType="VARCHAR"/>
+            <result column="column_comment" property="columnComment" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+    <select id="findTableInfoByTableId" resultMap="TableInfosMap">
+    select tab.table_id, tab.table_name, tab.table_comment, col.column_name,
+     col.column_type, col.column_length, col.column_comment
+     from gen_table tab, gen_table_column col
+     where
+     tab.table_id = col.table_id and tab.table_id = #{tableId}
+  </select>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    table_id, table_name, table_comment, class_name, tpl_category, package_name, module_name, 
+    business_name, function_name, function_author, options, create_by, create_time, update_by, 
+    update_time, remark, status
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="cn.cnic.zhongtai.system.model.GenTableExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from gen_table
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from gen_table
+        where table_id = #{tableId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from gen_table
+    where table_id = #{tableId,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteByExample" parameterType="cn.cnic.zhongtai.system.model.GenTableExample">
+        delete from gen_table
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="cn.cnic.zhongtai.system.model.GenTable" useGeneratedKeys="true"
+            keyProperty="tableId">
+    insert into gen_table (table_id, table_name, table_comment, 
+      class_name, tpl_category, package_name, 
+      module_name, business_name, function_name, 
+      function_author, options, create_by, 
+      create_time, update_by, update_time, 
+      remark, status)
+    values (#{tableId,jdbcType=BIGINT}, #{tableName,jdbcType=VARCHAR}, #{tableComment,jdbcType=VARCHAR}, 
+      #{className,jdbcType=VARCHAR}, #{tplCategory,jdbcType=VARCHAR}, #{packageName,jdbcType=VARCHAR}, 
+      #{moduleName,jdbcType=VARCHAR}, #{businessName,jdbcType=VARCHAR}, #{functionName,jdbcType=VARCHAR}, 
+      #{functionAuthor,jdbcType=VARCHAR}, #{options,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=CHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="cn.cnic.zhongtai.system.model.GenTable">
+        insert into gen_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tableId != null">
+                table_id,
+            </if>
+            <if test="tableName != null">
+                table_name,
+            </if>
+            <if test="tableComment != null">
+                table_comment,
+            </if>
+            <if test="className != null">
+                class_name,
+            </if>
+            <if test="tplCategory != null">
+                tpl_category,
+            </if>
+            <if test="packageName != null">
+                package_name,
+            </if>
+            <if test="moduleName != null">
+                module_name,
+            </if>
+            <if test="businessName != null">
+                business_name,
+            </if>
+            <if test="functionName != null">
+                function_name,
+            </if>
+            <if test="functionAuthor != null">
+                function_author,
+            </if>
+            <if test="options != null">
+                options,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tableId != null">
+                #{tableId,jdbcType=BIGINT},
+            </if>
+            <if test="tableName != null">
+                #{tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="tableComment != null">
+                #{tableComment,jdbcType=VARCHAR},
+            </if>
+            <if test="className != null">
+                #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="tplCategory != null">
+                #{tplCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="packageName != null">
+                #{packageName,jdbcType=VARCHAR},
+            </if>
+            <if test="moduleName != null">
+                #{moduleName,jdbcType=VARCHAR},
+            </if>
+            <if test="businessName != null">
+                #{businessName,jdbcType=VARCHAR},
+            </if>
+            <if test="functionName != null">
+                #{functionName,jdbcType=VARCHAR},
+            </if>
+            <if test="functionAuthor != null">
+                #{functionAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="options != null">
+                #{options,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="cn.cnic.zhongtai.system.model.GenTableExample"
+            resultType="java.lang.Integer">
+        select count(*) from gen_table
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update gen_table
+        <set>
+            <if test="record.tableId != null">
+                table_id = #{record.tableId,jdbcType=BIGINT},
+            </if>
+            <if test="record.tableName != null">
+                table_name = #{record.tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tableComment != null">
+                table_comment = #{record.tableComment,jdbcType=VARCHAR},
+            </if>
+            <if test="record.className != null">
+                class_name = #{record.className,jdbcType=VARCHAR},
+            </if>
+            <if test="record.tplCategory != null">
+                tpl_category = #{record.tplCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="record.packageName != null">
+                package_name = #{record.packageName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.moduleName != null">
+                module_name = #{record.moduleName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.businessName != null">
+                business_name = #{record.businessName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.functionName != null">
+                function_name = #{record.functionName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.functionAuthor != null">
+                function_author = #{record.functionAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="record.options != null">
+                options = #{record.options,jdbcType=VARCHAR},
+            </if>
+            <if test="record.createBy != null">
+                create_by = #{record.createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="record.createTime != null">
+                create_time = #{record.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.updateBy != null">
+                update_by = #{record.updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="record.updateTime != null">
+                update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="record.status != null">
+                status = #{record.status,jdbcType=CHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update gen_table
+        set table_id = #{record.tableId,jdbcType=BIGINT},
+        table_name = #{record.tableName,jdbcType=VARCHAR},
+        table_comment = #{record.tableComment,jdbcType=VARCHAR},
+        class_name = #{record.className,jdbcType=VARCHAR},
+        tpl_category = #{record.tplCategory,jdbcType=VARCHAR},
+        package_name = #{record.packageName,jdbcType=VARCHAR},
+        module_name = #{record.moduleName,jdbcType=VARCHAR},
+        business_name = #{record.businessName,jdbcType=VARCHAR},
+        function_name = #{record.functionName,jdbcType=VARCHAR},
+        function_author = #{record.functionAuthor,jdbcType=VARCHAR},
+        options = #{record.options,jdbcType=VARCHAR},
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+        remark = #{record.remark,jdbcType=VARCHAR},
+        status = #{record.status,jdbcType=CHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.cnic.zhongtai.system.model.GenTable">
+        update gen_table
+        <set>
+            <if test="tableName != null">
+                table_name = #{tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="tableComment != null">
+                table_comment = #{tableComment,jdbcType=VARCHAR},
+            </if>
+            <if test="className != null">
+                class_name = #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="tplCategory != null">
+                tpl_category = #{tplCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="packageName != null">
+                package_name = #{packageName,jdbcType=VARCHAR},
+            </if>
+            <if test="moduleName != null">
+                module_name = #{moduleName,jdbcType=VARCHAR},
+            </if>
+            <if test="businessName != null">
+                business_name = #{businessName,jdbcType=VARCHAR},
+            </if>
+            <if test="functionName != null">
+                function_name = #{functionName,jdbcType=VARCHAR},
+            </if>
+            <if test="functionAuthor != null">
+                function_author = #{functionAuthor,jdbcType=VARCHAR},
+            </if>
+            <if test="options != null">
+                options = #{options,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+        </set>
+        where table_id = #{tableId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.cnic.zhongtai.system.model.GenTable">
+    update gen_table
+    set table_name = #{tableName,jdbcType=VARCHAR},
+      table_comment = #{tableComment,jdbcType=VARCHAR},
+      class_name = #{className,jdbcType=VARCHAR},
+      tpl_category = #{tplCategory,jdbcType=VARCHAR},
+      package_name = #{packageName,jdbcType=VARCHAR},
+      module_name = #{moduleName,jdbcType=VARCHAR},
+      business_name = #{businessName,jdbcType=VARCHAR},
+      function_name = #{functionName,jdbcType=VARCHAR},
+      function_author = #{functionAuthor,jdbcType=VARCHAR},
+      options = #{options,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR}
+    where table_id = #{tableId,jdbcType=BIGINT}
+  </update>
+
+
+    <!--开始自定义写-->
+    <select id="selectGenTableBytableName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from gen_table
+        where table_name = #{tableName,jdbcType=VARCHAR} and status = '0'
+    </select>
+
+
+    <select id="queryGenTableList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from gen_table
+        limit #{currIndex} , #{pageSize}
+    </select>
+
+    <select id="queryCount" resultType="java.lang.Integer">
+     select count(*) from gen_table
+  </select>
+
+    <select id="selectGenTableList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from gen_table where status = '0' ORDER BY create_time DESC
+    </select>
+
+
+    <select id="selectGenTableListByTableName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from gen_table where status = '0'
+        <if test="tableName != null and tableName !=''">
+            and table_name like CONCAT('%',#{tableName,jdbcType=VARCHAR},'%')
+        </if>
+        order by create_time
+    </select>
+
+
+    <update id="deleteTables" parameterType="java.util.List">
+        update gen_table set update_time = now(), status = '1' where table_id in
+        <foreach item="tableId" collection="tableIds" index="index" open="(" separator="," close=")">
+            #{tableId}
+        </foreach>
+    </update>
+
+    <update id="deleteTablesBytableId" parameterType="java.lang.Integer">
+    update gen_table set update_time = now(),  status = '1' where table_id = #{tableId}
+  </update>
+
+    <select id="modelListByTableName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select table_id , table_name from gen_table where status = '0'
+        <if test="tableName != null and tableName !=''">
+            and table_name like CONCAT('%',#{tableName,jdbcType=VARCHAR},'%')
+        </if>
+        limit 10
+    </select>
+
+    <select id="getTotalCount" resultType="Integer">
+        select count(*) from gen_table where status = '0'
+    </select>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.TopicInterfaceStatisticsMapper" >
+
+    <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.TopicInterfaceStatistics">
+        <result column="user_ip" property="userIp" jdbcType="VARCHAR" />
+        <result column="param" property="param" jdbcType="VARCHAR" />
+        <result column="call_time" property="callTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <insert id="create">
+        insert into topic_interface_statistics(topic_interface_id, param, call_time, user_ip)
+        value
+        (#{topicInterfaceId}, #{param}, #{callTime}, #{userIp})
+    </insert>
+
+    <select id="getListByInterfaceId" resultMap="BaseResultMap">
+        select param, call_time, user_ip from topic_interface_statistics where topic_interface_id = #{interfaceId} order by call_time desc
+    </select>
+
+    <select id="getTotalCount" resultType="Integer">
+        select count(*) from topic_interface_statistics
+    </select>
+
+</mapper>

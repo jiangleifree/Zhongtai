@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>数据管理</title>
+    <meta name="renderer" content="webkit">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/javascripts/ajaxUtil.js"></script>
+    <script type="text/javascript" src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <style>
+        .itemDiv , .itemDiv1{
+            width: 250px;
+            height: 250px;
+            border-radius:10px;
+            transition: 0.4s;
+            /*background: #f4f8fd  ;*/
+            background-size:100% 100% ;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            position: relative;
+        }
+        .itemDiv1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .itemDiv:hover , .itemDiv1:hover{
+            width: 260px;
+            height: 260px;
+        }
+
+        .itemDiv .divPosit{
+            height: 30px;
+            width: 100%;
+            /*background: pink;*/
+            position: relative;
+        }
+        .itemDiv .divPosit .titlePosit{
+            position: absolute;
+            left: -10px;
+            top: 10px;
+            width: 80px;
+            border-radius: 4px ;
+            height: 20px;
+            font-size:14px;
+            font-weight:400;
+            color:rgba(255,255,255,1);
+            background: rgba(251,114,116,1);
+            text-align: center;
+        }
+        .itemDiv .divPosit .open{
+            position: absolute;
+            right: 5px;
+            top: 10px;
+            height: 18px;
+            width: 40px;
+            border-radius: 20px;
+            background:#5fb878;
+            color: #fff;
+            line-height: 18px;
+            font-size: 12px;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            z-index:100;
+            text-align: center;
+        }
+        .itemDiv .div1{
+            height: 100px;
+            font-size: 18px;
+            margin-top: 10px;
+            width: 100%;
+            text-indent: 15px;
+            color: #000;
+            display: flex;
+            align-items: center;
+        }
+        .itemDiv .div1 div{
+            width: 100px;
+            height: 100px;
+            margin-right: 12px;
+            margin-left: 14px;
+        }
+        .itemDiv .div1 div img{
+            width: 100%;
+            height: 100%;
+            float: left;
+        }
+        .itemDiv .divTitle{
+            height: 22px;
+            font-size: 18px;
+            margin-top: 10px;
+            width: 100%;
+            text-indent: 15px;
+            color: #000;
+            display: flex;
+            align-items: center;
+        }
+        .itemDiv .div2{
+            font-size: 13px;
+            width: 100%;
+            margin-top: 10px;
+            text-indent: 15px;
+            color: #000;
+            white-space: nowrap;/*强制在一行显示*/
+            text-overflow:ellipsis;/*设置超出内容显示...*/
+            overflow: hidden;/*一定不能少 超出的内容进行隐藏*/
+        }
+        .itemDiv .div3{
+            font-size: 13px;
+            width: 140px;
+            margin-top: 10px;
+            text-indent: 15px;
+            color: #000;
+            white-space: nowrap;/*强制在一行显示*/
+            text-overflow:ellipsis;/*设置超出内容显示...*/
+            overflow: hidden;/*一定不能少 超出的内容进行隐藏*/
+        }
+        /*.itemDiv .div4{*/
+        /*    height: 140px;*/
+        /*    transition: 0.4s;*/
+        /*    width: 140px;*/
+        /*    position: absolute;*/
+        /*    top: 0px;*/
+        /*    left: 0px;*/
+        /*    opacity: 0.02;*/
+        /*}*/
+        /*.itemDiv .div4 img{*/
+        /*    width: 100%;*/
+        /*    height: 100%;*/
+        /*    float: left;*/
+        /*}*/
+        .itemDiv .div5 {
+            width: 100%;
+            height: 28px;
+            position: absolute;
+            bottom: 0px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            left: 0px;
+            background:rgba(0,222,152,1);
+            font-size:14px;
+            font-weight:400;
+            color:rgba(255,255,255,1);
+            line-height:28px;
+            text-indent: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .open{
+            height: 18px;
+            width: 40px;
+            border-radius: 20px;
+            background:#5fb878;
+            /*background:rgba(0,222,152,1);*/
+            color: #fff;
+            line-height: 18px;
+            font-size: 12px;
+            /*text-align: center;*/
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            margin-right: 10px;
+            z-index:100;
+        }
+        .close{
+            height: 18px;
+            width: 40px;
+            border-radius: 20px;
+            background:#d2d2d2;
+            /*background:rgba(251,114,116,1);*/
+            color: #fff;
+            line-height: 18px;
+            font-size: 12px;
+            /*text-align: center;*/
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+            margin-right: 10px;
+            z-index:100;
+        }
+
+
+    </style>
+</head>
+<body>
+<!--<div class="x-nav">-->
+<!--          <span class="layui-breadcrumb">-->
+<!--            <a href="">首页</a>-->
+<!--            <a href="">演示</a>-->
+<!--            <a>-->
+<!--              <cite>导航元素</cite></a>-->
+<!--          </span>-->
+<!--    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"-->
+<!--       onclick="location.reload()" title="刷新">-->
+<!--        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>-->
+<!--</div>-->
+
+<div class="layui-fluid">
+    <div id="conDiv" class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <h1>图库首页
+                    </h1>
+                </div>
+
+                <div class="layui-card-body " style="/*height: 650px*/;" style="widows: 50%;">
+                    <div id="itemConDiv" class="layui-btn-container">
+                        <!--                        <button class="layui-btn layui-btn-sm" onclick="window.location.href='theme-library-add.html';">添加主题库</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="div-container" style="display:flex;flex-wrap:wrap;justify-content:flex-start">
+            <div onclick="window.location.href='knowledge-graph-service.html';" style="width: 270px;height: 270px;display: flex;justify-content: center;align-items: center">
+                <div class="itemDiv1">
+                    <i class="layui-icon layui-icon-add-1" style="font-size: 120px; color: #ebeeee;"></i>
+                </div>
+            </div>
+        </div>
+<!--        <form class="layui-form" action="">-->
+<!--            <div class="layui-form-item">-->
+<!--                <div class="layui-input-block">-->
+<!--                    <input type="checkbox" checked="" name="open" lay-skin="switch" lay-filter="switchTest" lay-text="关闭|开启">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </form>-->
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        init();
+
+
+    });
+    $('#conDiv').on('click','.childd11',function (event) {
+        event.stopPropagation();
+        let ip = $(this).attr('name1')
+        let name = $(this).attr('name2')
+         //window.open(`http://127.0.0.1:${ip}`);
+        //parent.xadmin.add_tab("图库-" + name,`http://127.0.0.1:${ip}`,true);
+       // window.location.href="knowledge-graph-details.html?"+location.hostname+`:${ip}`;
+        window.location.href=`theme-details/map-storage-details.html?mapName=${name}&url=127.0.0.1&port=${ip}`;
+    })
+    $('#div-container').on('click','.open',function (event) {
+        event.stopPropagation();
+        let $this = $(this)
+        let index = $this.parents('.childd').index()
+        let mapName = $this.parents('.childd').find('.div1').attr('name')
+        let params = {
+            mapName:mapName
+        }
+        let i;
+        $.ajax({
+            type: "get",
+            async: true,
+            url: "/map/startMap",
+            data: (params),
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            beforeSend: function () {
+                i=showLoad();
+
+            },
+            success: function (resData) {
+                if(resData.code == 200){
+                    init();
+                    closeLoad(i);
+                    showSuccess();
+                }else{
+                    layer.alert(resData.errMsg, {icon: 2})
+                    closeLoad(i);
+                }
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert(request, {icon: 2})
+                layer.close(index);
+                closeLoad(i);
+            }
+        });
+    })
+    $('#div-container').on('click','.close',function (event) {
+        event.stopPropagation();
+        let $this = $(this)
+        let index = $this.parents('.childd').index()
+        let mapName = $this.parents('.childd').find('.div1').attr('name')
+        let params = {
+            mapName:mapName
+        }
+        let i;
+        $.ajax({
+            type: "get",
+            async: true,
+            url: "/map/stopMap",
+            data: (params),
+            dataType: 'json',
+            contentType: 'text/plain;charset=UTF-8',
+            beforeSend: function () {
+                i=showLoad();
+            },
+            success: function (resData) {
+                if(resData.code == 200){
+                    init();
+                    closeLoad(i);
+                    showSuccess();
+                }else{
+                    layer.alert(resData.errMsg, {icon: 2})
+                    closeLoad(i);
+                }
+            },
+            error: function (request) {//请求失败之后的操作
+                layer.alert(request, {icon: 2})
+                layer.close(index);
+                closeLoad(i);
+            }
+        });
+    })
+
+    function showLoad() {
+        return layer.msg('正在切换...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:100000});
+    }
+    function closeLoad(index) {
+        layer.close(index);
+    }
+    function showSuccess() {
+        layer.msg('切换成功！',{time: 1000,offset: 'auto'});
+    }
+
+    function init() {
+        var container = $("#div-container")
+        container.find('.childd').remove()
+        $.get('/map/getAll', function (resp) {
+            res = $.parseJSON(resp)
+            layui.each(res.data, function (index, item) {
+                let img  = ``
+                if(item.attarchId == ''){
+                    img = `<div><img src="../img/9656d225451e540.jpg" alt=""></div>`
+                }else{
+                    img =   `<div><img src="/file/get/picture?attarchId=${item.attarchId}" alt=""></div>`
+                }
+                var topicName= item.mapName;
+                let bottomDiv = ``
+                let result  = ``
+                if(item.status == 'closed'){
+                    bottomDiv =
+                        `<div class="div5" style="background: rgba(251,114,116,1)">已关闭
+                            <div class="open">启动</div>
+                        </div>`
+                    result = `
+                    <div data-value='${topicName}' class='childd' style="cursor:pointer; width: 270px;height: 270px;display: flex;justify-content: center;align-items: center">
+                        <div class="itemDiv">
+                            <div class="div1" name="${item.mapName}">
+                                ${img}
+                            </div>
+                            <div class="divTitle">${item.mapName}</div>
+                            <div class="div2" title="">http://127.0.0.1:${item.httpPort}</div>
+                            <div class="div2" title="">bolt://127.0.0.1:${item.boltPort}</div>
+                            <div class="div3" title="2018.1.10">${item.mapComment}</div>
+                            <div class="div4"></div>
+                            ${bottomDiv}
+                        </div>
+                    </div>
+                `;
+                }else if(item.status == 'doing'){
+                    bottomDiv = `<div class="div5" style="background: rgba(0,222,152,1)">已启动
+                                    <div class="close">关闭</div>
+                                </div>`
+                    result = `
+                    <div data-value='${topicName}' name2="${item.mapName}" name1="${item.boltPort}" class='childd childd11' style="cursor:pointer; width: 270px;height: 270px;display: flex;justify-content: center;align-items: center">
+                        <div class="itemDiv">
+                            <div class="div1" name="${item.mapName}">
+                                ${img}
+
+                            </div>
+                            <div class="divTitle">${item.mapName}</div>
+                            <div class="div2" title="">http://127.0.0.1:${item.httpPort}</div>
+                            <div class="div2" title="">bolt://127.0.0.1:${item.boltPort}</div>
+                            <div class="div3" title="2018.1.10">${item.mapComment}</div>
+                            <div class="div4"></div>
+                            ${bottomDiv}
+                        </div>
+                    </div>
+                `;
+                }else if(item.status == 'not init'){
+                    bottomDiv = `<div class="div5" style="background: rgba(153,153,153,1)">正在初始化</div>`
+                    result = `
+                    <div data-value='${topicName}' class='childd' style="cursor:pointer; width: 270px;height: 270px;display: flex;justify-content: center;align-items: center">
+                        <div class="itemDiv">
+                            <div class="div1" name="${item.mapName}">
+                                ${img}
+
+                            </div>
+                            <div class="divTitle">${item.mapName}</div>
+                            <div class="div2" title="">http://127.0.0.1:</div>
+                            <div class="div2" title="">bolt://127.0.0.1:</div>
+                            <div class="div3" title="2018.1.10">${item.mapComment}</div>
+                            <div class="div4"></div>
+                            ${bottomDiv}
+                        </div>
+                    </div>
+                `;
+                }
+
+                container.prepend(result)
+            })
+        })
+    }
+</script>
+</body>
+
+
+</html>

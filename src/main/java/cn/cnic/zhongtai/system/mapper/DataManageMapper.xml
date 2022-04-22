@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cnic.zhongtai.system.mapper.DataManageMapper" >
+  <resultMap id="BaseResultMap" type="cn.cnic.zhongtai.system.model.DataManage" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="table_id" property="tableId" jdbcType="BIGINT" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="file_size" property="fileSize" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="CHAR" />
+    <result column="data_type" property="dataType" jdbcType="VARCHAR" />
+    <result column="data_name" property="dataName" jdbcType="VARCHAR" />
+    <result column="progress" property="progress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, table_id, table_name, file_name, file_path, create_time, status, file_size, if(source=1,"手动导入","在线收割") as source ,
+    data_type, data_name, progress, result
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.cnic.zhongtai.system.model.DataManageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from data_manage
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from data_manage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from data_manage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.cnic.zhongtai.system.model.DataManageExample" >
+    delete from data_manage
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.cnic.zhongtai.system.model.DataManage" useGeneratedKeys="true" keyProperty="id"  >
+    insert into data_manage (id, table_id, table_name, 
+      file_name, file_path, create_time, 
+      status, file_size, source, 
+      data_type, data_name, progress
+      )
+    values (#{id,jdbcType=BIGINT}, #{tableId,jdbcType=BIGINT}, #{tableName,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR}, #{fileSize,jdbcType=VARCHAR}, #{source,jdbcType=CHAR}, 
+      #{dataType,jdbcType=VARCHAR}, #{dataName,jdbcType=VARCHAR}, #{progress,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cnic.zhongtai.system.model.DataManage" >
+    insert into data_manage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tableId != null" >
+        table_id,
+      </if>
+      <if test="tableName != null" >
+        table_name,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="filePath != null" >
+        file_path,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="fileSize != null" >
+        file_size,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="dataType != null" >
+        data_type,
+      </if>
+      <if test="dataName != null" >
+        data_name,
+      </if>
+      <if test="progress != null" >
+        progress,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="tableId != null" >
+        #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=CHAR},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataName != null" >
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null" >
+        #{progress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.cnic.zhongtai.system.model.DataManageExample" resultType="java.lang.Integer" >
+    select count(*) from data_manage
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update data_manage
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.tableId != null" >
+        table_id = #{record.tableId,jdbcType=BIGINT},
+      </if>
+      <if test="record.tableName != null" >
+        table_name = #{record.tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileName != null" >
+        file_name = #{record.fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filePath != null" >
+        file_path = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=CHAR},
+      </if>
+      <if test="record.fileSize != null" >
+        file_size = #{record.fileSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null" >
+        source = #{record.source,jdbcType=CHAR},
+      </if>
+      <if test="record.dataType != null" >
+        data_type = #{record.dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataName != null" >
+        data_name = #{record.dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.progress != null" >
+        progress = #{record.progress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update data_manage
+    set id = #{record.id,jdbcType=BIGINT},
+      table_id = #{record.tableId,jdbcType=BIGINT},
+      table_name = #{record.tableName,jdbcType=VARCHAR},
+      file_name = #{record.fileName,jdbcType=VARCHAR},
+      file_path = #{record.filePath,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=CHAR},
+      file_size = #{record.fileSize,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=CHAR},
+      data_type = #{record.dataType,jdbcType=VARCHAR},
+      data_name = #{record.dataName,jdbcType=VARCHAR},
+      progress = #{record.progress,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cnic.zhongtai.system.model.DataManage" >
+    update data_manage
+    <set >
+      <if test="tableId != null" >
+        table_id = #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="tableName != null" >
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="fileSize != null" >
+        file_size = #{fileSize,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=CHAR},
+      </if>
+      <if test="dataType != null" >
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataName != null" >
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null" >
+        progress = #{progress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cnic.zhongtai.system.model.DataManage" >
+    update data_manage
+    set table_id = #{tableId,jdbcType=BIGINT},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR},
+      file_size = #{fileSize,jdbcType=VARCHAR},
+      source = #{source,jdbcType=CHAR},
+      data_type = #{dataType,jdbcType=VARCHAR},
+      data_name = #{dataName,jdbcType=VARCHAR},
+      progress = #{progress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="setDataImportResult">
+    update data_manage set result = #{result} where id = #{id}
+  </update>
+
+  <!--自定义-->
+  <select id="selectDataManageList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from data_manage where  status = '0'
+    <if test="type != ''"  >
+      and source = #{type,jdbcType=CHAR}
+    </if>
+    ORDER BY create_time   DESC
+  </select>
+
+  <update id="changeDataImportProgress">
+        update data_manage set progress = #{progress} where id = #{id}
+    </update>
+
+  <update id="deleteDataManageByIds" parameterType="java.util.List">
+    update data_manage set update_time = now(), status = '1' where id in
+    <foreach item="id" collection="ids" index="index" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <update id="deleteDataManageById" parameterType="java.lang.Integer">
+    update data_manage set update_time = now(),  status = '1' where id = #{id}
+  </update>
+
+    <update id="updateDataManageName">
+        update data_manage set data_name = #{dataName},update_time = now() where id = #{id}
+    </update>
+
+  <select id="getTotalCount" resultType="Integer">
+        select count(*) from data_manage where status = '0'
+    </select>
+
+</mapper>

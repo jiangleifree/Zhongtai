@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>模型详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+    <script src="/admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin/js/xadmin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+
+            <div class="layui-card-body ">
+                <table class="layui-table" id="genTableColumnData" lay-filter="genTableColumnTable">
+                </table>
+            </div>
+
+            <!--tab切换选项-->
+       <!-- <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">模型列信息</li>
+              &lt;!&ndash;  <li>模型数据信息</li>&ndash;&gt;
+            </ul>
+            <div class="layui-tab-content"  >
+                <div class="layui-tab-item layui-show">
+                   &lt;!&ndash; 开始设置第一个卡片Tab的表格数据&ndash;&gt;
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <table class="layui-table" id="genTableColumnData" lay-filter="genTableColumnTable">
+                            </table>
+                        </div>
+                    </div>
+                    &lt;!&ndash; 结束&ndash;&gt;
+                 </div>
+&lt;!&ndash;
+                <div class="layui-tab-item">
+                    暂无数据！
+                </div>&ndash;&gt;
+            </div>
+        </div>-->
+            <!--tab切换选项结束-->
+
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    var url = location.search; //获取url中"?"符后的字串
+    var tableId = '';
+    if (url.indexOf("?") != -1) {
+        tableId = url.substr(1);
+    }
+    layui.use('table',
+    function() {
+        var table = layui.table;
+
+        table.render({
+            id:"genTableColumnTable",//
+            elem: '#genTableColumnData',//指定表格元素
+            url: '/genTableColumn/modelColumnByTableId?tableId='+tableId,  //请求路径
+            cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,skin: 'line ' //表格风格 line （行边框风格）row （列边框风格）nob （无边框风格）
+            //,even: true    //隔行换色
+            ,page: true  //开启分页
+            ,limits: [10,20,50,100]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+            ,limit: 10 //每页默认显示的数量
+            ,method:'post'  //提交方式
+            ,cols: [[
+                {type:'checkbox'}, //开启多选框
+                {
+                    field: 'columnId', //json对应的key
+                    title: 'columnId',   //列名
+                    sort: true,   // 默认为 false,true为开启排序
+                    width: '5%',
+                    hide:true
+                },
+                {
+                    field: 'columnName', //json对应的key
+                    title: '字段名称',   //列名
+                    width: '15%',
+                    style: 'color:red;'
+                },
+                {
+                    field: 'columnType', //json对应的key
+                    title: '字段类型',   //列名
+                    width: '10%',
+                }, {
+                    field: 'columnLength',
+                    title: '字段长度',
+                    align: 'center',
+                    width: '10%',
+                },
+                {
+                    field: 'columnComment', //json对应的key
+                    title: '字段描述',   //列名
+                }
+            ]]
+        });
+
+    });</script>
+
+
+</html>
